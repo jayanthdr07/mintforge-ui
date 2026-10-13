@@ -1,27 +1,56 @@
 @import "tailwindcss";
 @import "../styles/design-tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-mf-background: var(--mf-background);
+  --color-mf-surface: var(--mf-surface);
+  --color-mf-surface-secondary: var(--mf-surface-secondary);
+  --color-mf-surface-tertiary: var(--mf-surface-tertiary);
+
+  --color-mf-foreground: var(--mf-foreground);
+  --color-mf-foreground-secondary: var(--mf-foreground-secondary);
+  --color-mf-foreground-muted: var(--mf-foreground-muted);
+
+  --color-mf-brand: var(--mf-brand);
+  --color-mf-brand-hover: var(--mf-brand-hover);
+  --color-mf-brand-subtle: var(--mf-brand-subtle);
+  --color-mf-brand-foreground: var(--mf-brand-foreground);
+
+  --color-mf-border: var(--mf-border);
+  --color-mf-border-strong: var(--mf-border-strong);
+
+  --color-mf-success: var(--mf-success);
+  --color-mf-warning: var(--mf-warning);
+  --color-mf-danger: var(--mf-danger);
+  --color-mf-info: var(--mf-info);
+
+  --font-sans: var(--mf-font-sans);
+
+  --radius-mf-sm: var(--mf-radius-sm);
+  --radius-mf-md: var(--mf-radius-md);
+  --radius-mf-lg: var(--mf-radius-lg);
+  --radius-mf-xl: var(--mf-radius-xl);
+
+  --shadow-mf-sm: var(--mf-shadow-sm);
+  --shadow-mf-md: var(--mf-shadow-md);
+  --shadow-mf-lg: var(--mf-shadow-lg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--mf-border);
+  }
+
+  body {
+    background-color: var(--mf-background);
+    color: var(--mf-foreground);
+    font-family: var(--mf-font-sans);
+  }
+
+  ::selection {
+    background-color: var(--mf-brand-subtle);
+    color: var(--mf-foreground);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}

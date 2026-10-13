@@ -71,7 +71,9 @@
 }
 
 /* Dark theme tokens */
-.dark {
+.dark,
+html[data-theme="dark"],
+:root[data-theme="dark"] {
   --mf-background: #111513;
   --mf-surface: #181d1a;
   --mf-surface-secondary: #202723;

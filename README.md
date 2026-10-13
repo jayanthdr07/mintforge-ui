@@ -169,7 +169,7 @@ If you find the project interesting, consider starring the repository and sharin
 
 Our goal is to help developers build faster, create consistent interfaces, and customize components to fit their projects.
 
-Learn more about NEXYOUTH: [Official Website](http://nexyouth-web.vercel.app)
+Learn more about NEXYOUTH: [Official Website](https://nexyouth-web.vercel.app/)
 
 
 ---

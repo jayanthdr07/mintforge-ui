@@ -163,6 +163,15 @@ Mintforge UI is being built in the open. Developers interested in reusable UI co
 
 If you find the project interesting, consider starring the repository and sharing feedback.
 
+## 🏢 Built by NEXYOUTH pvt.ltd
+
+**Mintforge UI** is an open-source project developed by **NEXYOUTH pvt.ltd**, with a focus on building reusable UI components and consistent design systems for modern web and mobile applications.
+
+Our goal is to help developers build faster, create consistent interfaces, and customize components to fit their projects.
+
+Learn more about NEXYOUTH: [Official Website](http://nexyouth-web.vercel.app)
+
+
 ---
 
 **Mintforge UI** — Build consistently. Customize freely. Build in the open.

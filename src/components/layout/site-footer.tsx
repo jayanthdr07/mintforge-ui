@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { ArrowUp, ArrowUpRight, Sparkles } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
@@ -42,11 +41,7 @@ const footerLinks = {
 const supportedTech = ["React 19", "Next.js 16", "React Native", "Tailwind CSS v4", "TypeScript"];
 
 export default function SiteFooter() {
-  const [year, setYear] = useState("2026");
-
-  useEffect(() => {
-    setYear(new Date().getFullYear().toString());
-  }, []);
+  const year = new Date().getFullYear().toString();
 
   const scrollToTop = () => {
     if (typeof window !== "undefined") {

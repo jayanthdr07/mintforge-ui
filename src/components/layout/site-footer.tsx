@@ -1,8 +1,8 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { ArrowUp, ArrowUpRight, Sparkles } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
@@ -41,14 +41,14 @@ const footerLinks = {
 
 const supportedTech = ["React 19", "Next.js 16", "React Native", "Tailwind CSS v4", "TypeScript"];
 
-export default function SiteFooter() {
-  const [year, setYear] = useState("2026");
+const emptySubscribe = () => () => {};
 
-  useEffect(() => {
-    // This value must be computed on the client so Next.js prerendering does not see an unstable `new Date()`.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setYear(new Date().getFullYear().toString());
-  }, []);
+export default function SiteFooter() {
+  const year = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date().getFullYear(),
+    () => 2026
+  );
 
   const scrollToTop = () => {
     if (typeof window !== "undefined") {

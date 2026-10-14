@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import "@/styles/design-tokens.css";
 import "./globals.css";
 import SiteHeader from "@/components/layout/site-header";
 import SiteFooter from "@/components/layout/site-footer";
@@ -51,7 +52,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ThemeProvider>
-          <div className="mf-page-shell">
+          <div className="mf-page-shell mf-site">
             <SiteHeader />
             <main className="mf-main-content">{children}</main>
             <SiteFooter />

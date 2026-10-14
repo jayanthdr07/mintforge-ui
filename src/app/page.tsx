@@ -4,57 +4,74 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Copy, Sparkles, ArrowUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
+import MagicRings from "@/components/ui/magic-rings";
+import {
+  ReactIcon,
+  NextjsIcon,
+  ReactNativeIcon,
+  TypeScriptIcon,
+  TailwindIcon,
+} from "@/components/ui/framework-icons";
+import { useTheme } from "@/components/layout/theme-provider";
+import CodePreviewShowcase from "@/components/ui/code-preview-showcase";
+import WhatWeAreBuilding from "@/components/ui/what-we-are-building";
+import QuickInstallSection from "@/components/ui/quick-install-section";
 
 const GITHUB_URL = "https://github.com/rakshithkumar608/mintforge-ui";
-
-const frameworks = [
-  { icon: "⚛", name: "React", description: "Web components" },
-  { icon: "N", name: "Next.js", description: "SSR / SSG" },
-  { icon: "◈", name: "React Native", description: "Mobile UI" },
-  { icon: "TS", name: "TypeScript", description: "Type safe" },
-  { icon: "≋", name: "Tailwind CSS", description: "Utility first" },
-];
-
-const features = [
-  {
-    number: "01",
-    icon: "◈",
-    title: "Reusable Components",
-    description:
-      "Build interfaces faster with accessible, customizable building blocks designed for everyday product development.",
-    items: ["Buttons, inputs and forms", "Navigation, modals and overlays", "Tables, tabs, badges and feedback"],
-    href: "#components",
-    link: "Explore components",
-  },
-  {
-    number: "02",
-    icon: "▦",
-    title: "Ready-Made Blocks",
-    description:
-      "Compose complete product workflows using thoughtfully designed layout sections and real-world UI patterns.",
-    items: ["Authentication layouts", "Dashboards & settings panels", "SaaS sections & marketing blocks"],
-    href: "#blocks",
-    link: "Explore blocks",
-  },
-  {
-    number: "03",
-    icon: "▣",
-    title: "Web & Mobile Ready",
-    description:
-      "Maintain a unified visual language across React web applications and React Native / Expo mobile experiences.",
-    items: ["React 19 & Next.js 16 support", "React Native & Expo direction", "Design tokens & TypeScript first"],
-    href: "#react-native",
-    link: "Explore platforms",
-  },
-];
-
-const componentTabs = ["Buttons", "Inputs", "Badges", "Cards"];
 const installCommand = "npm install mintforge-ui";
 
+const frameworks = [
+  {
+    name: "React",
+    role: "Component Primitives",
+    description: "Accessible, headless hooks and building blocks.",
+    badge: "v19.0",
+    icon: <ReactIcon size={26} />,
+    accentBorder: "rgba(97, 218, 251, 0.35)",
+    accentBg: "rgba(97, 218, 251, 0.08)",
+  },
+  {
+    name: "Next.js",
+    role: "Server & App Router",
+    description: "Zero hydration mismatch and optimized server render.",
+    badge: "v16.0",
+    icon: <NextjsIcon size={26} />,
+    accentBorder: "rgba(160, 160, 160, 0.35)",
+    accentBg: "rgba(160, 160, 160, 0.08)",
+  },
+  {
+    name: "React Native",
+    role: "Universal Mobile",
+    description: "Cross-platform mobile primitives and Expo setup.",
+    badge: "Expo 52",
+    icon: <ReactNativeIcon size={26} />,
+    accentBorder: "rgba(97, 218, 251, 0.35)",
+    accentBg: "rgba(97, 218, 251, 0.08)",
+  },
+  {
+    name: "TypeScript",
+    role: "Type-Safe Contracts",
+    description: "End-to-end type definitions and IDE autocomplete.",
+    badge: "v5.6+",
+    icon: <TypeScriptIcon size={26} />,
+    accentBorder: "rgba(49, 120, 198, 0.35)",
+    accentBg: "rgba(49, 120, 198, 0.08)",
+  },
+  {
+    name: "Tailwind CSS",
+    role: "Token Design System",
+    description: "Semantic utilities, smooth transitions, and dark mode.",
+    badge: "v4.0",
+    icon: <TailwindIcon size={26} />,
+    accentBorder: "rgba(56, 189, 248, 0.35)",
+    accentBg: "rgba(56, 189, 248, 0.08)",
+  },
+];
+
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState("Buttons");
-  const [buttonVariant, setButtonVariant] = useState("Primary");
   const [copied, setCopied] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const copyInstallCommand = async () => {
     try {
@@ -68,256 +85,138 @@ export default function HomePage() {
 
   return (
     <div className="mf-site">
-      {/* Hero Section */}
-      <section className="mf-hero">
-        <div className="mf-container">
-          <div className="mf-hero-grid">
-            <div className="mf-hero-copy mf-fade-up">
-              <div className="mf-eyebrow">
-                <span className="mf-status-dot" />
-                Open Source UI Ecosystem
-              </div>
+      {/* Centered Hero Section with React Bits MagicRings Background */}
+      <section className="mf-hero-centered">
+        {/* MagicRings WebGL Ambient Canvas */}
+        <div className="mf-hero-rings-wrap" aria-hidden="true">
+          <MagicRings
+            color={isDark ? "#10b981" : "#059669"}
+            colorTwo={isDark ? "#6366f1" : "#4f46e5"}
+            motion="pulse"
+            ringCount={6}
+            speed={0.9}
+            lineThickness={2.2}
+            glow={1.2}
+            hoverScale={1.15}
+            clickBurst={true}
+            theme={isDark ? "dark" : "light"}
+          />
+        </div>
 
-              <h1>
-                Build modern apps with{" "}
-                <span className="mf-gradient-text">beautiful components.</span>
-              </h1>
+        <div className="mf-container mf-hero-centered-content">
+          {/* Eyebrow Badge Pill */}
+          <div className="mf-hero-badge-pill mf-fade-up">
+            <span className="mf-status-dot" />
+            <span>Next-Gen Open Source UI</span>
+            <span className="mf-badge-divider" />
+            <span className="mf-badge-tag">v0.1.0 Ready</span>
+          </div>
 
-              <p className="mf-hero-description">
-                Mintforge UI provides accessible primitives, customizable blocks, and ready-to-use
-                templates for React, Next.js, and React Native. Crafted by NEXYOUTH for speed and consistency.
-              </p>
+          {/* Large Animated Headline */}
+          <h1 className="mf-hero-title-large mf-fade-up">
+            Build consistently. <br />
+            <span className="mf-hero-gradient-headline">Customize freely.</span>
+          </h1>
 
-              <div className="mf-hero-actions">
-                <Link href="#components" className="mf-button mf-button-primary">
-                  <Sparkles size={15} />
-                  <span>Explore Components</span>
-                  <ArrowRight size={14} />
-                </Link>
+          {/* Subtitle Description */}
+          <p className="mf-hero-subtitle-large mf-fade-up">
+            Mintforge UI provides accessible primitives, modular layout blocks, and themeable
+            design tokens for <strong>React</strong>, <strong>Next.js</strong>, and{" "}
+            <strong>React Native</strong>. Crafted by NEXYOUTH for speed, clarity, and scale.
+          </p>
 
-                <a
-                  href={GITHUB_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mf-button mf-button-secondary"
+          {/* CTA Buttons & Interactive Command Pill */}
+          <div className="mf-hero-cta-group mf-fade-up">
+            <Link href="#components" className="mf-hero-primary-cta">
+              <Sparkles size={16} />
+              <span>Explore Components</span>
+              <ArrowRight size={15} />
+            </Link>
+
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mf-hero-secondary-cta"
+            >
+              <FaGithub size={17} />
+              <span>Star on GitHub</span>
+              <ArrowUpRight size={14} />
+            </a>
+
+            <button
+              type="button"
+              onClick={copyInstallCommand}
+              className="mf-hero-cmd-pill"
+              title="Click to copy install command"
+            >
+              <span className="mf-cmd-prompt">$</span>
+              <span>npm install mintforge-ui</span>
+              {copied ? (
+                <Check size={14} style={{ color: "var(--site-accent)" }} />
+              ) : (
+                <Copy size={14} style={{ color: "var(--site-muted)" }} />
+              )}
+            </button>
+          </div>
+
+          {/* Value Highlights */}
+          <div className="mf-hero-highlights mf-fade-up">
+            <span className="mf-highlight-item">
+              <span className="mf-highlight-check">✓</span> 100% Free &amp; Open Source
+            </span>
+            <span className="mf-highlight-item">
+              <span className="mf-highlight-check">✓</span> Next.js 16 &amp; React 19 Ready
+            </span>
+            <span className="mf-highlight-item">
+              <span className="mf-highlight-check">✓</span> Accessible (WCAG AAA)
+            </span>
+            <span className="mf-highlight-item">
+              <span className="mf-highlight-check">✓</span> Tailwind CSS Tokens
+            </span>
+          </div>
+
+          {/* 5 Frameworks Showcase with Official Icons */}
+          <div className="mf-frameworks-section mf-fade-up">
+            <div className="mf-frameworks-header">
+              <span className="mf-frameworks-title">Universal Multi-Platform Support</span>
+            </div>
+
+            <div className="mf-frameworks-grid">
+              {frameworks.map((fw) => (
+                <div
+                  key={fw.name}
+                  className="mf-framework-card"
+                  style={
+                    {
+                      "--framework-border": fw.accentBorder,
+                      "--framework-bg": fw.accentBg,
+                    } as React.CSSProperties
+                  }
                 >
-                  <FaGithub size={16} />
-                  <span>View on GitHub</span>
-                  <ArrowUpRight size={13} />
-                </a>
-              </div>
-
-              <div className="mf-trust-row">
-                <span>✓ 100% Open Source (MIT)</span>
-                <span>✓ Next.js 16 & React 19</span>
-                <span>✓ Tailwind CSS v4 Tokens</span>
-              </div>
-            </div>
-
-            {/* Interactive Preview Mockup Window */}
-            <div className="mf-hero-visual mf-fade-up mf-delay-2">
-              <div className="mf-visual-glow" aria-hidden="true" />
-
-              <div className="mf-preview-window">
-                <div className="mf-preview-topbar">
-                  <div className="mf-mini-brand">
-                    <span className="mf-mini-logo">M</span>
-                    <span>
-                      Mintforge <b>UI Sandbox</b>
-                    </span>
-                  </div>
-                  <div className="mf-window-controls" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                </div>
-
-                <div className="mf-preview-body">
-                  <div className="mf-preview-sidebar">
-                    <span className="mf-sidebar-label">PRIMITIVES</span>
-                    {componentTabs.map((tab) => (
-                      <button
-                        key={tab}
-                        type="button"
-                        onClick={() => setActiveTab(tab)}
-                        className={`mf-sidebar-item ${activeTab === tab ? "mf-sidebar-active" : ""}`}
-                        style={{ width: "100%", textAlign: "left", background: activeTab === tab ? undefined : "transparent", border: 0, cursor: "pointer" }}
-                      >
-                        {tab}
-                      </button>
-                    ))}
+                  <div className="mf-framework-top">
+                    <div className="mf-framework-icon-container">{fw.icon}</div>
+                    <span className="mf-framework-badge">{fw.badge}</span>
                   </div>
 
-                  <div className="mf-preview-content">
-                    <div className="mf-preview-heading">
-                      <div>
-                        <span className="mf-breadcrumb">COMPONENTS / {activeTab.toUpperCase()}</span>
-                        <h3>Interactive {activeTab}</h3>
-                        <p>Explore variants, states, and customizable tokens</p>
-                      </div>
-                      <Sparkles size={16} className="mf-sparkle" />
-                    </div>
-
-                    <div className="mf-preview-tabs">
-                      {["Primary", "Outline", "Ghost"].map((variant) => (
-                        <button
-                          key={variant}
-                          type="button"
-                          onClick={() => setButtonVariant(variant)}
-                          className={buttonVariant === variant ? "active" : ""}
-                        >
-                          {variant}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="mf-demo-grid">
-                      <div className="mf-demo-card">
-                        <span className="mf-demo-label">DEFAULT STATE</span>
-                        <strong>{buttonVariant} Button</strong>
-                        <button
-                          type="button"
-                          className={`mf-demo-button ${
-                            buttonVariant === "Primary"
-                              ? "mf-demo-primary"
-                              : buttonVariant === "Outline"
-                              ? "mf-demo-outline"
-                              : "mf-demo-ghost"
-                          }`}
-                        >
-                          {buttonVariant} Action
-                        </button>
-                      </div>
-
-                      <div className="mf-demo-card">
-                        <span className="mf-demo-label">LIVE INPUT PREVIEW</span>
-                        <span className="mf-demo-input-label">Email Address</span>
-                        <input
-                          type="email"
-                          placeholder="developer@mintforge.dev"
-                          readOnly
-                        />
-                        <span className="mf-demo-helper">Accessible label & token focus ring</span>
-                      </div>
-                    </div>
-                  </div>
+                  <strong className="mf-framework-name">{fw.name}</strong>
+                  <span className="mf-framework-role">{fw.role}</span>
+                  <p className="mf-framework-desc">{fw.description}</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Supported Frameworks Row */}
-          <div className="mf-frameworks mf-fade-up">
-            {frameworks.map((fw) => (
-              <div key={fw.name} className="mf-framework">
-                <span className="mf-framework-icon">{fw.icon}</span>
-                <div>
-                  <strong>{fw.name}</strong>
-                  <span>{fw.description}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Sections */}
-      <section id="components" className="mf-features-section">
-        <div className="mf-container">
-          <div className="mf-section-heading">
-            <span className="mf-section-kicker">WHAT WE&apos;RE BUILDING</span>
-            <h2>Crafted for developer speed &amp; design consistency</h2>
-            <p>
-              From basic accessible primitives to complete responsive layouts, Mintforge UI is designed to scale with your product.
-            </p>
-          </div>
-
-          <div className="mf-feature-grid">
-            {features.map((feature) => (
-              <div key={feature.number} className="mf-feature-card">
-                <div className="mf-feature-topline">
-                  <div className="mf-feature-icon">{feature.icon}</div>
-                  <span className="mf-feature-number">{feature.number}</span>
-                </div>
-
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
-
-                <ul>
-                  {feature.items.map((item) => (
-                    <li key={item}>
-                      <span>✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link href={feature.href} className="mf-text-link">
-                  <span>{feature.link}</span>
-                  <span>→</span>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Installation Snippet Section */}
-      <section id="installation" className="mf-install-section">
-        <div className="mf-container">
-          <div className="mf-install-grid">
-            <div className="mf-install-copy">
-              <span className="mf-section-kicker">QUICK INSTALL</span>
-              <h2>Start using Mintforge UI in seconds</h2>
-              <p>
-                Add the package to your existing React or Next.js app, configure design tokens, and start importing clean primitives.
-              </p>
-              <Link href="#docs" className="mf-text-link">
-                <span>Read the installation guide</span>
-                <span>→</span>
-              </Link>
-            </div>
-
-            <div className="mf-terminal">
-              <div className="mf-terminal-top">
-                <div className="mf-terminal-dots" aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <span>BASH — NPM PACKAGE</span>
-                <button
-                  type="button"
-                  onClick={copyInstallCommand}
-                  aria-label="Copy install command"
-                  title="Copy command"
-                >
-                  {copied ? (
-                    <span style={{ color: "#38e9ae", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                      <Check size={12} /> Copied!
-                    </span>
-                  ) : (
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                      <Copy size={12} /> Copy
-                    </span>
-                  )}
-                </button>
-              </div>
-
-              <div className="mf-terminal-body">
-                <span className="mf-terminal-prompt">$</span>
-                <code>{installCommand}</code>
-              </div>
-
-              <p>
-                <span>ℹ</span>
-                <span>Supports React 19, Next.js 16 (App Router), TypeScript, and Tailwind CSS v4.</span>
-              </p>
+              ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Interactive Code IDE & Prebuilt UI Showcase */}
+      <CodePreviewShowcase />
+
+      {/* What We Are Building: Interactive Category Showcase */}
+      <WhatWeAreBuilding />
+
+      {/* Quick Install Section: Interactive Multi-mode Setup */}
+      <QuickInstallSection />
     </div>
   );
 }

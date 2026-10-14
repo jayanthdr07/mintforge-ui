@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { ArrowUp, ArrowUpRight, Sparkles } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
@@ -41,7 +42,13 @@ const footerLinks = {
 const supportedTech = ["React 19", "Next.js 16", "React Native", "Tailwind CSS v4", "TypeScript"];
 
 export default function SiteFooter() {
-  const year = new Date().getFullYear().toString();
+  const [year, setYear] = useState("2026");
+
+  useEffect(() => {
+    // This value must be computed on the client so Next.js prerendering does not see an unstable `new Date()`.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setYear(new Date().getFullYear().toString());
+  }, []);
 
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
@@ -51,7 +58,6 @@ export default function SiteFooter() {
 
   return (
     <footer className="mf-footer">
-      {/* Top Banner Card */}
       <div className="mf-container">
         <div className="mf-footer-cta-card">
           <div className="mf-footer-cta-content">
@@ -84,9 +90,7 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        {/* Main Columns Grid */}
         <div className="mf-footer-grid">
-          {/* Brand Column */}
           <div className="mf-footer-brand-col">
             <Link href="/" className="mf-brand mf-brand-footer" aria-label="Mintforge UI">
               <div className="mf-logo-box">
@@ -110,14 +114,12 @@ export default function SiteFooter() {
               The developer-first UI ecosystem for React, Next.js, and React Native. Designed for consistency, crafted with accessible primitives.
             </p>
 
-            {/* Status Indicator */}
             <div className="mf-footer-status">
               <span className="mf-status-dot-pulse" aria-hidden="true" />
               <span className="mf-status-text">All systems operational</span>
               <span className="mf-status-tag">v0.1.0-alpha</span>
             </div>
 
-            {/* Supported Technologies Pills */}
             <div className="mf-footer-tech-stack">
               {supportedTech.map((tech) => (
                 <span key={tech} className="mf-tech-pill">
@@ -127,7 +129,6 @@ export default function SiteFooter() {
             </div>
           </div>
 
-          {/* Links Column 1: Explore */}
           <div className="mf-footer-col">
             <h4 className="mf-footer-col-title">Explore</h4>
             <ul className="mf-footer-links">
@@ -142,7 +143,6 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          {/* Links Column 2: Documentation */}
           <div className="mf-footer-col">
             <h4 className="mf-footer-col-title">Documentation</h4>
             <ul className="mf-footer-links">
@@ -156,7 +156,6 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          {/* Links Column 3: Community & NEXYOUTH */}
           <div className="mf-footer-col">
             <h4 className="mf-footer-col-title">Community</h4>
             <ul className="mf-footer-links">
@@ -176,7 +175,6 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          {/* Links Column 4: Legal & Policy */}
           <div className="mf-footer-col">
             <h4 className="mf-footer-col-title">Open Source</h4>
             <ul className="mf-footer-links">
@@ -197,7 +195,6 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="mf-footer-bottom">
           <div className="mf-footer-copyright">
             <span>© {year} Mintforge UI. An open-source initiative by </span>

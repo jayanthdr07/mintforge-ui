@@ -69,12 +69,12 @@ export function ComponentCode({
             ))}
           </div>
         ) : filename ? (
-          <div className="flex items-center gap-2 text-xs font-mono font-medium text-muted-foreground">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
             <FileCode size={13} className="text-muted-foreground" />
             <span>{filename}</span>
           </div>
         ) : (
-          <span className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             {language}
           </span>
         )}

@@ -477,7 +477,7 @@
   padding: 0.25rem 0.65rem;
   border-radius: 6px;
   font-size: 0.75rem;
-  font-family: "JetBrains Mono", var(--mf-font-mono), monospace !important;
+  font-family: "Plus Jakarta Sans", var(--mf-font-sans), sans-serif !important;
   font-weight: 550;
   color: #7d938a;
   background: transparent;
@@ -520,7 +520,7 @@
   color: #e2e8f0;
 }
 
-/* Force JetBrains Mono font and ligatures across all code blocks */
+/* Apply the same font style as normal text (Plus Jakarta Sans) across all code blocks */
 .mf-docs-code-container,
 .mf-docs-code-container pre,
 .mf-docs-code-container code,
@@ -540,10 +540,9 @@
 .mf-docs-line-content span,
 .mf-docs-line-content div,
 .mf-docs-line-gutter,
-.mf-docs-line-gutter span {
-  font-family: "JetBrains Mono", var(--mf-font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
-  font-feature-settings: "calt" 1, "liga" 1;
-  font-variant-ligatures: normal;
+.mf-docs-line-gutter span,
+.mf-inline-code {
+  font-family: "Plus Jakarta Sans", var(--mf-font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 .mf-docs-code-body {

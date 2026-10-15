@@ -99,7 +99,7 @@ export function ComponentCode({
           <div className="mf-docs-line-content">
             <code>
               {lines.map((line, i) => (
-                <div key={i} className="leading-relaxed">
+                <div key={i} className="min-h-[1.7em] leading-[1.7]">
                   {highlightCodeLine(line, codeLang)}
                 </div>
               ))}
@@ -110,7 +110,7 @@ export function ComponentCode({
         <pre className="mf-docs-code-body">
           <code>
             {lines.map((line, i) => (
-              <div key={i} className="leading-relaxed">
+              <div key={i} className="min-h-[1.7em] leading-[1.7]">
                 {highlightCodeLine(line, codeLang)}
               </div>
             ))}

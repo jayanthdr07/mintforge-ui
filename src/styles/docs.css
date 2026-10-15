@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
 /* ==========================================================================
    Mintforge UI - Documentation Styles (shadcn/ui inspired aesthetic)
    ========================================================================== */
@@ -439,26 +441,26 @@
   overflow: hidden;
   border: 1px solid var(--mf-border);
   margin: 1.25rem 0 2rem;
-  background: #091310;
-  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.25);
+  background: #060e0a;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
 }
 
 .dark .mf-docs-code-container {
   border-color: #1a2c24;
-  background: #060e0b;
+  background: #060e0a;
 }
 
 .mf-docs-code-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0.85rem;
-  background: #0e1b16;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.55rem 0.95rem;
+  background: #0a1410;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dark .mf-docs-code-header {
-  background: #0a1411;
+  background: #08110d;
   border-color: #1a2c24;
 }
 
@@ -475,7 +477,7 @@
   padding: 0.25rem 0.65rem;
   border-radius: 6px;
   font-size: 0.75rem;
-  font-family: var(--mf-font-mono);
+  font-family: "JetBrains Mono", var(--mf-font-mono), monospace !important;
   font-weight: 550;
   color: #7d938a;
   background: transparent;
@@ -518,23 +520,64 @@
   color: #e2e8f0;
 }
 
+/* Force JetBrains Mono font and ligatures across all code blocks */
+.mf-docs-code-container,
+.mf-docs-code-container pre,
+.mf-docs-code-container code,
+.mf-docs-code-container span,
+.mf-docs-code-container div,
+.mf-docs-code-body,
+.mf-docs-code-body pre,
+.mf-docs-code-body code,
+.mf-docs-code-body span,
+.mf-docs-code-body div,
+.mf-docs-code-numbered,
+.mf-docs-code-numbered code,
+.mf-docs-code-numbered span,
+.mf-docs-code-numbered div,
+.mf-docs-line-content,
+.mf-docs-line-content code,
+.mf-docs-line-content span,
+.mf-docs-line-content div,
+.mf-docs-line-gutter,
+.mf-docs-line-gutter span {
+  font-family: "JetBrains Mono", var(--mf-font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-ligatures: normal;
+}
+
 .mf-docs-code-body {
-  padding: 1.1rem 1.3rem;
-  font-family: var(--mf-font-mono);
+  margin: 0;
+  padding: 1.15rem 1.35rem;
   font-size: 0.8125rem;
   line-height: 1.7;
-  color: #cbd5e1;
+  color: #e2e8f0;
   overflow-x: auto;
+  tab-size: 2;
+  letter-spacing: -0.01em;
+}
+
+.mf-docs-code-body code {
+  display: block;
+  font-family: inherit !important;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 /* Code Block with Line Numbers */
 .mf-docs-code-numbered {
   display: flex;
-  padding: 0.95rem 0;
-  font-family: var(--mf-font-mono);
+  margin: 0;
+  padding: 1.15rem 0;
   font-size: 0.8125rem;
   line-height: 1.7;
   overflow-x: auto;
+  tab-size: 2;
+  letter-spacing: -0.01em;
 }
 
 .mf-docs-line-gutter {
@@ -543,16 +586,31 @@
   padding: 0 1rem;
   text-align: right;
   user-select: none;
-  color: #4b6158;
+  color: #3b5349;
   border-right: 1px solid #1a2c24;
   min-width: 44px;
+  font-size: 0.8125rem;
+  line-height: 1.7;
 }
 
 .mf-docs-line-content {
   flex: 1;
-  padding: 0 1.25rem;
-  color: #cbd5e1;
+  padding: 0 1.35rem;
+  color: #e2e8f0;
   white-space: pre;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.mf-docs-line-content code {
+  display: block;
+  font-family: inherit !important;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 /* Inline Code Chip */

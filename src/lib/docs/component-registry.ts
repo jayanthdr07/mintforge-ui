@@ -1,0 +1,623 @@
+import { ComponentMeta } from "@/types/docs";
+
+export const COMPONENT_REGISTRY: Record<string, ComponentMeta> = {
+  button: {
+    id: "button",
+    title: "Button",
+    description: "Interactive button primitive supporting multiple visual variants, sizing scales, loading spinners, and icon slots.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Button } from "@/components/ui/button";`,
+    sourceCode: `import * as React from "react";
+import { Loader2 } from "lucide-react";
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "secondary" | "outline" | "ghost" | "destructive";
+  size?: "sm" | "md" | "lg";
+  isLoading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className = "",
+      variant = "default",
+      size = "md",
+      isLoading = false,
+      leftIcon,
+      rightIcon,
+      disabled,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles =
+      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-[var(--mf-radius-md)]";
+
+    const variantStyles = {
+      default:
+        "bg-[var(--mf-brand)] text-white hover:bg-[var(--mf-brand-hover)] focus-visible:ring-[var(--mf-brand)] shadow-sm",
+      secondary:
+        "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-tertiary)] focus-visible:ring-[var(--mf-border)] border border-[var(--mf-border)]",
+      outline:
+        "bg-transparent text-[var(--mf-foreground)] border border-[var(--mf-border)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+      ghost:
+        "bg-transparent text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+      destructive:
+        "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500 shadow-sm",
+    };
+
+    const sizeStyles = {
+      sm: "h-8 px-3 text-xs gap-1.5",
+      md: "h-10 px-4 text-sm gap-2",
+      lg: "h-12 px-6 text-base gap-2.5",
+    };
+
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || isLoading}
+        className={\`\${baseStyles} \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
+        {...props}
+      >
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin text-current" />
+        ) : (
+          leftIcon
+        )}
+        {children}
+        {!isLoading && rightIcon}
+      </button>
+    );
+  }
+);
+Button.displayName = "Button";`,
+    props: [
+      { name: "variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive"', defaultValue: '"default"', description: "Controls the visual styling and elevation." },
+      { name: "size", type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: "Controls padding, line-height, and typography scale." },
+      { name: "isLoading", type: "boolean", defaultValue: "false", description: "Renders an animated spinner and disables pointer events." },
+      { name: "leftIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Icon rendered immediately before the button label." },
+      { name: "rightIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Icon rendered immediately after the button label." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Standard disabled attribute; disables interaction." },
+    ],
+    examples: [
+      {
+        title: "Standard Action",
+        code: `<Button>Deploy Application</Button>`,
+      },
+      {
+        title: "Icon and State Combinations",
+        code: `<div className="flex flex-wrap gap-3">
+  <Button leftIcon={<Sparkles size={16} />}>Magic Action</Button>
+  <Button variant="outline" rightIcon={<ArrowRight size={16} />}>Continue</Button>
+  <Button isLoading>Uploading</Button>
+</div>`,
+      },
+    ],
+  },
+
+  input: {
+    id: "input",
+    title: "Input",
+    description: "Accessible text input field with built-in label association, validation feedback, and icon accessory slots.",
+    category: "Forms",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Input } from "@/components/ui/input";`,
+    sourceCode: `import * as React from "react";
+
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+}
+
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className = "",
+      label,
+      error,
+      helperText,
+      leftIcon,
+      rightIcon,
+      id,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const inputId = id || React.useId();
+
+    return (
+      <div className="w-full flex flex-col gap-1.5">
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="text-xs font-semibold text-mf-foreground select-none"
+          >
+            {label}
+          </label>
+        )}
+        <div className="relative flex items-center w-full">
+          {leftIcon && (
+            <div className="absolute left-3 flex items-center pointer-events-none text-(--mf-foreground-muted)">
+              {leftIcon}
+            </div>
+          )}
+          <input
+            id={inputId}
+            ref={ref}
+            disabled={disabled}
+            aria-invalid={!!error}
+            className={\`w-full h-10 rounded-[var(--mf-radius-md)] border bg-[var(--mf-surface)] text-[var(--mf-foreground)] px-3 text-sm placeholder:text-[var(--mf-foreground-muted)] transition-colors outline-none focus:ring-2 focus:ring-[var(--mf-brand)] focus:border-[var(--mf-brand)] disabled:opacity-50 disabled:bg-[var(--mf-surface-secondary)] disabled:cursor-not-allowed \${
+              leftIcon ? "pl-9" : ""
+            } \${rightIcon ? "pr-9" : ""} \${
+              error
+                ? "border-red-500 focus:ring-red-500"
+                : "border-mf-border hover:border-(--mf-border-strong)"
+            } \${className}\`}
+            {...props}
+          />
+          {rightIcon && (
+            <div className="absolute right-3 flex items-center text-(--mf-foreground-muted)">
+              {rightIcon}
+            </div>
+          )}
+        </div>
+        {error ? (
+          <p className="text-xs text-red-500">{error}</p>
+        ) : helperText ? (
+          <p className="text-xs text-(--mf-foreground-muted)">{helperText}</p>
+        ) : null}
+      </div>
+    );
+  }
+);
+Input.displayName = "Input";`,
+    props: [
+      { name: "label", type: "string", defaultValue: "undefined", description: "Accessible label automatically bound to the input via htmlFor." },
+      { name: "error", type: "string", defaultValue: "undefined", description: "Validation error message with red border and aria-invalid=true." },
+      { name: "helperText", type: "string", defaultValue: "undefined", description: "Informational text displayed beneath the input field." },
+      { name: "leftIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Prefix icon embedded on the left side of the input." },
+      { name: "rightIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Suffix icon or action embedded on the right side." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Disables focus and reduces opacity." },
+    ],
+    examples: [
+      {
+        title: "Standard Form Input",
+        code: `<Input label="Account Email" placeholder="alex@mintforge.dev" />`,
+      },
+    ],
+  },
+
+  card: {
+    id: "card",
+    title: "Card",
+    description: "Versatile surface container designed for grouping related information, media, and interactive controls.",
+    category: "Layout",
+    status: "Ready",
+    dependencies: [],
+    importSnippet: `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";`,
+    sourceCode: `import * as React from "react";
+
+export function Card({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={\`rounded-[var(--mf-radius-lg)] border border-[var(--mf-border)] bg-[var(--mf-surface)] text-[var(--mf-foreground)] shadow-[var(--mf-shadow-sm)] transition-shadow hover:shadow-[var(--mf-shadow-md)] \${className}\`}
+      {...props}
+    />
+  );
+}
+
+export function CardHeader({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={\`flex flex-col space-y-1.5 p-6 \${className}\`} {...props} />;
+}
+
+export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h3
+      className={\`text-lg font-semibold leading-none tracking-tight text-[var(--mf-foreground)] \${className}\`}
+      {...props}
+    />
+  );
+}
+
+export function CardDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={\`text-sm text-[var(--mf-foreground-secondary)] \${className}\`}
+      {...props}
+    />
+  );
+}
+
+export function CardContent({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={\`p-6 pt-0 \${className}\`} {...props} />;
+}
+
+export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={\`flex items-center p-6 pt-0 border-t border-[var(--mf-border)] mt-4 \${className}\`}
+      {...props}
+    />
+  );
+}`,
+    props: [
+      { name: "className", type: "string", defaultValue: '""', description: "Custom classes applied to the root card container." },
+      { name: "children", type: "React.ReactNode", defaultValue: "undefined", description: "Child components (CardHeader, CardContent, etc.)." },
+    ],
+    examples: [
+      {
+        title: "Product Card",
+        code: `<Card className="w-90">
+  <CardHeader>
+    <CardTitle>Enterprise Analytics</CardTitle>
+    <CardDescription>Real-time KPI metrics and telemetry alerts.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p className="text-sm">Includes unlimited event streaming and custom dashboard widgets.</p>
+  </CardContent>
+  <CardFooter className="justify-between">
+    <span className="text-xs text-(--mf-foreground-muted)">Active Plan</span>
+    <Button size="sm">Manage</Button>
+  </CardFooter>
+</Card>`,
+      },
+    ],
+  },
+
+  badge: {
+    id: "badge",
+    title: "Badge",
+    description: "Compact status indicator and counter pill for badges, tags, and category chips.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: [],
+    importSnippet: `import { Badge } from "@/components/ui/badge";`,
+    sourceCode: `import * as React from "react";
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "brand" | "outline" | "success" | "warning" | "destructive";
+  size?: "sm" | "md";
+}
+
+export function Badge({
+  className = "",
+  variant = "default",
+  size = "md",
+  children,
+  ...props
+}: BadgeProps) {
+  const variantStyles = {
+    default: "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] border-transparent",
+    brand: "bg-[var(--mf-brand-subtle)] text-[var(--mf-brand)] border-[var(--mf-brand)]/20 font-semibold",
+    outline: "bg-transparent text-[var(--mf-foreground)] border-[var(--mf-border-strong)]",
+    success: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    destructive: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+  };
+
+  const sizeStyles = {
+    sm: "px-2 py-0.5 text-[11px]",
+    md: "px-2.5 py-1 text-xs",
+  };
+
+  return (
+    <div
+      className={\`inline-flex items-center gap-1 font-medium rounded-[var(--mf-radius-full)] border transition-colors select-none \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}`,
+    props: [
+      { name: "variant", type: '"default" | "brand" | "outline" | "success" | "warning" | "destructive"', defaultValue: '"default"', description: "Color scheme of the badge." },
+      { name: "size", type: '"sm" | "md"', defaultValue: '"md"', description: "Font size and padding scale." },
+    ],
+    examples: [
+      {
+        title: "Status Badges",
+        code: `<Badge variant="brand">v0.1.0 Ready</Badge>`,
+      },
+    ],
+  },
+
+  dialog: {
+    id: "dialog",
+    title: "Dialog / Modal",
+    description: "Overlay window for critical user workflows, confirmations, and focus-trapped tasks.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";`,
+    sourceCode: `"use client";
+
+import * as React from "react";
+import { X } from "lucide-react";
+
+interface DialogContextType {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const DialogContext = React.createContext<DialogContextType | undefined>(undefined);
+
+export function Dialog({
+  children,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setOpen = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!isControlled) setUncontrolledOpen(nextOpen);
+      onOpenChange?.(nextOpen);
+    },
+    [isControlled, onOpenChange]
+  );
+
+  return (
+    <DialogContext.Provider value={{ open, setOpen }}>
+      {children}
+    </DialogContext.Provider>
+  );
+}
+
+export function DialogTrigger({
+  asChild,
+  children,
+}: {
+  asChild?: boolean;
+  children: React.ReactElement<{ onClick?: React.MouseEventHandler }>;
+}) {
+  const ctx = React.useContext(DialogContext);
+  if (!ctx) throw new Error("DialogTrigger must be used inside Dialog");
+
+  return React.cloneElement(children, {
+    onClick: (e: React.MouseEvent) => {
+      children.props.onClick?.(e);
+      ctx.setOpen(true);
+    },
+  });
+}
+
+export function DialogContent({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ctx = React.useContext(DialogContext);
+  if (!ctx) throw new Error("DialogContent must be used inside Dialog");
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") ctx.setOpen(false);
+    };
+    if (ctx.open) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [ctx]);
+
+  if (!ctx.open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+        onClick={() => ctx.setOpen(false)}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        className={\`relative z-10 w-full max-w-lg rounded-[var(--mf-radius-lg)] border border-[var(--mf-border)] bg-[var(--mf-surface)] p-6 shadow-2xl text-[var(--mf-foreground)] \${className}\`}
+      >
+        <button
+          onClick={() => ctx.setOpen(false)}
+          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-mf-foreground"
+          aria-label="Close dialog"
+        >
+          <X size={18} />
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export function DialogHeader({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={\`flex flex-col space-y-1.5 text-left mb-4 \${className}\`} {...props} />;
+}
+
+export function DialogTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return <h2 className={\`text-lg font-semibold text-[var(--mf-foreground)] \${className}\`} {...props} />;
+}
+
+export function DialogDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+  return <p className={\`text-sm text-[var(--mf-foreground-secondary)] \${className}\`} {...props} />;
+}
+
+export function DialogFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={\`flex flex-wrap justify-end gap-2 mt-6 \${className}\`} {...props} />;
+}
+
+export function DialogClose({ children }: { children: React.ReactElement<{ onClick?: React.MouseEventHandler }> }) {
+  const ctx = React.useContext(DialogContext);
+  if (!ctx) return children;
+
+  return React.cloneElement(children, {
+    onClick: (e: React.MouseEvent) => {
+      children.props.onClick?.(e);
+      ctx.setOpen(false);
+    },
+  });
+}`,
+    props: [
+      { name: "open", type: "boolean", defaultValue: "undefined", description: "Controlled open state of the dialog." },
+      { name: "onOpenChange", type: "(open: boolean) => void", defaultValue: "undefined", description: "Callback triggered upon open state transition." },
+    ],
+    examples: [
+      {
+        title: "Confirmation Dialog",
+        code: `<Dialog>
+  <DialogTrigger><Button>Open Dialog</Button></DialogTrigger>
+  <DialogContent>
+    <DialogHeader><DialogTitle>Confirmation</DialogTitle></DialogHeader>
+    <p className="text-sm">Are you sure?</p>
+  </DialogContent>
+</Dialog>`,
+      },
+    ],
+  },
+
+  tabs: {
+    id: "tabs",
+    title: "Tabs",
+    description: "Layered interface component for switching between multiple distinct views or content panes.",
+    category: "Navigation",
+    status: "Ready",
+    dependencies: [],
+    importSnippet: `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";`,
+    sourceCode: `"use client";
+
+import * as React from "react";
+
+interface TabsContextType {
+  value: string;
+  onValueChange: (val: string) => void;
+}
+
+const TabsContext = React.createContext<TabsContextType | undefined>(undefined);
+
+export function Tabs({
+  defaultValue,
+  value: controlledValue,
+  onValueChange,
+  children,
+  className = "",
+}: {
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (val: string) => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue || "");
+  const isControlled = controlledValue !== undefined;
+  const value = isControlled ? controlledValue : uncontrolledValue;
+
+  const handleValueChange = (newVal: string) => {
+    if (!isControlled) setUncontrolledValue(newVal);
+    onValueChange?.(newVal);
+  };
+
+  return (
+    <TabsContext.Provider value={{ value, onValueChange: handleValueChange }}>
+      <div className={\`w-full flex flex-col \${className}\`}>{children}</div>
+    </TabsContext.Provider>
+  );
+}
+
+export function TabsList({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      role="tablist"
+      className={\`inline-flex items-center gap-1 p-1 bg-[var(--mf-surface-secondary)] border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] self-start \${className}\`}
+      {...props}
+    />
+  );
+}
+
+export function TabsTrigger({
+  value,
+  children,
+  className = "",
+}: {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ctx = React.useContext(TabsContext);
+  if (!ctx) throw new Error("TabsTrigger must be used inside Tabs");
+
+  const isSelected = ctx.value === value;
+
+  return (
+    <button
+      role="tab"
+      type="button"
+      aria-selected={isSelected}
+      onClick={() => ctx.onValueChange(value)}
+      className={\`px-3.5 py-1.5 text-xs font-medium rounded-[var(--mf-radius-sm)] transition-all cursor-pointer \${
+        isSelected
+          ? "bg-mf-surface text-mf-foreground shadow-(--mf-shadow-sm) font-semibold"
+          : "text-mf-foreground-secondary hover:text-mf-foreground"
+      } \${className}\`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function TabsContent({
+  value,
+  children,
+  className = "",
+}: {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ctx = React.useContext(TabsContext);
+  if (!ctx) throw new Error("TabsContent must be used inside Tabs");
+
+  if (ctx.value !== value) return null;
+
+  return (
+    <div role="tabpanel" className={\`mt-4 focus-visible:outline-none \${className}\`}>
+      {children}
+    </div>
+  );
+}`,
+    props: [
+      { name: "defaultValue", type: "string", defaultValue: '""', description: "Initial active tab identifier." },
+      { name: "value", type: "string", defaultValue: "undefined", description: "Controlled active tab key." },
+      { name: "onValueChange", type: "(val: string) => void", defaultValue: "undefined", description: "Handler fired when active tab changes." },
+    ],
+    examples: [
+      {
+        title: "Standard Tabs",
+        code: `<Tabs defaultValue="tab1">
+  <TabsList>
+    <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+    <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">Content 1</TabsContent>
+  <TabsContent value="tab2">Content 2</TabsContent>
+</Tabs>`,
+      },
+    ],
+  },
+};

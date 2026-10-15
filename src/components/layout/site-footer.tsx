@@ -11,18 +11,18 @@ const NEXYOUTH_URL = "https://nexyouth-web.vercel.app";
 
 const footerLinks = {
   explore: [
-    { label: "Components", href: "#components", badge: null },
-    { label: "UI Blocks", href: "#blocks", badge: null },
-    { label: "Templates", href: "#templates", badge: "New" },
-    { label: "React Native", href: "#react-native", badge: "Preview" },
-    { label: "Design Tokens", href: "#tokens", badge: null },
+    { label: "Components", href: "/docs/components", badge: null },
+    { label: "UI Blocks", href: "/#blocks", badge: null },
+    { label: "Templates", href: "/#templates", badge: "New" },
+    { label: "React Native", href: "/#react-native", badge: "Preview" },
+    { label: "Design Tokens", href: "/docs#tokens", badge: null },
   ],
   docs: [
-    { label: "Getting Started", href: "#installation" },
-    { label: "Installation & CLI", href: "#installation" },
-    { label: "Theming & Colors", href: "#theming" },
-    { label: "Tailwind Integration", href: "#installation" },
-    { label: "Component API", href: "#components" },
+    { label: "Getting Started", href: "/docs" },
+    { label: "Installation & CLI", href: "/docs#installation" },
+    { label: "Theming & Colors", href: "/docs#tokens" },
+    { label: "Tailwind Integration", href: "/docs#installation" },
+    { label: "Component API", href: "/docs/components" },
   ],
   ecosystem: [
     { label: "NEXYOUTH Platform", href: NEXYOUTH_URL, external: true },
@@ -73,7 +73,7 @@ export default function SiteFooter() {
             </p>
           </div>
           <div className="mf-footer-cta-actions">
-            <Link href="#components" className="mf-cta-button mf-cta-button-lg">
+            <Link href="/docs/components" className="mf-cta-button mf-cta-button-lg">
               <Sparkles size={14} />
               <span>Explore Components</span>
             </Link>

@@ -19,26 +19,25 @@ import { FaGithub } from "react-icons/fa";
 const GITHUB_URL = "https://github.com/rakshithkumar608/mintforge-ui";
 
 const navigation = [
-  { label: "Components", href: "#components", badge: null },
-  { label: "Blocks", href: "#blocks", badge: null },
-  { label: "Templates", href: "#templates", badge: null },
-  { label: "React Native", href: "#react-native", badge: "Preview" },
-  { label: "Docs", href: "#docs", badge: null },
+  { label: "Components", href: "/docs/components", badge: null },
+  { label: "Blocks", href: "/#blocks", badge: null },
+  { label: "Templates", href: "/#templates", badge: null },
+  { label: "React Native", href: "/#react-native", badge: "Preview" },
+  { label: "Docs", href: "/docs", badge: null },
 ];
 
 const searchableItems = [
-  { title: "Button", category: "Components", href: "#components", desc: "Interactive button with primary, outline, and ghost variants" },
-  { title: "Input & Form", category: "Components", href: "#components", desc: "Accessible text inputs, labels, and validation states" },
-  { title: "Card", category: "Components", href: "#components", desc: "Elevated content container with header and action slots" },
-  { title: "Modal / Dialog", category: "Components", href: "#components", desc: "Overlay dialog for user confirmations and workflows" },
-  { title: "Data Table", category: "Components", href: "#components", desc: "Sortable, filterable tables for rich datasets" },
-  { title: "Tabs", category: "Components", href: "#components", desc: "Tabbed navigation for switching between views" },
-  { title: "Badge & Pill", category: "Components", href: "#components", desc: "Status pills and numerical counters" },
-  { title: "Authentication Layout", category: "Blocks", href: "#blocks", desc: "Ready-to-use login, register, and 2FA layouts" },
-  { title: "Admin Dashboard", category: "Blocks", href: "#blocks", desc: "Sidebar, metrics cards, and activity feeds" },
-  { title: "React Native Mobile", category: "Platforms", href: "#react-native", desc: "Native iOS & Android cross-platform primitives" },
-  { title: "Installation & CLI", category: "Documentation", href: "#installation", desc: "Quick start guide, source copy, and package setup" },
-  { title: "Design Tokens", category: "Styling", href: "#design-tokens", desc: "Color palettes, typography, spacing, and radius variables" },
+  { title: "Button", category: "Components", href: "/docs/components/button", desc: "Interactive button with primary, outline, and ghost variants" },
+  { title: "Input & Form", category: "Components", href: "/docs/components/input", desc: "Accessible text inputs, labels, and validation states" },
+  { title: "Card", category: "Components", href: "/docs/components/card", desc: "Elevated content container with header and action slots" },
+  { title: "Modal / Dialog", category: "Components", href: "/docs/components/dialog", desc: "Overlay dialog for user confirmations and workflows" },
+  { title: "Tabs", category: "Components", href: "/docs/components/tabs", desc: "Tabbed navigation for switching between views" },
+  { title: "Badge & Pill", category: "Components", href: "/docs/components/badge", desc: "Status pills and numerical counters" },
+  { title: "Authentication Layout", category: "Blocks", href: "/#blocks", desc: "Ready-to-use login, register, and 2FA layouts" },
+  { title: "Admin Dashboard", category: "Blocks", href: "/#blocks", desc: "Sidebar, metrics cards, and activity feeds" },
+  { title: "React Native Mobile", category: "Platforms", href: "/#react-native", desc: "Native iOS & Android cross-platform primitives" },
+  { title: "Installation & CLI", category: "Documentation", href: "/docs#installation", desc: "Quick start guide, source copy, and package setup" },
+  { title: "Design Tokens", category: "Styling", href: "/docs#tokens", desc: "Color palettes, typography, spacing, and radius variables" },
 ];
 
 export function SiteLogo({ footer = false }: { footer?: boolean }) {
@@ -199,7 +198,7 @@ export function SiteHeader() {
             </a>
 
             {/* Get Started CTA Button */}
-            <Link href="#components" className="mf-cta-button">
+            <Link href="/docs/components" className="mf-cta-button">
               <Sparkles size={13} />
               <span>Explore UI</span>
             </Link>

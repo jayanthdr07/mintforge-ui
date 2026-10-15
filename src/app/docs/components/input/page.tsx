@@ -29,15 +29,15 @@ export default function InputDocPage() {
         <DocsHeader title={meta.title} description={meta.description} badge="Forms" />
 
         <section id="interactive" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Interactive Playground</h2>
+          <h2 className="text-xl font-bold text-foreground">Interactive Playground</h2>
 
           <div className="flex gap-3 mb-2">
             <button
               onClick={() => setHasError(!hasError)}
-              className={`px-3 py-1.5 text-xs rounded-[var(--mf-radius-md)] border cursor-pointer ${
+              className={`px-3 py-1.5 text-xs rounded-md border cursor-pointer ${
                 hasError
                   ? "bg-red-500/10 border-red-500 text-red-500 font-semibold"
-                  : "bg-[var(--mf-surface-secondary)] border-[var(--mf-border)] text-[var(--mf-foreground)]"
+                  : "bg-secondary border-border text-foreground"
               }`}
             >
               {hasError ? "Clear Error State" : "Trigger Validation Error"}
@@ -68,8 +68,8 @@ export default function InputDocPage() {
         </section>
 
         <section id="examples" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Examples</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 border border-[var(--mf-border)] rounded-[var(--mf-radius-lg)] bg-[var(--mf-surface)]">
+          <h2 className="text-xl font-bold text-foreground">Examples</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 border border-border rounded-lg bg-card">
             <Input label="Search docs" placeholder="Search..." leftIcon={<Search size={16} />} />
             <Input label="Master Password" type="password" placeholder="••••••••" leftIcon={<Lock size={16} />} />
             <Input label="Disabled state" disabled value="Read only token" />
@@ -78,14 +78,14 @@ export default function InputDocPage() {
         </section>
 
         <section id="installation" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Installation</h2>
+          <h2 className="text-xl font-bold text-foreground">Installation</h2>
           <ComponentCode code={meta.importSnippet} language="tsx" />
-          <p className="text-xs text-[var(--mf-foreground-secondary)] mt-2">Source file:</p>
+          <p className="text-xs text-muted-foreground mt-2">Source file:</p>
           <ComponentCode code={meta.sourceCode} language="tsx" />
         </section>
 
         <section id="props" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Props Reference</h2>
+          <h2 className="text-xl font-bold text-foreground">Props Reference</h2>
           <ComponentPropsTable props={meta.props} />
         </section>
 

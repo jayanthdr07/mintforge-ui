@@ -13,9 +13,9 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variantStyles = {
-    default: "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] border-transparent",
-    brand: "bg-[var(--mf-brand-subtle)] text-[var(--mf-brand)] border-[var(--mf-brand)]/20 font-semibold",
-    outline: "bg-transparent text-[var(--mf-foreground)] border-[var(--mf-border-strong)]",
+    default: "bg-secondary text-foreground border-transparent",
+    brand: "bg-brand-subtle text-brand border-brand/20 font-semibold",
+    outline: "bg-transparent text-foreground border-border-strong",
     success: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     destructive: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
@@ -28,7 +28,7 @@ export function Badge({
 
   return (
     <div
-      className={`inline-flex items-center gap-1 font-medium rounded-[var(--mf-radius-full)] border transition-colors select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center gap-1 font-medium rounded-full border transition-colors select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       {children}

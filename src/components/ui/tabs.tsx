@@ -42,7 +42,7 @@ export function TabsList({ className = "", ...props }: React.HTMLAttributes<HTML
   return (
     <div
       role="tablist"
-      className={`inline-flex items-center gap-1 p-1 bg-[var(--mf-surface-secondary)] border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] self-start ${className}`}
+      className={`inline-flex items-center gap-1 p-1 bg-muted border border-border rounded-md self-start ${className}`}
       {...props}
     />
   );
@@ -68,10 +68,10 @@ export function TabsTrigger({
       type="button"
       aria-selected={isSelected}
       onClick={() => ctx.onValueChange(value)}
-      className={`px-3.5 py-1.5 text-xs font-medium rounded-[var(--mf-radius-sm)] transition-all cursor-pointer ${
+      className={`px-3.5 py-1.5 text-xs font-medium rounded-sm transition-all cursor-pointer ${
         isSelected
-          ? "bg-[var(--mf-surface)] text-[var(--mf-foreground)] shadow-[var(--mf-shadow-sm)] font-semibold"
-          : "text-[var(--mf-foreground-secondary)] hover:text-[var(--mf-foreground)]"
+          ? "bg-card text-foreground shadow-sm font-semibold"
+          : "text-muted-foreground hover:text-foreground"
       } ${className}`}
     >
       {children}

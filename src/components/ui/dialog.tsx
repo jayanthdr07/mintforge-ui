@@ -90,11 +90,11 @@ export function DialogContent({
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative z-10 w-full max-w-lg rounded-[var(--mf-radius-lg)] border border-[var(--mf-border)] bg-[var(--mf-surface)] p-6 shadow-2xl text-[var(--mf-foreground)] ${className}`}
+        className={`relative z-10 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl text-card-foreground ${className}`}
       >
         <button
           onClick={() => ctx.setOpen(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-[var(--mf-foreground)]"
+          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-foreground"
           aria-label="Close dialog"
         >
           <X size={18} />
@@ -110,11 +110,11 @@ export function DialogHeader({ className = "", ...props }: React.HTMLAttributes<
 }
 
 export function DialogTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={`text-lg font-semibold text-[var(--mf-foreground)] ${className}`} {...props} />;
+  return <h2 className={`text-lg font-semibold text-foreground ${className}`} {...props} />;
 }
 
 export function DialogDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={`text-sm text-[var(--mf-foreground-secondary)] ${className}`} {...props} />;
+  return <p className={`text-sm text-muted-foreground ${className}`} {...props} />;
 }
 
 export function DialogFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {

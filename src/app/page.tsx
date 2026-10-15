@@ -127,7 +127,7 @@ export default function HomePage() {
 
           {/* CTA Buttons & Interactive Command Pill */}
           <div className="mf-hero-cta-group mf-fade-up">
-            <Link href="#components" className="mf-hero-primary-cta">
+            <Link href="/docs/components" className="mf-hero-primary-cta">
               <Sparkles size={16} />
               <span>Explore Components</span>
               <ArrowRight size={15} />

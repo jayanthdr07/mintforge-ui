@@ -1,22 +1,51 @@
-// Defines the documentation tree and pagination order.
+// Defines the documentation tree and pagination order matching the shadcn/ui aesthetic
 
 import { NavSection } from "@/types/docs";
 
 export const DOCS_NAVIGATION: NavSection[] = [
   {
-    title: "Getting Started",
+    title: "Sections",
     items: [
       {
         title: "Introduction",
         href: "/docs",
       },
       {
-        title: "Installation",
-        href: "/docs#installation", 
+        title: "Components",
+        href: "/docs/components",
       },
       {
-        title: "Design Tokens",
-        href: "/docs#tokens"
+        title: "AI Elements",
+        href: "/docs/ai-elements",
+        badge: "New",
+      },
+      {
+        title: "Installation",
+        href: "/docs/installation",
+      },
+      {
+        title: "Theming",
+        href: "/docs/theming",
+      },
+      {
+        title: "CLI",
+        href: "/docs/cli",
+      },
+      {
+        title: "Typeset",
+        href: "/docs/typeset",
+      },
+      {
+        title: "Skills",
+        href: "/docs/skills",
+      },
+      {
+        title: "Registry",
+        href: "/docs/registry",
+      },
+      {
+        title: "Changelog",
+        href: "/docs/changelog",
       },
     ],
   },
@@ -25,28 +54,60 @@ export const DOCS_NAVIGATION: NavSection[] = [
     title: "Components",
     items: [
       {
-        title: "Overview",
-        href: "/docs/components",
+        title: "Accordion",
+        href: "/docs/components/accordion",
       },
       {
-        title: "Button",
-        href: "/docs/components/button",
+        title: "Alert",
+        href: "/docs/components/alert",
       },
       {
-        title: "Input",
-        href: "/docs/components/input",
+        title: "Alert Dialog",
+        href: "/docs/components/alert-dialog",
       },
       {
-        title: "Card",
-        href: "/docs/components/card",
+        title: "Aspect Ratio",
+        href: "/docs/components/aspect-ratio",
+      },
+      {
+        title: "Attachment",
+        href: "/docs/components/attachment",
+      },
+      {
+        title: "Avatar",
+        href: "/docs/components/avatar",
       },
       {
         title: "Badge",
         href: "/docs/components/badge",
       },
       {
+        title: "Breadcrumb",
+        href: "/docs/components/breadcrumb",
+      },
+      {
+        title: "Bubble",
+        href: "/docs/components/bubble",
+      },
+      {
+        title: "Button",
+        href: "/docs/components/button",
+      },
+      {
+        title: "Button Group",
+        href: "/docs/components/button-group",
+      },
+      {
+        title: "Card",
+        href: "/docs/components/card",
+      },
+      {
         title: "Dialog",
         href: "/docs/components/dialog",
+      },
+      {
+        title: "Input",
+        href: "/docs/components/input",
       },
       {
         title: "Tabs",
@@ -58,7 +119,27 @@ export const DOCS_NAVIGATION: NavSection[] = [
 
 export const COMPONENT_PAGINATION_ORDER = [
   {
-    title: "Overview",
+    title: "Introduction",
+    href: "/docs",
+  },
+  {
+    title: "Installation",
+    href: "/docs/installation",
+  },
+  {
+    title: "Theming",
+    href: "/docs/theming",
+  },
+  {
+    title: "CLI",
+    href: "/docs/cli",
+  },
+  {
+    title: "Typeset",
+    href: "/docs/typeset",
+  },
+  {
+    title: "Components Overview",
     href: "/docs/components",
   },
   {

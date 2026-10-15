@@ -25,17 +25,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-[var(--mf-radius-md)]";
+      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-md";
 
     const variantStyles = {
       default:
-        "bg-[var(--mf-brand)] text-white hover:bg-[var(--mf-brand-hover)] focus-visible:ring-[var(--mf-brand)] shadow-sm",
+        "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-ring shadow-sm",
       secondary:
-        "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-tertiary)] focus-visible:ring-[var(--mf-border)] border border-[var(--mf-border)]",
+        "bg-secondary text-foreground hover:bg-surface-tertiary focus-visible:ring-border border border-border",
       outline:
-        "bg-transparent text-[var(--mf-foreground)] border border-[var(--mf-border)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+        "bg-transparent text-foreground border border-border hover:bg-secondary focus-visible:ring-border",
       ghost:
-        "bg-transparent text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+        "bg-transparent text-foreground hover:bg-secondary focus-visible:ring-border",
       destructive:
         "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500 shadow-sm",
     };

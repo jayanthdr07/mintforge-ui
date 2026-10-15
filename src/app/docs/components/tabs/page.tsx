@@ -22,7 +22,7 @@ export default function TabsDocPage() {
         <DocsHeader title={meta.title} description={meta.description} badge="Navigation" />
 
         <section id="interactive" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Live Example</h2>
+          <h2 className="text-xl font-bold text-foreground">Live Example</h2>
           <ComponentPreview code={meta.examples[0].code}>
             <div className="w-full max-w-md">
               <Tabs defaultValue="overview">
@@ -32,17 +32,17 @@ export default function TabsDocPage() {
                   <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="overview">
-                  <div className="p-4 border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] text-xs text-[var(--mf-foreground-secondary)]">
+                  <div className="p-4 border border-border rounded-md text-xs text-muted-foreground">
                     Overview dashboard showing total requests, API health, and cluster latency.
                   </div>
                 </TabsContent>
                 <TabsContent value="analytics">
-                  <div className="p-4 border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] text-xs text-[var(--mf-foreground-secondary)]">
+                  <div className="p-4 border border-border rounded-md text-xs text-muted-foreground">
                     Telemetry metrics, uptime SLAs, and serverless invocations per region.
                   </div>
                 </TabsContent>
                 <TabsContent value="settings">
-                  <div className="p-4 border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] text-xs text-[var(--mf-foreground-secondary)]">
+                  <div className="p-4 border border-border rounded-md text-xs text-muted-foreground">
                     API token controls, webhooks, and team access credentials.
                   </div>
                 </TabsContent>
@@ -52,9 +52,9 @@ export default function TabsDocPage() {
         </section>
 
         <section id="installation" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Installation</h2>
+          <h2 className="text-xl font-bold text-foreground">Installation</h2>
           <ComponentCode code={meta.importSnippet} language="tsx" />
-          <p className="text-xs text-[var(--mf-foreground-secondary)] mt-2">Source file:</p>
+          <p className="text-xs text-muted-foreground mt-2">Source file:</p>
           <ComponentCode code={meta.sourceCode} language="tsx" />
         </section>
 

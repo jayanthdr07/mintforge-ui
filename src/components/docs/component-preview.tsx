@@ -12,10 +12,10 @@ interface ComponentPreviewProps {
 
 export function ComponentPreview({ children, code, title = "Interactive Preview" }: ComponentPreviewProps) {
   return (
-    <div className="w-full my-6 border border-[var(--mf-border)] rounded-[var(--mf-radius-lg)] overflow-hidden bg-[var(--mf-surface)] shadow-[var(--mf-shadow-sm)]">
+    <div className="w-full my-6 border border-border rounded-lg overflow-hidden bg-card shadow-sm">
       <Tabs defaultValue="preview" className="w-full">
-        <div className="flex items-center justify-between border-b border-[var(--mf-border)] px-4 py-2.5 bg-[var(--mf-surface-secondary)]">
-          <span className="text-xs font-semibold text-[var(--mf-foreground)]">{title}</span>
+        <div className="flex items-center justify-between border-b border-border px-4 py-2.5 bg-secondary">
+          <span className="text-xs font-semibold text-foreground">{title}</span>
           <TabsList className="h-8">
             <TabsTrigger value="preview" className="text-xs">
               Preview
@@ -26,11 +26,11 @@ export function ComponentPreview({ children, code, title = "Interactive Preview"
           </TabsList>
         </div>
 
-        <TabsContent value="preview" className="m-0 p-8 flex items-center justify-center min-h-[180px] bg-[var(--mf-surface)]">
+        <TabsContent value="preview" className="m-0 p-8 flex items-center justify-center min-h-[180px] bg-card">
           {children}
         </TabsContent>
 
-        <TabsContent value="code" className="m-0 p-0 border-t border-[var(--mf-border)]">
+        <TabsContent value="code" className="m-0 p-0 border-t border-border">
           <ComponentCode code={code} />
         </TabsContent>
       </Tabs>

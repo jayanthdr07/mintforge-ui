@@ -8,11 +8,11 @@ export function ComponentPagination({ currentHref }: { currentHref: string }) {
   const next = currentIndex < COMPONENT_PAGINATION_ORDER.length - 1 ? COMPONENT_PAGINATION_ORDER[currentIndex + 1] : null;
 
   return (
-    <div className="flex items-center justify-between pt-8 mt-12 border-t border-[var(--mf-border)]">
+    <div className="flex items-center justify-between pt-8 mt-12 border-t border-border">
       {prev ? (
         <Link
           href={prev.href}
-          className="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--mf-radius-md)] border border-[var(--mf-border)] text-[var(--mf-foreground-secondary)] hover:text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-secondary)] transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
         >
           <ChevronLeft size={16} />
           <span>{prev.title}</span>
@@ -24,7 +24,7 @@ export function ComponentPagination({ currentHref }: { currentHref: string }) {
       {next ? (
         <Link
           href={next.href}
-          className="flex items-center gap-2 px-3 py-2 text-sm rounded-[var(--mf-radius-md)] border border-[var(--mf-border)] text-[var(--mf-foreground-secondary)] hover:text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-secondary)] transition-colors ml-auto"
+          className="flex items-center gap-2 px-3 py-2 text-sm rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors ml-auto"
         >
           <span>{next.title}</span>
           <ChevronRight size={16} />

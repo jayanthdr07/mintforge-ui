@@ -24,7 +24,7 @@ export default function BadgeDocPage() {
         <DocsHeader title={meta.title} description={meta.description} badge="Feedback" />
 
         <section id="interactive" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Live Example</h2>
+          <h2 className="text-xl font-bold text-foreground">Live Example</h2>
           <ComponentPreview code={meta.examples[0].code}>
             <div className="flex flex-wrap gap-2.5">
               <Badge variant="default">Default Pill</Badge>
@@ -38,14 +38,14 @@ export default function BadgeDocPage() {
         </section>
 
         <section id="installation" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Installation</h2>
+          <h2 className="text-xl font-bold text-foreground">Installation</h2>
           <ComponentCode code={meta.importSnippet} language="tsx" />
-          <p className="text-xs text-[var(--mf-foreground-secondary)] mt-2">Source file:</p>
+          <p className="text-xs text-muted-foreground mt-2">Source file:</p>
           <ComponentCode code={meta.sourceCode} language="tsx" />
         </section>
 
         <section id="props" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Props Reference</h2>
+          <h2 className="text-xl font-bold text-foreground">Props Reference</h2>
           <ComponentPropsTable
             props={meta.props as unknown as Parameters<typeof ComponentPropsTable>[0]["props"]}
           />

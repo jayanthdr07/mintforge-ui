@@ -36,17 +36,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-[var(--mf-radius-md)]";
+      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-md";
 
     const variantStyles = {
       default:
-        "bg-[var(--mf-brand)] text-white hover:bg-[var(--mf-brand-hover)] focus-visible:ring-[var(--mf-brand)] shadow-sm",
+        "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-ring shadow-sm",
       secondary:
-        "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-tertiary)] focus-visible:ring-[var(--mf-border)] border border-[var(--mf-border)]",
+        "bg-secondary text-foreground hover:bg-surface-tertiary focus-visible:ring-border border border-border",
       outline:
-        "bg-transparent text-[var(--mf-foreground)] border border-[var(--mf-border)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+        "bg-transparent text-foreground border border-border hover:bg-secondary focus-visible:ring-border",
       ghost:
-        "bg-transparent text-[var(--mf-foreground)] hover:bg-[var(--mf-surface-secondary)] focus-visible:ring-[var(--mf-border)]",
+        "bg-transparent text-foreground hover:bg-secondary focus-visible:ring-border",
       destructive:
         "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500 shadow-sm",
     };
@@ -140,14 +140,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-semibold text-mf-foreground select-none"
+            className="text-xs font-semibold text-foreground select-none"
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center w-full">
           {leftIcon && (
-            <div className="absolute left-3 flex items-center pointer-events-none text-(--mf-foreground-muted)">
+            <div className="absolute left-3 flex items-center pointer-events-none text-muted-foreground">
               {leftIcon}
             </div>
           )}
@@ -156,17 +156,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             disabled={disabled}
             aria-invalid={!!error}
-            className={\`w-full h-10 rounded-[var(--mf-radius-md)] border bg-[var(--mf-surface)] text-[var(--mf-foreground)] px-3 text-sm placeholder:text-[var(--mf-foreground-muted)] transition-colors outline-none focus:ring-2 focus:ring-[var(--mf-brand)] focus:border-[var(--mf-brand)] disabled:opacity-50 disabled:bg-[var(--mf-surface-secondary)] disabled:cursor-not-allowed \${
+            className={\`w-full h-10 rounded-md border bg-background text-foreground px-3 text-sm placeholder:text-muted-foreground transition-colors outline-none focus:ring-2 focus:ring-ring focus:border-ring disabled:opacity-50 disabled:bg-muted disabled:cursor-not-allowed \${
               leftIcon ? "pl-9" : ""
             } \${rightIcon ? "pr-9" : ""} \${
               error
                 ? "border-red-500 focus:ring-red-500"
-                : "border-mf-border hover:border-(--mf-border-strong)"
+                : "border-border hover:border-border-strong"
             } \${className}\`}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3 flex items-center text-(--mf-foreground-muted)">
+            <div className="absolute right-3 flex items-center text-muted-foreground">
               {rightIcon}
             </div>
           )}
@@ -174,7 +174,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {error ? (
           <p className="text-xs text-red-500">{error}</p>
         ) : helperText ? (
-          <p className="text-xs text-(--mf-foreground-muted)">{helperText}</p>
+          <p className="text-xs text-muted-foreground">{helperText}</p>
         ) : null}
       </div>
     );
@@ -210,7 +210,7 @@ Input.displayName = "Input";`,
 export function Card({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={\`rounded-[var(--mf-radius-lg)] border border-[var(--mf-border)] bg-[var(--mf-surface)] text-[var(--mf-foreground)] shadow-[var(--mf-shadow-sm)] transition-shadow hover:shadow-[var(--mf-shadow-md)] \${className}\`}
+      className={\`rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md \${className}\`}
       {...props}
     />
   );
@@ -223,7 +223,7 @@ export function CardHeader({ className = "", ...props }: React.HTMLAttributes<HT
 export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={\`text-lg font-semibold leading-none tracking-tight text-[var(--mf-foreground)] \${className}\`}
+      className={\`text-lg font-semibold leading-none tracking-tight text-card-foreground \${className}\`}
       {...props}
     />
   );
@@ -232,7 +232,7 @@ export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTM
 export function CardDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={\`text-sm text-[var(--mf-foreground-secondary)] \${className}\`}
+      className={\`text-sm text-muted-foreground \${className}\`}
       {...props}
     />
   );
@@ -245,7 +245,7 @@ export function CardContent({ className = "", ...props }: React.HTMLAttributes<H
 export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={\`flex items-center p-6 pt-0 border-t border-[var(--mf-border)] mt-4 \${className}\`}
+      className={\`flex items-center p-6 pt-0 border-t border-border mt-4 \${className}\`}
       {...props}
     />
   );
@@ -266,7 +266,7 @@ export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HT
     <p className="text-sm">Includes unlimited event streaming and custom dashboard widgets.</p>
   </CardContent>
   <CardFooter className="justify-between">
-    <span className="text-xs text-(--mf-foreground-muted)">Active Plan</span>
+    <span className="text-xs text-muted-foreground">Active Plan</span>
     <Button size="sm">Manage</Button>
   </CardFooter>
 </Card>`,
@@ -297,9 +297,9 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variantStyles = {
-    default: "bg-[var(--mf-surface-secondary)] text-[var(--mf-foreground)] border-transparent",
-    brand: "bg-[var(--mf-brand-subtle)] text-[var(--mf-brand)] border-[var(--mf-brand)]/20 font-semibold",
-    outline: "bg-transparent text-[var(--mf-foreground)] border-[var(--mf-border-strong)]",
+    default: "bg-secondary text-foreground border-transparent",
+    brand: "bg-brand-subtle text-brand border-brand/20 font-semibold",
+    outline: "bg-transparent text-foreground border-border-strong",
     success: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     destructive: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
@@ -312,7 +312,7 @@ export function Badge({
 
   return (
     <div
-      className={\`inline-flex items-center gap-1 font-medium rounded-[var(--mf-radius-full)] border transition-colors select-none \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
+      className={\`inline-flex items-center gap-1 font-medium rounded-full border transition-colors select-none \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
       {...props}
     >
       {children}
@@ -432,11 +432,11 @@ export function DialogContent({
       <div
         role="dialog"
         aria-modal="true"
-        className={\`relative z-10 w-full max-w-lg rounded-[var(--mf-radius-lg)] border border-[var(--mf-border)] bg-[var(--mf-surface)] p-6 shadow-2xl text-[var(--mf-foreground)] \${className}\`}
+        className={\`relative z-10 w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-2xl text-card-foreground \${className}\`}
       >
         <button
           onClick={() => ctx.setOpen(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-mf-foreground"
+          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-foreground"
           aria-label="Close dialog"
         >
           <X size={18} />
@@ -452,11 +452,11 @@ export function DialogHeader({ className = "", ...props }: React.HTMLAttributes<
 }
 
 export function DialogTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={\`text-lg font-semibold text-[var(--mf-foreground)] \${className}\`} {...props} />;
+  return <h2 className={\`text-lg font-semibold text-foreground \${className}\`} {...props} />;
 }
 
 export function DialogDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={\`text-sm text-[var(--mf-foreground-secondary)] \${className}\`} {...props} />;
+  return <p className={\`text-sm text-muted-foreground \${className}\`} {...props} />;
 }
 
 export function DialogFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -544,7 +544,7 @@ export function TabsList({ className = "", ...props }: React.HTMLAttributes<HTML
   return (
     <div
       role="tablist"
-      className={\`inline-flex items-center gap-1 p-1 bg-[var(--mf-surface-secondary)] border border-[var(--mf-border)] rounded-[var(--mf-radius-md)] self-start \${className}\`}
+      className={\`inline-flex items-center gap-1 p-1 bg-muted border border-border rounded-md self-start \${className}\`}
       {...props}
     />
   );
@@ -570,10 +570,10 @@ export function TabsTrigger({
       type="button"
       aria-selected={isSelected}
       onClick={() => ctx.onValueChange(value)}
-      className={\`px-3.5 py-1.5 text-xs font-medium rounded-[var(--mf-radius-sm)] transition-all cursor-pointer \${
+      className={\`px-3.5 py-1.5 text-xs font-medium rounded-sm transition-all cursor-pointer \${
         isSelected
-          ? "bg-mf-surface text-mf-foreground shadow-(--mf-shadow-sm) font-semibold"
-          : "text-mf-foreground-secondary hover:text-mf-foreground"
+          ? "bg-card text-foreground shadow-sm font-semibold"
+          : "text-muted-foreground hover:text-foreground"
       } \${className}\`}
     >
       {children}

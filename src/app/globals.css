@@ -1,6 +1,55 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Canvas & Surfaces */
+  --color-background: var(--mf-background);
+  --color-foreground: var(--mf-foreground);
+  --color-foreground-secondary: var(--mf-foreground-secondary);
+  --color-foreground-muted: var(--mf-foreground-muted);
+  --color-surface: var(--mf-surface);
+  --color-surface-secondary: var(--mf-surface-secondary);
+  --color-surface-tertiary: var(--mf-surface-tertiary);
+
+  /* Semantic Cards & Popovers */
+  --color-card: var(--mf-surface);
+  --color-card-foreground: var(--mf-foreground);
+  --color-popover: var(--mf-surface);
+  --color-popover-foreground: var(--mf-foreground);
+
+  /* Primary & Brand */
+  --color-primary: var(--mf-brand);
+  --color-primary-foreground: var(--mf-brand-foreground);
+  --color-primary-hover: var(--mf-brand-hover);
+  --color-brand: var(--mf-brand);
+  --color-brand-foreground: var(--mf-brand-foreground);
+  --color-brand-hover: var(--mf-brand-hover);
+  --color-brand-subtle: var(--mf-brand-subtle);
+
+  /* Secondary & Muted */
+  --color-secondary: var(--mf-surface-secondary);
+  --color-secondary-foreground: var(--mf-foreground);
+  --color-muted: var(--mf-surface-secondary);
+  --color-muted-foreground: var(--mf-foreground-muted);
+  --color-accent: var(--mf-brand-subtle);
+  --color-accent-foreground: var(--mf-brand);
+
+  /* Borders & Focus Rings */
+  --color-border: var(--mf-border);
+  --color-border-strong: var(--mf-border-strong);
+  --color-input: var(--mf-border);
+  --color-ring: var(--mf-brand);
+
+  /* Radii */
+  --radius-sm: var(--mf-radius-sm);
+  --radius-md: var(--mf-radius-md);
+  --radius-lg: var(--mf-radius-lg);
+  --radius-full: var(--mf-radius-full);
+
+  /* Fonts */
+  --font-sans: var(--mf-font-sans);
+  --font-mono: var(--mf-font-mono);
+
+  /* Backwards-compatibility aliases */
   --color-mf-background: var(--mf-background);
   --color-mf-surface: var(--mf-surface);
   --color-mf-surface-secondary: var(--mf-surface-secondary);
@@ -8,8 +57,6 @@
   --color-mf-foreground-secondary: var(--mf-foreground-secondary);
   --color-mf-brand: var(--mf-brand);
   --color-mf-border: var(--mf-border);
-  --font-sans: var(--mf-font-sans);
-  --font-mono: var(--mf-font-mono);
 }
 
 :root {

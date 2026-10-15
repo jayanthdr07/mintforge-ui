@@ -23,7 +23,7 @@ export default function CardDocPage() {
         <DocsHeader title={meta.title} description={meta.description} badge="Layout" />
 
         <section id="interactive" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Live Example</h2>
+          <h2 className="text-xl font-bold text-foreground">Live Example</h2>
           <ComponentPreview code={meta.examples[0].code}>
             <Card className="w-[340px]">
               <CardHeader>
@@ -31,12 +31,12 @@ export default function CardDocPage() {
                 <CardDescription>Real-time KPI telemetry and events.</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-[var(--mf-foreground-secondary)]">
+                <p className="text-xs text-muted-foreground">
                   Includes unlimited event streaming and custom dashboard metrics.
                 </p>
               </CardContent>
               <CardFooter className="justify-between">
-                <span className="text-xs text-[var(--mf-foreground-muted)]">Active tier</span>
+                <span className="text-xs text-muted-foreground">Active tier</span>
                 <Button size="sm">Manage</Button>
               </CardFooter>
             </Card>
@@ -44,9 +44,9 @@ export default function CardDocPage() {
         </section>
 
         <section id="installation" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-[var(--mf-foreground)]">Installation</h2>
+          <h2 className="text-xl font-bold text-foreground">Installation</h2>
           <ComponentCode code={meta.importSnippet} language="tsx" />
-          <p className="text-xs text-[var(--mf-foreground-secondary)] mt-2">Source file:</p>
+          <p className="text-xs text-muted-foreground mt-2">Source file:</p>
           <ComponentCode code={meta.sourceCode} language="tsx" />
         </section>
 

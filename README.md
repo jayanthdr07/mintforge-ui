@@ -2,6 +2,30 @@
 
 **An open-source UI ecosystem for React, Next.js, and React Native.**
 
+<!-- Project status -->
+![Status](https://img.shields.io/badge/status-in%20development-orange)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen)
+
+<!-- Tech stack -->
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss)
+
+<!-- GitHub repository -->
+[![GitHub stars](https://img.shields.io/github/stars/rakshithkumar608/mintforge-ui?style=flat)](https://github.com/rakshithkumar608/mintforge-ui/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/rakshithkumar608/mintforge-ui?style=flat)](https://github.com/rakshithkumar608/mintforge-ui/forks)
+[![GitHub issues](https://img.shields.io/github/issues/rakshithkumar608/mintforge-ui)](https://github.com/rakshithkumar608/mintforge-ui/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/rakshithkumar608/mintforge-ui)](https://github.com/rakshithkumar608/mintforge-ui/pulls)
+[![Last commit](https://img.shields.io/github/last-commit/rakshithkumar608/mintforge-ui)](https://github.com/rakshithkumar608/mintforge-ui/commits/main)
+
+<!-- Package status: enable after publishing -->
+<!-- [![npm version](https://img.shields.io/npm/v/mintforge-ui)](https://www.npmjs.com/package/mintforge-ui) -->
+<!-- [![npm downloads](https://img.shields.io/npm/dm/mintforge-ui)](https://www.npmjs.com/package/mintforge-ui) -->
+
+
+
 Mintforge UI is a developer-focused project for building reusable, customizable UI components and ready-to-use interface blocks for web and mobile applications.
 
 The goal is to help developers build consistent user interfaces faster, with components they can explore, install, customize, and use in their own projects.
@@ -12,20 +36,20 @@ The goal is to help developers build consistent user interfaces faster, with com
 
 A collection of reusable components for React and Next.js, including:
 
-* Buttons, inputs, forms, and dropdowns
-* Cards, dialogs, tabs, and tooltips
-* Navigation, sidebars, and tables
-* Layout components and other common UI elements
+- Buttons, inputs, forms, and dropdowns
+- Cards, dialogs, tabs, and tooltips
+- Navigation, sidebars, and tables
+- Layout components and other common UI elements
 
 ### 2. UI Blocks and Templates
 
 Ready-to-use interface sections and larger layouts for common application needs, including:
 
-* Authentication pages
-* Admin dashboards
-* Settings pages
-* Data tables and management interfaces
-* SaaS application layouts and other reusable workflows
+- Authentication pages
+- Admin dashboards
+- Settings pages
+- Data tables and management interfaces
+- SaaS application layouts and reusable workflows
 
 ### 3. React Native Components
 
@@ -33,13 +57,13 @@ A dedicated collection of mobile UI components for React Native and Expo, follow
 
 ### 4. Component Documentation Website
 
-A central website where developers can:
+A central website where developers will be able to:
 
-* Browse and search components
-* Preview components and explore examples
-* Read installation and usage instructions
-* Copy code and customize components
-* Discover blocks and templates
+- Browse and search components
+- Preview components and explore examples
+- Read installation and usage instructions
+- Copy code and customize components
+- Discover blocks and templates
 
 ### 5. Component Installation and Customization
 
@@ -49,39 +73,38 @@ The project aims to make components straightforward to integrate into existing a
 
 Mintforge UI aims to provide:
 
-* **Simple and consistent design** — clean interfaces with thoughtful spacing, typography, and neutral colors.
-* **Customization** — components developers can adapt to their requirements.
-* **Developer experience** — clear documentation and practical examples.
-* **Reusable patterns** — components and blocks designed for real application interfaces.
-* **Web and mobile support** — a consistent design language across supported platforms.
-* **Open-source collaboration** — a project that developers can inspect, improve, and contribute to.
+- **Simple and consistent design** — clean interfaces with thoughtful spacing, typography, and neutral colors.
+- **Customization** — components developers can adapt to their requirements.
+- **Developer experience** — clear documentation and practical examples.
+- **Reusable patterns** — components and blocks designed for real application interfaces.
+- **Web and mobile support** — a consistent design language across supported platforms.
+- **Open-source collaboration** — a project developers can inspect, improve, and contribute to.
 
 ## Technology Stack
 
 The initial website uses:
 
-* [Next.js](https://nextjs.org/)
-* [React](https://react.dev/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Tailwind CSS](https://tailwindcss.com/)
-* [shadcn/ui](https://ui.shadcn.com/)
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
-React Native, component distribution tooling, and other supporting packages will be introduced as their implementation begins.
+The project may use additional libraries as implementation needs evolve. React Native, component distribution tooling, and other supporting packages will be introduced as development progresses.
 
 ## Getting Started
 
 ### Prerequisites
 
-* Node.js compatible with the project's Next.js version
-* npm
-* Git
+- Node.js compatible with the project's Next.js version
+- npm
+- Git
 
 ### Installation
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/mintforge-ui.git
+git clone https://github.com/rakshithkumar608/mintforge-ui.git
 cd mintforge-ui
 ```
 
@@ -97,9 +120,16 @@ Start the development server:
 npm run dev
 ```
 
-Open http://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Replace `YOUR-USERNAME` with the GitHub username or organization that owns the repository.
+### Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
 
 ## Project Structure
 
@@ -128,50 +158,45 @@ Mintforge UI is in early development. The initial focus is establishing the proj
 
 The component library, React Native collection, installation workflow, and supporting tools will be developed progressively. Features will be documented as they become available.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, suggestions, bug reports, and discussions are welcome.
 
 Before contributing:
 
-1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for contribution instructions when available.
-2. Check existing issues to avoid duplicating work.
-3. Open an issue to discuss significant changes before implementing them.
-4. Submit changes through a pull request.
+1. Check existing issues to avoid duplicating work.
+2. Open an issue to discuss significant changes before implementing them.
+3. Submit changes through a pull request.
+4. Follow the repository's contribution guidelines when available.
 
-If the contribution guide is not yet available, please open an issue to discuss your proposed contribution first.
-
-## 🐛 Reporting Issues
+## Reporting Issues
 
 If you find a bug or have an idea for an improvement, open an issue in the GitHub repository.
 
-Please include enough detail to understand the problem, steps to reproduce it, and expected behavior.
+Please include enough detail to understand the problem, steps to reproduce it, and the expected behavior.
 
-## 🔒 Security
+## Security
 
-Please do not disclose security vulnerabilities in public issues. Follow the reporting instructions in [SECURITY.md](SECURITY.md) once the security policy has been added.
+Please do not disclose security vulnerabilities in public issues. Add a `SECURITY.md` file with private reporting instructions as the project establishes its security policy.
 
-## 📄 License
+## License
 
-Mintforge UI is intended to be released under the [MIT License](LICENSE).
+Mintforge UI is intended to be released under the MIT License. See the repository's `LICENSE` file for the applicable terms.
 
-Review the repository's `LICENSE` file for the applicable license terms.
-
-## 💚 Community
+## Community
 
 Mintforge UI is being built in the open. Developers interested in reusable UI components, design systems, web development, and React Native are welcome to follow the project and participate as it evolves.
 
 If you find the project interesting, consider starring the repository and sharing feedback.
 
-## 🏢 Built by NEXYOUTH pvt.ltd
+## Built by NEXYOUTH Pvt. Ltd.
 
-**Mintforge UI** is an open-source project developed by **NEXYOUTH pvt.ltd**, with a focus on building reusable UI components and consistent design systems for modern web and mobile applications.
+**Mintforge UI** is an open-source project developed by **NEXYOUTH Pvt. Ltd.**, with a focus on building reusable UI components and consistent design systems for modern web and mobile applications.
 
 Our goal is to help developers build faster, create consistent interfaces, and customize components to fit their projects.
 
 Learn more about NEXYOUTH: [Official Website](https://nexyouth-web.vercel.app/)
 
-
 ---
 
-**Mintforge UI** — Build consistently. Customize freely. Build in the open.
+**Mintforge UI — Build consistently. Customize freely. Build in the open.**

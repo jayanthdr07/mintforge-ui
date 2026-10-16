@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 /**
  * Mintforge UI CLI
@@ -29,7 +30,7 @@ const REGISTRY_PATH = path.join(__dirname, "../registry/components.json");
 let registry = {};
 try {
   registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf8"));
-} catch (e) {
+} catch {
   registry = {};
 }
 

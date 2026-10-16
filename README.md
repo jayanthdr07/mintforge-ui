@@ -20,15 +20,25 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/rakshithkumar608/mintforge-ui)](https://github.com/rakshithkumar608/mintforge-ui/pulls)
 [![Last commit](https://img.shields.io/github/last-commit/rakshithkumar608/mintforge-ui)](https://github.com/rakshithkumar608/mintforge-ui/commits/main)
 
-<!-- Package status: enable after publishing -->
-<!-- [![npm version](https://img.shields.io/npm/v/mintforge-ui)](https://www.npmjs.com/package/mintforge-ui) -->
-<!-- [![npm downloads](https://img.shields.io/npm/dm/mintforge-ui)](https://www.npmjs.com/package/mintforge-ui) -->
-
-
+<!-- npm package -->
+[![npm version](https://img.shields.io/npm/v/mintforge?color=10b981&label=npm%20package)](https://www.npmjs.com/package/mintforge)
+[![npm downloads](https://img.shields.io/npm/dm/mintforge?color=10b981)](https://www.npmjs.com/package/mintforge)
 
 Mintforge UI is a developer-focused project for building reusable, customizable UI components and ready-to-use interface blocks for web and mobile applications.
 
 The goal is to help developers build consistent user interfaces faster, with components they can explore, install, customize, and use in their own projects.
+
+## Quick Start (CLI)
+
+Add components directly into any React or Next.js project using the official `mintforge` CLI:
+
+```bash
+# 1. Initialize Mintforge in your project
+npx mintforge init
+
+# 2. Add components directly to your codebase
+npx mintforge add button card dialog input tabs badge
+```
 
 ## What We're Building
 

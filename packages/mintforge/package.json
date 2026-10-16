@@ -32,7 +32,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rakshithkumar608/mintforge-ui.git"
+    "url": "git+https://github.com/rakshithkumar608/mintforge-ui.git"
   },
   "bugs": {
     "url": "https://github.com/rakshithkumar608/mintforge-ui/issues"

@@ -4,23 +4,17 @@ import { useState } from "react";
 import { DocsHeader } from "@/components/docs/docs-header";
 import { DocsTableOfContents } from "@/components/docs/docs-table-of-contents";
 import { ComponentCode } from "@/components/docs/component-code";
+import Link from "next/link";
 import {
   Sparkles,
   Bot,
-  Brain,
   Check,
   Copy,
-  Terminal,
   ShieldCheck,
-  Zap,
   Layers,
-  Code2,
   FileCode,
   Smartphone,
   Palette,
-  ExternalLink,
-  ChevronRight,
-  ArrowRight,
 } from "lucide-react";
 
 type AssistantId = "claude" | "cursor" | "antigravity" | "windsurf" | "copilot";
@@ -811,12 +805,12 @@ export default function DocsSkillsPage() {
           <span className="text-center sm:text-left">
             Ready to explore our accessible component primitives?
           </span>
-          <a
+          <Link
             href="/docs/components"
             className="inline-flex items-center gap-1 text-brand hover:underline font-semibold"
           >
             Browse Component Catalog &rarr;
-          </a>
+          </Link>
         </div>
       </div>
 

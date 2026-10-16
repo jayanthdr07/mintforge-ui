@@ -1,0 +1,44 @@
+{
+  "name": "mintforge",
+  "version": "0.1.0",
+  "description": "Official CLI for Mintforge UI - Universal, AI-native component system for Web and Mobile",
+  "bin": {
+    "mintforge": "./bin/index.js"
+  },
+  "main": "./bin/index.js",
+  "scripts": {
+    "test": "node ./bin/index.js --help"
+  },
+  "files": [
+    "bin",
+    "registry",
+    "README.md"
+  ],
+  "keywords": [
+    "mintforge",
+    "mintforge-ui",
+    "shadcn",
+    "components",
+    "ui",
+    "react",
+    "nextjs",
+    "react-native",
+    "expo",
+    "tailwind",
+    "agentic-ai",
+    "design-system"
+  ],
+  "author": "Rakshith Kumar <rakshithkumar608@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rakshithkumar608/mintforge-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rakshithkumar608/mintforge-ui/issues"
+  },
+  "homepage": "https://github.com/rakshithkumar608/mintforge-ui#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

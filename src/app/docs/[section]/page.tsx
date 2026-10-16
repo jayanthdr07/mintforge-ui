@@ -5,9 +5,7 @@ import Link from "next/link";
 import { Layers } from "lucide-react";
 
 export function generateStaticParams() {
-  return [
-    { section: "changelog" },
-  ];
+  return [];
 }
 
 export default async function DynamicSectionDocPage({

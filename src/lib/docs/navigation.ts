@@ -149,6 +149,10 @@ export const COMPONENT_PAGINATION_ORDER = [
     href: "/docs/registry",
   },
   {
+    title: "Changelog",
+    href: "/docs/changelog",
+  },
+  {
     title: "Components Overview",
     href: "/docs/components",
   },

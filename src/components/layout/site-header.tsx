@@ -22,7 +22,7 @@ const navigation = [
   { label: "Components", href: "/docs/components", badge: null },
   { label: "Blocks", href: "/#blocks", badge: null },
   { label: "Templates", href: "/#templates", badge: null },
-  { label: "React Native", href: "/#react-native", badge: "Preview" },
+  { label: "React Native", href: "/react-native", badge: "Universal" },
   { label: "Docs", href: "/docs", badge: null },
 ];
 
@@ -35,7 +35,7 @@ const searchableItems = [
   { title: "Badge & Pill", category: "Components", href: "/docs/components/badge", desc: "Status pills and numerical counters" },
   { title: "Authentication Layout", category: "Blocks", href: "/#blocks", desc: "Ready-to-use login, register, and 2FA layouts" },
   { title: "Admin Dashboard", category: "Blocks", href: "/#blocks", desc: "Sidebar, metrics cards, and activity feeds" },
-  { title: "React Native Mobile", category: "Platforms", href: "/#react-native", desc: "Native iOS & Android cross-platform primitives" },
+  { title: "React Native Mobile", category: "Platforms", href: "/react-native", desc: "Native iOS & Android cross-platform primitives and Expo setup" },
   { title: "Installation & CLI", category: "Documentation", href: "/docs#installation", desc: "Quick start guide, source copy, and package setup" },
   { title: "Agent Skills", category: "Documentation", href: "/docs/skills", desc: "AI assistant skills for Claude Code, Cursor, Windsurf, Copilot, and Antigravity" },
   { title: "Open Registry", category: "Documentation", href: "/docs/registry", desc: "Decentralized custom component registry specification and hosting" },

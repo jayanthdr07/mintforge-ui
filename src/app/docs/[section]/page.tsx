@@ -6,7 +6,6 @@ import { Layers } from "lucide-react";
 
 export function generateStaticParams() {
   return [
-    { section: "registry" },
     { section: "changelog" },
   ];
 }

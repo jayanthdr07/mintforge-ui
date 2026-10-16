@@ -38,6 +38,7 @@ export const DOCS_NAVIGATION: NavSection[] = [
       {
         title: "Skills",
         href: "/docs/skills",
+        badge: "New",
       },
       {
         title: "Registry",
@@ -137,6 +138,10 @@ export const COMPONENT_PAGINATION_ORDER = [
   {
     title: "Typeset",
     href: "/docs/typeset",
+  },
+  {
+    title: "Skills",
+    href: "/docs/skills",
   },
   {
     title: "Components Overview",

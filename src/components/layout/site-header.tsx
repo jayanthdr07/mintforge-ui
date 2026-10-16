@@ -37,6 +37,7 @@ const searchableItems = [
   { title: "Admin Dashboard", category: "Blocks", href: "/#blocks", desc: "Sidebar, metrics cards, and activity feeds" },
   { title: "React Native Mobile", category: "Platforms", href: "/#react-native", desc: "Native iOS & Android cross-platform primitives" },
   { title: "Installation & CLI", category: "Documentation", href: "/docs#installation", desc: "Quick start guide, source copy, and package setup" },
+  { title: "Agent Skills", category: "Documentation", href: "/docs/skills", desc: "AI assistant skills for Claude Code, Cursor, Windsurf, Copilot, and Antigravity" },
   { title: "Design Tokens", category: "Styling", href: "/docs#tokens", desc: "Color palettes, typography, spacing, and radius variables" },
 ];
 

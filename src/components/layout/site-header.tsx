@@ -22,7 +22,7 @@ const navigation = [
   { label: "Components", href: "/docs/components", badge: null },
   { label: "Blocks", href: "/#blocks", badge: null },
   { label: "Templates", href: "/#templates", badge: null },
-  { label: "React Native", href: "/react-native", badge: "Universal" },
+  { label: "React Native", href: "/react-native", badge: "Expo" },
   { label: "Docs", href: "/docs", badge: null },
 ];
 

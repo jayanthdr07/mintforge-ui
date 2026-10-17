@@ -34,6 +34,13 @@ try {
   registry = {};
 }
 
+// Seam Check Modules
+const { loadConfig, createDefaultConfigFile } = require("../lib/config");
+const { scanBackend } = require("../lib/backend-scanner");
+const { scanFrontend } = require("../lib/frontend-scanner");
+const { detectDrift } = require("../lib/drift-detector");
+const { renderReport } = require("../lib/reporter");
+
 function printBanner() {
   console.log("");
   console.log(`  ${c.emerald}${c.bold}▲ Mintforge UI${c.reset} ${c.gray}v${PKG_VERSION}${c.reset}`);
@@ -54,6 +61,7 @@ function printHelp() {
   console.log(`    ${c.emerald}diff${c.reset} <component>     Compare local component against latest registry`);
   console.log("");
   console.log(`  ${c.bold}Options:${c.reset}`);
+  console.log(`    ${c.dim}--init${c.reset}                (With check) Create default seamcheck.yaml config`);
   console.log(`    ${c.dim}-y, --yes${c.reset}             Skip confirmation prompts and accept defaults`);
   console.log(`    ${c.dim}-h, --help${c.reset}            Display this help message`);
   console.log(`    ${c.dim}-v, --version${c.reset}         Display the current version`);
@@ -61,6 +69,7 @@ function printHelp() {
   console.log(`  ${c.bold}Examples:${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge init${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge add button card dialog${c.reset}`);
+  console.log(`    $ ${c.emerald}npx mintforge check --init${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge check${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge list${c.reset}`);
   console.log("");
@@ -245,32 +254,53 @@ function cmdDiff(name, cwd) {
   console.log("");
 }
 
-function cmdCheck(cwd) {
-  printBanner();
-  console.log(`  ${c.cyan}🔍 Mintforge Seam Check${c.reset} ${c.dim}(Full-Stack Contract Verifier)${c.reset}`);
-  console.log(`  ${c.dim}Checking Next.js/Expo frontend types & fetch calls against FastAPI models...${c.reset}`);
-  console.log("");
-
-  const configFile = path.join(cwd, "seamcheck.yaml");
-  const altConfigFile = path.join(cwd, "seamcheck.yml");
-  const hasConfig = fs.existsSync(configFile) || fs.existsSync(altConfigFile);
-
-  if (!hasConfig) {
-    console.log(`  ${c.yellow}⚠ No seamcheck.yaml found in ${cwd}${c.reset}`);
-    console.log(`  To configure explicit mappings between Zod schemas and Pydantic models:`);
-    console.log(`  ${c.dim}Create seamcheck.yaml with:${c.reset}`);
-    console.log(`    ${c.emerald}mappings:${c.reset}`);
-    console.log(`      ${c.emerald}UserSignupSchema: UserSignup${c.reset}`);
-    console.log(`      ${c.emerald}OrderCreateSchema: OrderCreate${c.reset}`);
-    console.log("");
-    console.log(`  ${c.cyan}ℹ Phase 0 audit is currently active. Run manual audit before running CLI checks.${c.reset}`);
+function cmdCheck(args, cwd) {
+  if (args.includes("--init")) {
+    printBanner();
+    const res = createDefaultConfigFile(cwd);
+    if (res.created) {
+      console.log(`  ${c.green}✔ Created seamcheck.yaml in ${cwd}${c.reset}`);
+      console.log(`  Configure your backend and frontend paths in seamcheck.yaml.`);
+      console.log(`  Then run: ${c.emerald}npx mintforge check${c.reset}`);
+    } else {
+      console.log(`  ${c.yellow}ℹ ${res.message}${c.reset}`);
+    }
     console.log("");
     return;
   }
 
-  console.log(`  ${c.green}✔${c.reset} Configuration detected. Scanning AST...`);
-  console.log(`  ${c.dim}No drift detected between mapped schemas.${c.reset}`);
-  console.log("");
+  const { found, autoDetected, config, error } = loadConfig(cwd);
+
+  if (error) {
+    printBanner();
+    console.error(`  ${c.red}Configuration error: ${error}${c.reset}`);
+    process.exit(1);
+  }
+
+  if (!found && !autoDetected) {
+    printBanner();
+    console.log(`  ${c.yellow}⚠ No seamcheck.yaml found in ${cwd}${c.reset}`);
+    console.log(`  To initialize Seam Check for your project, run:`);
+    console.log(`    ${c.emerald}npx mintforge check --init${c.reset}`);
+    console.log("");
+    return;
+  }
+
+  printBanner();
+  console.log(`  ${c.cyan}🔍 Scanning full-stack contracts...${c.reset}`);
+  if (autoDetected) {
+    console.log(`  ${c.dim}Auto-detected paths: Backend=${config.backend.path}, Frontend=${config.frontend.path}${c.reset}`);
+  }
+
+  const backendData = scanBackend(config.backend);
+  const frontendData = scanFrontend(config.frontend);
+
+  const { findings, stats } = detectDrift(backendData, frontendData, config);
+  const exitCode = renderReport(findings, stats);
+
+  if (exitCode !== 0 && !args.includes("--no-exit")) {
+    process.exit(exitCode);
+  }
 }
 
 // Main CLI router
@@ -301,7 +331,7 @@ function main() {
 
     case "check":
     case "verify":
-      cmdCheck(cwd);
+      cmdCheck(args.slice(1), cwd);
       break;
 
     case "list":

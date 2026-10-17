@@ -58,10 +58,10 @@ const MODES: ModeInfo[] = [
 
 const COMMANDS: Record<InstallMode, Record<PackageManager, string>> = {
   cli: {
-    npm: "npx mintforge-ui@latest init",
-    pnpm: "pnpm dlx mintforge-ui@latest init",
-    yarn: "yarn dlx mintforge-ui@latest init",
-    bun: "bunx --bun mintforge-ui@latest init",
+    npm: "npx mintforge@latest init",
+    pnpm: "pnpm dlx mintforge@latest init",
+    yarn: "yarn dlx mintforge@latest init",
+    bun: "bunx --bun mintforge@latest init",
   },
   manual: {
     npm: "npm install mintforge-ui lucide-react",

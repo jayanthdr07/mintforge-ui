@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Layers,
   LayoutGrid,
@@ -16,9 +17,10 @@ import {
   Send,
   Bell,
   Code2,
+  ArrowRight,
 } from "lucide-react";
 
-type CategoryId = "components" | "blocks" | "native" | "tokens";
+type CategoryId = "components" | "blocks" | "native" | "tokens" | "seam";
 
 interface CategoryMeta {
   id: CategoryId;
@@ -62,6 +64,14 @@ const CATEGORIES: CategoryMeta[] = [
     subtitle: "Multi-Brand Semantic Scales",
     description: "Strictly typed semantic colors, elevation shadows, dynamic corner radii, and fluid typography tokens.",
   },
+  {
+    id: "seam",
+    label: "Seam Verification",
+    badge: "FastAPI + Next",
+    icon: <ShieldCheck size={16} />,
+    subtitle: "Zero-Codegen API Contracts",
+    description: "Static AST linter that finds mismatches between Next.js/Expo forms and FastAPI Pydantic models before runtime.",
+  },
 ];
 
 export default function WhatWeAreBuilding() {
@@ -88,6 +98,11 @@ export default function WhatWeAreBuilding() {
 
   // Tokens state
   const [radiusToken, setRadiusToken] = useState<"sm" | "md" | "lg" | "full">("md");
+
+  // Seam Check state
+  const [seamScenario, setSeamScenario] = useState<"casing" | "optional" | "route">("casing");
+  const [seamScanActive, setSeamScanActive] = useState(false);
+
   const [showCode, setShowCode] = useState(false);
 
   const copyToClipboard = (text: string) => {
@@ -620,6 +635,121 @@ export default function WhatWeAreBuilding() {
             </div>
           )}
 
+          {/* ==============================================================
+              TAB 5: SEAM VERIFICATION
+              ============================================================== */}
+          {activeCategory === "seam" && (
+            <div className="mf-wwb-grid-tokens">
+              {/* Seam Widget 1: Live Contract Drift Detector */}
+              <div className="mf-wwb-widget-card">
+                <div className="mf-wwb-widget-head">
+                  <div>
+                    <span className="mf-wwb-widget-title">Contract Drift Simulator</span>
+                    <span className="mf-wwb-widget-sub">Select a failure scenario to verify</span>
+                  </div>
+                  <span className="mf-badge-mint">Zero Codegen</span>
+                </div>
+
+                <div className="mf-wwb-radius-buttons my-3">
+                  {[
+                    { id: "casing", label: "Casing Drift" },
+                    { id: "optional", label: "Optionality Drift" },
+                    { id: "route", label: "Route Drift" },
+                  ].map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => {
+                        setSeamScenario(s.id as "casing" | "optional" | "route");
+                        setSeamScanActive(false);
+                      }}
+                      className={`mf-wwb-radius-btn ${seamScenario === s.id ? "active" : ""}`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="rounded-lg border border-border bg-[#0d1310] p-4 font-mono text-xs text-left">
+                  <div className="flex items-center justify-between border-b border-border/50 pb-2 mb-3 text-[11px] text-zinc-400">
+                    <span>seamcheck.yaml • active scanner</span>
+                    <button
+                      type="button"
+                      onClick={() => setSeamScanActive(true)}
+                      className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold hover:bg-emerald-500/30 transition-colors"
+                    >
+                      {seamScanActive ? "Scanned ✓" : "Run Scan"}
+                    </button>
+                  </div>
+                  {seamScenario === "casing" && (
+                    <div>
+                      <div className="text-red-400 font-bold mb-1">
+                        ERROR  orders.schema.ts:14  OrderCreate.discount_code
+                      </div>
+                      <div className="text-zinc-400 pl-4">
+                        Frontend sends &quot;discountCode&quot;. Backend expects &quot;discount_code&quot; at app/routes/orders.py:31.
+                      </div>
+                    </div>
+                  )}
+                  {seamScenario === "optional" && (
+                    <div>
+                      <div className="text-amber-400 font-bold mb-1">
+                        WARNING  user.schema.ts:8  UserSignup.phoneNumber
+                      </div>
+                      <div className="text-zinc-400 pl-4">
+                        Field marked required in Zod, but optional in FastAPI UserSignup at app/models/user.py:12.
+                      </div>
+                    </div>
+                  )}
+                  {seamScenario === "route" && (
+                    <div>
+                      <div className="text-red-400 font-bold mb-1">
+                        ERROR  checkout.tsx:42  POST /api/orders
+                      </div>
+                      <div className="text-zinc-400 pl-4">
+                        Frontend calls /api/orders. No matching FastAPI route found. Did you mean /api/v1/orders/?
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Seam Widget 2: CLI One-Liner */}
+              <div className="mf-wwb-widget-card flex flex-col justify-between">
+                <div>
+                  <div className="mf-wwb-widget-head">
+                    <span className="mf-wwb-widget-title">CLI &amp; CI Verification</span>
+                    <span className="mf-wwb-pill-mini">npx mintforge check</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    Runs in &lt;1 second via Python <code>ast</code> and TypeScript <code>tree-sitter</code>.
+                    Drop it into your GitHub Actions workflow to block broken API contracts before they hit production.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-lg border border-border bg-[#0d1310] font-mono text-xs text-emerald-400 my-4 flex items-center justify-between">
+                  <code>$ npx mintforge check</code>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard("npx mintforge check")}
+                    className="p-1 text-muted-foreground hover:text-foreground"
+                    title="Copy command"
+                  >
+                    <Copy size={13} />
+                  </button>
+                </div>
+
+                <Link
+                  href="/docs/seam-check"
+                  className="flex items-center justify-between text-xs font-semibold text-brand hover:underline pt-2 border-t border-border"
+                >
+                  <span>Explore Seam Check Docs</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* Code Inspection Drawer */}
           {showCode && (
             <div className="mf-wwb-code-drawer">
@@ -637,7 +767,9 @@ export default function WhatWeAreBuilding() {
                         ? `import { MetricCard, TeamInviteCard } from "@mintforge/blocks";\n\nexport function DashboardBlock() {\n  return <MetricCard value="$54,230.00" change="+18.4%" timeframe="7d" />;\n}`
                         : activeCategory === "native"
                         ? `import { BottomSheet, HapticPress } from "@mintforge/native";\n\nexport function MobileFlow() {\n  return <BottomSheet snapPoints={["30%", "60%", "90%"]} blur />;\n}`
-                        : `:root {\n  --mf-brand: #10b981;\n  --mf-radius-md: 12px;\n  --mf-surface: #0f1915;\n}`
+                        : activeCategory === "tokens"
+                        ? `:root {\n  --mf-brand: #10b981;\n  --mf-radius-md: 12px;\n  --mf-surface: #0f1915;\n}`
+                        : `# seamcheck.yaml\nversion: 1\nbackend:\n  path: "backend/app"\n  framework: "fastapi"\nfrontend:\n  path: "frontend/src"\n  framework: "nextjs"\nmappings:\n  OrderCreateSchema: "OrderCreate"`
                     )
                   }
                   className="mf-wwb-code-copy-btn"
@@ -656,6 +788,8 @@ export default function WhatWeAreBuilding() {
                     `import { BottomSheet, HapticPress, DynamicIsland } from "@mintforge/native";\n\nexport function NativeCheckout() {\n  return (\n    <BottomSheet snapPoints={["30%", "60%", "90%"]} rounded="2xl" blur>\n      <HapticPress type="heavy" onPress={handleAuthorize}>\n        Slide to Pay $1,250.00\n      </HapticPress>\n    </BottomSheet>\n  );\n}`}
                   {activeCategory === "tokens" &&
                     `/* Mintforge Design Tokens (design-tokens.css) */\n:root {\n  --mf-brand: #10b981;\n  --mf-brand-hover: #34d399;\n  --mf-surface: #0f1915;\n  --mf-border: #1e352a;\n  --mf-radius-md: 12px;\n}\n\n.dark {\n  --mf-background: #080f0c;\n  --mf-surface: #0f1915;\n}`}
+                  {activeCategory === "seam" &&
+                    `# seamcheck.yaml (Mintforge Seam Check Configuration)\nversion: 1\nbackend:\n  path: "backend/app"\n  framework: "fastapi"\nfrontend:\n  path: "frontend/src"\n  framework: "nextjs"\n\n# Explicit Schema Mappings\nmappings:\n  OrderCreateSchema: "OrderCreate"\n  UserSignupSchema: "UserSignup"`}
                 </code>
               </pre>
             </div>

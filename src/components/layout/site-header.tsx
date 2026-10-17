@@ -38,6 +38,7 @@ const searchableItems = [
   { title: "React Native Mobile", category: "Platforms", href: "/react-native", desc: "Native iOS & Android cross-platform primitives and Expo setup" },
   { title: "Installation & CLI", category: "Documentation", href: "/docs#installation", desc: "Quick start guide, source copy, and package setup" },
   { title: "Agent Skills", category: "Documentation", href: "/docs/skills", desc: "AI assistant skills for Claude Code, Cursor, Windsurf, Copilot, and Antigravity" },
+  { title: "Seam Check", category: "Verification", href: "/docs/seam-check", desc: "Contract drift verifier between Next.js/Expo frontend and FastAPI backend" },
   { title: "Open Registry", category: "Documentation", href: "/docs/registry", desc: "Decentralized custom component registry specification and hosting" },
   { title: "Changelog", category: "Documentation", href: "/docs/changelog", desc: "Detailed timeline of releases, component updates, and ecosystem milestones" },
   { title: "Design Tokens", category: "Styling", href: "/docs#tokens", desc: "Color palettes, typography, spacing, and radius variables" },

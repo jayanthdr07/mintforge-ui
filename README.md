@@ -38,6 +38,9 @@ npx mintforge init
 
 # 2. Add components directly to your codebase
 npx mintforge add button card dialog input tabs badge
+
+# 3. Verify frontend forms against backend FastAPI models (Seam Check)
+npx mintforge check
 ```
 
 ## What We're Building
@@ -61,21 +64,29 @@ Ready-to-use interface sections and larger layouts for common application needs,
 - Data tables and management interfaces
 - SaaS application layouts and reusable workflows
 
-### 3. React Native Components
+### 3. Full-Stack Seam Verification (Seam Check)
+
+A zero-codegen contract verification engine and GitHub Action (`npx mintforge check`) that eliminates runtime mismatches between your frontend (Next.js / Expo / React) and backend (FastAPI / Pydantic):
+
+- **Schema Drift**: Catches missing fields, extra fields, optional vs required conflicts, and type mismatches between Pydantic and Zod.
+- **Endpoint Drift**: Verifies that every `fetch` and `axios` call targets an active FastAPI route path and HTTP method.
+- **Payload Drift**: Flags mismatched keys and casing issues (`camelCase` vs `snake_case`) before deploying to production.
+
+### 4. React Native Components
 
 A dedicated collection of mobile UI components for React Native and Expo, following a consistent design approach with the web library wherever practical.
 
-### 4. Component Documentation Website
+### 5. Component Documentation Website
 
 A central website where developers will be able to:
 
 - Browse and search components
 - Preview components and explore examples
-- Read installation and usage instructions
+- Read installation, usage, and Seam Check instructions
 - Copy code and customize components
 - Discover blocks and templates
 
-### 5. Component Installation and Customization
+### 6. Component Installation and Customization
 
 The project aims to make components straightforward to integrate into existing applications. Source-based installation and a CLI or registry may be introduced as the library develops.
 

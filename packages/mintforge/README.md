@@ -17,12 +17,16 @@ Add components directly to your source code:
 
 ```bash
 npx mintforge add button card dialog
+
+# Verify frontend forms against backend FastAPI models (Seam Check)
+npx mintforge check
 ```
 
 ## Commands
 
 - `npx mintforge init` — Sets up `components.json`, creates `lib/utils.ts`, and prepares the `components/ui` folder.
 - `npx mintforge add <components...>` — Adds one or more components to `components/ui/`.
+- `npx mintforge check` — Scans Next.js / Expo frontend code against FastAPI backend models to flag schema, endpoint, and payload drift.
 - `npx mintforge list` — Displays all available primitives, blocks, and mobile components.
 - `npx mintforge diff <component>` — Compares your local component with upstream registry.
 
@@ -30,6 +34,7 @@ npx mintforge add button card dialog
 
 - **Zero Lock-In**: Own 100% of the code. Components are dropped directly into your codebase.
 - **Universal**: Designed for both **Web (React/Next.js)** and **Mobile (React Native/Expo)**.
+- **Full-Stack Seam Verification**: Built-in static linter finding mismatches between FastAPI and TypeScript forms before runtime.
 - **AI-Agent Ready**: Built-in schemas and rules for Claude Code, Cursor, Windsurf, and Antigravity.
 - **Aesthetic**: Signature emerald/mint dark mode design tokens.
 

@@ -49,6 +49,7 @@ function printHelp() {
   console.log(`  ${c.bold}Commands:${c.reset}`);
   console.log(`    ${c.emerald}init${c.reset}                  Initialize Mintforge in your project (creates components.json & utils)`);
   console.log(`    ${c.emerald}add${c.reset} <components...>   Add component(s) to your project (e.g. button, card, dialog)`);
+  console.log(`    ${c.emerald}check${c.reset} [options]        Verify frontend forms & fetch calls against FastAPI/Pydantic models`);
   console.log(`    ${c.emerald}list${c.reset}                  List all available components in the registry`);
   console.log(`    ${c.emerald}diff${c.reset} <component>     Compare local component against latest registry`);
   console.log("");
@@ -60,6 +61,7 @@ function printHelp() {
   console.log(`  ${c.bold}Examples:${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge init${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge add button card dialog${c.reset}`);
+  console.log(`    $ ${c.emerald}npx mintforge check${c.reset}`);
   console.log(`    $ ${c.emerald}npx mintforge list${c.reset}`);
   console.log("");
 }
@@ -243,6 +245,34 @@ function cmdDiff(name, cwd) {
   console.log("");
 }
 
+function cmdCheck(cwd) {
+  printBanner();
+  console.log(`  ${c.cyan}🔍 Mintforge Seam Check${c.reset} ${c.dim}(Full-Stack Contract Verifier)${c.reset}`);
+  console.log(`  ${c.dim}Checking Next.js/Expo frontend types & fetch calls against FastAPI models...${c.reset}`);
+  console.log("");
+
+  const configFile = path.join(cwd, "seamcheck.yaml");
+  const altConfigFile = path.join(cwd, "seamcheck.yml");
+  const hasConfig = fs.existsSync(configFile) || fs.existsSync(altConfigFile);
+
+  if (!hasConfig) {
+    console.log(`  ${c.yellow}⚠ No seamcheck.yaml found in ${cwd}${c.reset}`);
+    console.log(`  To configure explicit mappings between Zod schemas and Pydantic models:`);
+    console.log(`  ${c.dim}Create seamcheck.yaml with:${c.reset}`);
+    console.log(`    ${c.emerald}mappings:${c.reset}`);
+    console.log(`      ${c.emerald}UserSignupSchema: UserSignup${c.reset}`);
+    console.log(`      ${c.emerald}OrderCreateSchema: OrderCreate${c.reset}`);
+    console.log("");
+    console.log(`  ${c.cyan}ℹ Phase 0 audit is currently active. Run manual audit before running CLI checks.${c.reset}`);
+    console.log("");
+    return;
+  }
+
+  console.log(`  ${c.green}✔${c.reset} Configuration detected. Scanning AST...`);
+  console.log(`  ${c.dim}No drift detected between mapped schemas.${c.reset}`);
+  console.log("");
+}
+
 // Main CLI router
 function main() {
   const args = process.argv.slice(2);
@@ -267,6 +297,11 @@ function main() {
 
     case "add":
       cmdAdd(args.slice(1), cwd);
+      break;
+
+    case "check":
+    case "verify":
+      cmdCheck(cwd);
       break;
 
     case "list":

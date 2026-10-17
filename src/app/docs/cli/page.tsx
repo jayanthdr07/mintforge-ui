@@ -4,9 +4,9 @@ import { useState } from "react";
 import { DocsHeader } from "@/components/docs/docs-header";
 import { DocsTableOfContents } from "@/components/docs/docs-table-of-contents";
 import { ComponentCode } from "@/components/docs/component-code";
+import Link from "next/link";
 
-
-type SimTab = "init" | "add" | "diff" | "all";
+type SimTab = "init" | "add" | "check" | "diff" | "all";
 
 export default function DocsCliPage() {
   const [activeSim, setActiveSim] = useState<SimTab>("init");
@@ -16,6 +16,7 @@ export default function DocsCliPage() {
     { id: "terminal-simulator", title: "Interactive Terminal" },
     { id: "init-command", title: "init" },
     { id: "add-command", title: "add" },
+    { id: "check-command", title: "check" },
     { id: "diff-command", title: "diff" },
     { id: "create-command", title: "create" },
     { id: "components-json", title: "components.json Reference" },
@@ -37,6 +38,24 @@ export default function DocsCliPage() {
         "",
         "  Success! Project initialized. You can now add components:",
         "    npx mintforge@latest add button card dialog",
+      ],
+    },
+    check: {
+      cmd: "npx mintforge@latest check",
+      output: [
+        "  ▲ Mintforge UI CLI v0.1.0",
+        "",
+        "  🔍 Running Mintforge Seam Check...",
+        "  Checking Next.js frontend types & fetch calls against FastAPI models...",
+        "",
+        "  ✔ Loaded seamcheck.yaml",
+        "  ✔ Parsed 14 Pydantic models via Python AST",
+        "  ✔ Parsed 18 Zod schemas & 12 API calls via tree-sitter",
+        "",
+        "  ERROR  orders.schema.ts:14  OrderCreate.discount_code",
+        "         Frontend sends \"discountCode\". Backend expects \"discount_code\" at app/routes/orders.py:31.",
+        "",
+        "  ✖ 1 contract drift error found.",
       ],
     },
     add: {
@@ -150,14 +169,22 @@ export default function DocsCliPage() {
               <span className="mf-terminal-title">mintforge-cli — bash</span>
 
               <div className="mf-terminal-tabs">
-                {(["init", "add", "diff", "all"] as SimTab[]).map((tab) => (
+                {(["init", "add", "check", "diff", "all"] as SimTab[]).map((tab) => (
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setActiveSim(tab)}
                     className={`mf-terminal-tab ${activeSim === tab ? "active" : ""}`}
                   >
-                    {tab === "init" ? "init" : tab === "add" ? "add [components]" : tab === "diff" ? "diff" : "add --all"}
+                    {tab === "init"
+                      ? "init"
+                      : tab === "add"
+                      ? "add [components]"
+                      : tab === "check"
+                      ? "check"
+                      : tab === "diff"
+                      ? "diff"
+                      : "add --all"}
                   </button>
                 ))}
               </div>
@@ -297,7 +324,51 @@ export default function DocsCliPage() {
           </div>
         </section>
 
-        {/* Section 5: diff Command */}
+        {/* Section 5: check Command */}
+        <section id="check-command" className="scroll-mt-24">
+          <h2 className="mf-docs-h2">check</h2>
+          <p className="mf-docs-paragraph">
+            Statically verifies frontend forms (Zod schemas, <span className="mf-inline-code">fetch()</span>, and <span className="mf-inline-code">axios</span> calls) against backend FastAPI Pydantic models. Catches schema drift, casing discrepancies (<span className="mf-inline-code">camelCase</span> vs <span className="mf-inline-code">snake_case</span>), and missing routes before runtime:
+          </p>
+
+          <ComponentCode
+            packageManagerTabs
+            commands={{
+              pnpm: "pnpm dlx mintforge@latest check",
+              npm: "npx mintforge@latest check",
+              yarn: "yarn dlx mintforge@latest check",
+              bun: "bunx mintforge@latest check",
+            }}
+          />
+
+          <h3 className="mf-docs-h3">What It Checks</h3>
+          <ul className="mf-docs-bullets">
+            <li className="mf-docs-bullet-item">
+              <strong>Schema Drift</strong>: Compares Pydantic models to Zod schemas (missing fields, extra fields, type mismatch).
+            </li>
+            <li className="mf-docs-bullet-item">
+              <strong>Endpoint Drift</strong>: Matches every frontend API call to an active FastAPI route by HTTP method and URL path.
+            </li>
+            <li className="mf-docs-bullet-item">
+              <strong>Payload Drift</strong>: Flags payload key mismatches between frontend request bodies and FastAPI route request models.
+            </li>
+          </ul>
+
+          <div className="mt-4 p-4 rounded-xl border border-border bg-card flex items-center justify-between">
+            <div>
+              <h4 className="text-sm font-bold text-foreground">Need a custom CI setup or YAML configuration?</h4>
+              <p className="text-xs text-muted-foreground mt-0.5">Read the full Seam Check architecture specification and GitHub Action workflow.</p>
+            </div>
+            <Link
+              href="/docs/seam-check"
+              className="text-xs font-semibold text-brand hover:underline shrink-0 ml-4 inline-flex items-center gap-1"
+            >
+              <span>Seam Check Guide &rarr;</span>
+            </Link>
+          </div>
+        </section>
+
+        {/* Section 6: diff Command */}
         <section id="diff-command" className="scroll-mt-24">
           <h2 className="mf-docs-h2">diff</h2>
           <p className="mf-docs-paragraph">

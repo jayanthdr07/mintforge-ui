@@ -12,6 +12,7 @@ export default function DocsIntroductionPage() {
     { id: "open-code", title: "Open Code & Zero Lock-in" },
     { id: "token-engine", title: "OKLCH Token Engine" },
     { id: "ai-ready", title: "AI-Ready & LLM-Native" },
+    { id: "seam-verification", title: "Seam Verification" },
     { id: "react-native", title: "React Native & Expo Parity" },
     { id: "ecosystem", title: "The Mintforge Ecosystem" },
   ];
@@ -21,7 +22,7 @@ export default function DocsIntroductionPage() {
       <div className="mf-docs-main">
         <DocsHeader
           title="Introduction"
-          description="Mintforge UI is a next-generation open-source design system and UI ecosystem for React 19, Next.js 16 (App Router), and React Native (Expo 52). Engineered by NEXYOUTH for developer speed, WCAG AAA accessibility, universal cross-platform parity, and agentic AI readiness."
+          description="Mintforge UI is a next-generation open-source design system and UI ecosystem for React 19, Next.js 16 (App Router), and React Native (Expo 52). Engineered by NEXYOUTH for developer speed, WCAG AAA accessibility, universal cross-platform parity, agentic AI readiness, and full-stack API contract verification."
           nextHref="/docs/installation"
         />
 
@@ -44,7 +45,7 @@ export default function DocsIntroductionPage() {
         </section>
 
         {/* Feature Highlights Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 my-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 my-8">
           <div className="p-4 rounded-xl border border-border bg-card">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5">
               <Zap size={18} />
@@ -59,9 +60,9 @@ export default function DocsIntroductionPage() {
             <div className="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-2.5">
               <ShieldCheck size={18} />
             </div>
-            <h4 className="text-sm font-bold text-foreground mb-1">WCAG AAA Accessibility</h4>
+            <h4 className="text-sm font-bold text-foreground mb-1">Seam Verification</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Full ARIA attributes, keyboard navigation traps, focus visible rings, and screen-reader announcements out of the box.
+              Zero-codegen static linter verifying Next.js &amp; Expo frontend forms against FastAPI Pydantic models.
             </p>
           </div>
 
@@ -69,9 +70,9 @@ export default function DocsIntroductionPage() {
             <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2.5">
               <Smartphone size={18} />
             </div>
-            <h4 className="text-sm font-bold text-foreground mb-1">Universal Web & Mobile</h4>
+            <h4 className="text-sm font-bold text-foreground mb-1">Universal Web &amp; Mobile</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Single unified design token system powering both Next.js web applications and React Native / Expo iOS & Android apps.
+              Single unified design token system powering both Next.js web applications and React Native / Expo iOS &amp; Android apps.
             </p>
           </div>
 
@@ -82,6 +83,26 @@ export default function DocsIntroductionPage() {
             <h4 className="text-sm font-bold text-foreground mb-1">Agentic AI Native</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Standardized prop signatures and flat file schemas designed so LLMs and coding agents can effortlessly read and generate UI.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-2.5">
+              <Palette size={18} />
+            </div>
+            <h4 className="text-sm font-bold text-foreground mb-1">WCAG AAA Accessibility</h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Full ARIA attributes, keyboard navigation traps, focus visible rings, and screen-reader announcements out of the box.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-card">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2.5">
+              <Layers size={18} />
+            </div>
+            <h4 className="text-sm font-bold text-foreground mb-1">42+ UI Primitives</h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Production building blocks from buttons and form inputs to dialogs, bottom sheets, and charts.
             </p>
           </div>
         </div>
@@ -175,14 +196,34 @@ export default function DocsIntroductionPage() {
           </ul>
         </section>
 
+        {/* Section 6: Seam Verification */}
+        <section id="seam-verification" className="scroll-mt-24">
+          <h2 className="mf-docs-h2">Full-Stack Seam Verification</h2>
+          <p className="mf-docs-paragraph">
+            The hardest runtime bugs in full-stack applications occur at the boundary between frontend forms and backend API models. 
+            Mintforge includes <strong>Seam Check</strong>—a zero-codegen, static AST linter that validates Next.js and Expo frontend code directly against FastAPI Pydantic models:
+          </p>
+          <ul className="mf-docs-bullets">
+            <li className="mf-docs-bullet-item">
+              <strong>Schema Drift</strong>: Compares Pydantic models to Zod schemas, flagging missing fields, extra keys, and type discrepancies.
+            </li>
+            <li className="mf-docs-bullet-item">
+              <strong>Endpoint Drift</strong>: Ensures every frontend <span className="mf-inline-code">fetch()</span> or <span className="mf-inline-code">axios</span> call matches an active FastAPI route by HTTP method and path.
+            </li>
+            <li className="mf-docs-bullet-item">
+              <strong>Payload Drift</strong>: Verifies frontend request body keys match backend request schemas, catching <span className="mf-inline-code">camelCase</span> vs <span className="mf-inline-code">snake_case</span> mismatches before runtime.
+            </li>
+          </ul>
+        </section>
+
         {/* Section 7: The Ecosystem */}
         <section id="ecosystem" className="scroll-mt-24">
           <h2 className="mf-docs-h2">The Mintforge Ecosystem</h2>
           <p className="mf-docs-paragraph">
-            Mintforge UI is more than a set of buttons—it is an end-to-end frontend toolkit:
+            Mintforge UI is more than a set of buttons—it is an end-to-end full-stack toolkit:
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 my-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-6">
             <Link
               href="/docs/components"
               className="p-4 rounded-xl border border-border bg-card hover:border-brand transition-all group"
@@ -193,6 +234,19 @@ export default function DocsIntroductionPage() {
               </h4>
               <p className="text-xs text-muted-foreground mt-1">
                 42+ accessible atomic UI building blocks.
+              </p>
+            </Link>
+
+            <Link
+              href="/docs/seam-check"
+              className="p-4 rounded-xl border border-border bg-card hover:border-brand transition-all group"
+            >
+              <ShieldCheck size={18} className="text-emerald-500 mb-2" />
+              <h4 className="text-sm font-bold text-foreground group-hover:text-brand transition-colors">
+                Seam Check
+              </h4>
+              <p className="text-xs text-muted-foreground mt-1">
+                Zero-codegen FastAPI &amp; Next.js contract linter.
               </p>
             </Link>
 
@@ -215,7 +269,7 @@ export default function DocsIntroductionPage() {
             >
               <Palette size={18} className="text-emerald-500 mb-2" />
               <h4 className="text-sm font-bold text-foreground group-hover:text-brand transition-colors">
-                Tokens & Theming
+                Tokens &amp; Theming
               </h4>
               <p className="text-xs text-muted-foreground mt-1">
                 OKLCH color engine and multi-brand themes.

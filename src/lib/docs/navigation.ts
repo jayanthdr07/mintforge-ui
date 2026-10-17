@@ -32,6 +32,11 @@ export const DOCS_NAVIGATION: NavSection[] = [
         href: "/docs/cli",
       },
       {
+        title: "Seam Check",
+        href: "/docs/seam-check",
+        badge: "New",
+      },
+      {
         title: "Typeset",
         href: "/docs/typeset",
       },
@@ -135,6 +140,10 @@ export const COMPONENT_PAGINATION_ORDER = [
   {
     title: "CLI",
     href: "/docs/cli",
+  },
+  {
+    title: "Seam Check",
+    href: "/docs/seam-check",
   },
   {
     title: "Typeset",

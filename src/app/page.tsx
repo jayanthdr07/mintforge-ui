@@ -169,6 +169,9 @@ export default function HomePage() {
               <span className="mf-highlight-check">✓</span> Next.js 16 &amp; React 19 Ready
             </span>
             <span className="mf-highlight-item">
+              <span className="mf-highlight-check">✓</span> Full-Stack Seam Check
+            </span>
+            <span className="mf-highlight-item">
               <span className="mf-highlight-check">✓</span> Accessible (WCAG AAA)
             </span>
             <span className="mf-highlight-item">

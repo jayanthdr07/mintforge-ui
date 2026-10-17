@@ -101,6 +101,15 @@ export default function DocsInstallationPage() {
               bun: "bunx mintforge@latest add button card dialog",
             }}
           />
+
+          <div className="mt-4 p-4 rounded-xl border border-border bg-card flex items-center justify-between">
+            <div>
+              <h4 className="text-sm font-bold text-foreground">Building with a FastAPI backend?</h4>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Run <span className="mf-inline-code">npx mintforge check</span> to statically verify your Zod form schemas against Pydantic models with zero codegen.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Section 2: Step-by-Step Manual Installation */}

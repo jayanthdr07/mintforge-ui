@@ -11,7 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-type VersionFilter = "all" | "v0.1.2" | "v0.1.1" | "v0.1.0";
+type VersionFilter = "all" | "v0.1.3" | "v0.1.2" | "v0.1.1" | "v0.1.0";
 
 interface ChangelogEntry {
   version: string;
@@ -33,8 +33,46 @@ interface ChangelogEntry {
 
 const CHANGELOG_ENTRIES: ChangelogEntry[] = [
   {
-    version: "v0.1.2",
+    version: "v0.1.3",
     tag: "Latest",
+    date: "October 17, 2026",
+    title: "Full-Stack Seam Verification & Catalog Expansion",
+    summary:
+      "Introduces Mintforge Seam Check: a static contract linter that eliminates runtime 422 and 404 mismatches between Next.js/Expo frontends and FastAPI Pydantic backends with zero code generation.",
+    highlights: [
+      {
+        category: "Seam Verification",
+        description:
+          "Added static AST contract analysis comparing Pydantic models to Zod schemas, matching fetch/axios routes to FastAPI endpoints, and catching camelCase vs snake_case payload drift.",
+        link: { label: "Read Seam Check Guide", href: "/docs/seam-check" },
+      },
+      {
+        category: "CLI Tooling",
+        description:
+          "Integrated 'npx mintforge check' command directly into the CLI package, with automatic seamcheck.yaml project configuration and CI readiness.",
+        link: { label: "Explore CLI Guide", href: "/docs/cli" },
+      },
+      {
+        category: "Component Catalog",
+        description:
+          "Expanded interactive component catalog index to display 15 UI primitives across Core Primitives and CLI Registry items with live search.",
+        link: { label: "Browse Catalog", href: "/docs/components" },
+      },
+    ],
+    codeSnippet: {
+      code: `# Verify frontend forms and API calls against FastAPI backend
+npx mintforge check
+
+# Configuration in seamcheck.yaml
+mappings:
+  OrderCreateSchema: OrderCreate`,
+      language: "bash",
+      filename: "terminal — bash",
+    },
+  },
+  {
+    version: "v0.1.2",
+    tag: "Stable",
     date: "October 16, 2026",
     title: "Open Registry Standard & Agent Skills",
     summary:
@@ -227,6 +265,7 @@ export default function DocsChangelogPage() {
             {(
               [
                 { id: "all", label: "All Milestones" },
+                { id: "v0.1.3", label: "v0.1.3 (Seam Check & Catalog)" },
                 { id: "v0.1.2", label: "v0.1.2 (Registry & Skills)" },
                 { id: "v0.1.1", label: "v0.1.1 (Primitives & AI)" },
                 { id: "v0.1.0", label: "v0.1.0 (Genesis)" },

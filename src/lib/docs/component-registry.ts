@@ -624,26 +624,36 @@ export function TabsContent({
   accordion: {
     id: "accordion",
     title: "Accordion",
-    description: "Vertically stacked interactive disclosure headings that reveal and hide related content sections.",
+    description: "Vertically stacked interactive disclosure headings with multiple visual styles (Morph, Minimal, Outlined, Nested), spring animations, and WAI-ARIA disclosure pattern.",
     category: "Primitives",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";`,
-    sourceCode: `export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";`,
+    importSnippet: `import {\n  Accordion,\n  AccordionItem,\n  AccordionTrigger,\n  AccordionContent,\n  AccordionMorph,\n  AccordionMinimal,\n  AccordionOutlined,\n  AccordionNested,\n} from "@/components/ui/accordion";`,
+    sourceCode: `export * from "@/components/ui/accordion";`,
     props: [
-      { name: "type", type: '"single" | "multiple"', defaultValue: '"single"', description: "Expansion behavior mode." },
-      { name: "defaultValue", type: "string | string[]", defaultValue: "undefined", description: "Initially open item key(s)." },
-      { name: "collapsible", type: "boolean", defaultValue: "true", description: "Whether an open single item can be collapsed." },
+      { name: "type", type: '"single" | "multiple"', defaultValue: '"single"', description: "Controls single or multiple expanded items." },
+      { name: "variant", type: '"morph" | "minimal" | "outlined" | "nested" | "bordered" | "cards"', defaultValue: '"morph"', description: "Visual variant style." },
+      { name: "animation", type: '"smooth" | "spring" | "none"', defaultValue: '"smooth"', description: "Expand/collapse transition curve." },
+      { name: "indicator", type: '"chevron" | "plus" | "morph" | "none"', defaultValue: '"chevron"', description: "Trigger indicator icon style." },
+      { name: "collapsible", type: "boolean", defaultValue: "true", description: "Allow collapsing open item in single mode." },
+      { name: "disabled", type: "boolean", defaultValue: "false", description: "Disables interaction across items." },
     ],
     examples: [
       {
-        title: "Standard Accordion",
-        code: `<Accordion type="single" defaultValue="item-1" collapsible>
-  <AccordionItem value="item-1">
-    <AccordionTrigger>Is Mintforge contract-aware?</AccordionTrigger>
-    <AccordionContent>Yes, it verifies frontend payloads against FastAPI models.</AccordionContent>
-  </AccordionItem>
-</Accordion>`,
+        title: "Signature Morph Accordion",
+        code: `<AccordionMorph defaultValue="item-1" />`,
+      },
+      {
+        title: "Clean Minimal Accordion",
+        code: `<AccordionMinimal defaultValue="item-1" />`,
+      },
+      {
+        title: "Outlined Accordion",
+        code: `<AccordionOutlined defaultValue="item-1" />`,
+      },
+      {
+        title: "Nested Tree Accordion",
+        code: `<AccordionNested defaultValue="parent-doc" />`,
       },
     ],
   },

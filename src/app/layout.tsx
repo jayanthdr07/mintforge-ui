@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   ],
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem("mintforge-theme");if(!t){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);document.documentElement.classList.toggle("dark",t==="dark");}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("mintforge-theme");if(!t){t="dark";}document.documentElement.setAttribute("data-theme",t);document.documentElement.classList.toggle("dark",t==="dark");}catch(e){}})();`;
 
 export default function RootLayout({
   children,

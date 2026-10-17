@@ -27,6 +27,7 @@ const navigation = [
 ];
 
 const searchableItems = [
+  { title: "Accordion", category: "Components", href: "/docs/components/accordion", desc: "Premium interactive accordion with Morph, Minimal, Outlined, and Nested variants" },
   { title: "Button", category: "Components", href: "/docs/components/button", desc: "Interactive button with primary, outline, and ghost variants" },
   { title: "Input & Form", category: "Components", href: "/docs/components/input", desc: "Accessible text inputs, labels, and validation states" },
   { title: "Card", category: "Components", href: "/docs/components/card", desc: "Elevated content container with header and action slots" },

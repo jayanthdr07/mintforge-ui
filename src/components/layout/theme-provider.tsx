@@ -41,14 +41,14 @@ function getThemeSnapshot(): Theme {
     if (saved === "dark" || saved === "light") {
       return saved;
     }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "dark";
   } catch {
-    return "light";
+    return "dark";
   }
 }
 
 function getThemeServerSnapshot(): Theme {
-  return "light";
+  return "dark";
 }
 
 function subscribeTheme(callback: () => void) {

@@ -120,6 +120,23 @@ export const DOCS_NAVIGATION: NavSection[] = [
         title: "Tabs",
         href: "/docs/components/tabs",
       },
+      {
+        title: "Seam",
+        href: "/docs/components/seam-status",
+        badge: "Contract",
+        items: [
+          {
+            title: "Seam Status",
+            href: "/docs/components/seam-status",
+            badge: "New",
+          },
+          {
+            title: "Seam Form",
+            href: "/docs/components/seam-form",
+            badge: "New",
+          },
+        ],
+      },
     ],
   },
 ];
@@ -188,5 +205,25 @@ export const COMPONENT_PAGINATION_ORDER = [
   {
     title: "Tabs",
     href: "/docs/components/tabs",
+  },
+  {
+    title: "Accordion",
+    href: "/docs/components/accordion",
+  },
+  {
+    title: "Alert",
+    href: "/docs/components/alert",
+  },
+  {
+    title: "Avatar",
+    href: "/docs/components/avatar",
+  },
+  {
+    title: "Seam Status",
+    href: "/docs/components/seam-status",
+  },
+  {
+    title: "Seam Form",
+    href: "/docs/components/seam-form",
   },
 ];

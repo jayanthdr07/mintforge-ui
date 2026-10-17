@@ -269,7 +269,13 @@ function cmdCheck(args, cwd) {
     return;
   }
 
-  const { found, autoDetected, config, error } = loadConfig(cwd);
+  let explicitConfig = null;
+  const configIdx = args.indexOf("--config") !== -1 ? args.indexOf("--config") : args.indexOf("-c");
+  if (configIdx !== -1 && args[configIdx + 1]) {
+    explicitConfig = path.resolve(cwd, args[configIdx + 1]);
+  }
+
+  const { found, autoDetected, config, error } = loadConfig(cwd, explicitConfig);
 
   if (error) {
     printBanner();

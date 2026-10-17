@@ -3,10 +3,14 @@ export interface NavItem {
   href: string;
   badge?: string;
   isNew?: boolean;
+  items?: NavItem[];
 }
 
 export interface NavSection { 
   title: string;
+  badge?: string;
+  isCollapsible?: boolean;
+  defaultOpen?: boolean;
   items: NavItem[];
 }
 

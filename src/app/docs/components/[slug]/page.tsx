@@ -6,14 +6,8 @@ import Link from "next/link";
 
 export function generateStaticParams() {
   return [
-    { slug: "accordion" },
-    { slug: "alert" },
-    { slug: "alert-dialog" },
     { slug: "aspect-ratio" },
-    { slug: "attachment" },
-    { slug: "avatar" },
     { slug: "breadcrumb" },
-    { slug: "bubble" },
     { slug: "button-group" },
   ];
 }

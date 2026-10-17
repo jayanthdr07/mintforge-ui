@@ -18,30 +18,6 @@ interface CatalogItem {
 
 const REGISTRY_PRIMITIVES: CatalogItem[] = [
   {
-    id: "accordion",
-    title: "Accordion",
-    category: "Disclosure",
-    status: "In Registry",
-    description: "Vertically stacked set of interactive headings that each reveal a section of content.",
-    href: "/docs/components/accordion",
-  },
-  {
-    id: "alert",
-    title: "Alert",
-    category: "Feedback",
-    status: "In Registry",
-    description: "Displays a prominent callout message for user attention with info, warning, and error states.",
-    href: "/docs/components/alert",
-  },
-  {
-    id: "alert-dialog",
-    title: "Alert Dialog",
-    category: "Overlays",
-    status: "In Registry",
-    description: "Modal dialog that interrupts the user with critical information and requires an explicit response.",
-    href: "/docs/components/alert-dialog",
-  },
-  {
     id: "aspect-ratio",
     title: "Aspect Ratio",
     category: "Layout",
@@ -50,36 +26,12 @@ const REGISTRY_PRIMITIVES: CatalogItem[] = [
     href: "/docs/components/aspect-ratio",
   },
   {
-    id: "attachment",
-    title: "Attachment",
-    category: "Data Input",
-    status: "In Registry",
-    description: "File upload pill, progress tracker, and drag-and-drop attachment dropzone.",
-    href: "/docs/components/attachment",
-  },
-  {
-    id: "avatar",
-    title: "Avatar",
-    category: "Primitives",
-    status: "In Registry",
-    description: "Image element with fallback initials and active presence indicator dot for user representations.",
-    href: "/docs/components/avatar",
-  },
-  {
     id: "breadcrumb",
     title: "Breadcrumb",
     category: "Navigation",
     status: "In Registry",
     description: "Displays the hierarchical path to the current page within the application structure.",
     href: "/docs/components/breadcrumb",
-  },
-  {
-    id: "bubble",
-    title: "Bubble",
-    category: "AI & Chat",
-    status: "In Registry",
-    description: "Chat message bubble with role styling (user vs assistant), action buttons, and streaming support.",
-    href: "/docs/components/bubble",
   },
   {
     id: "button-group",

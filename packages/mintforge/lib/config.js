@@ -77,14 +77,17 @@ function parseValue(val) {
 /**
  * Load or auto-detect Seam Check configuration
  */
-function loadConfig(cwd = process.cwd()) {
-  const candidates = [
-    path.join(cwd, "seamcheck.yaml"),
-    path.join(cwd, "seamcheck.yml"),
-    path.join(cwd, "seamcheck.json"),
-    path.join(cwd, ".seamcheck.yaml"),
-    path.join(cwd, ".seamcheck.json"),
-  ];
+function loadConfig(cwd = process.cwd(), explicitPath = null) {
+  const candidates = explicitPath
+    ? [explicitPath]
+    : [
+        path.join(cwd, "seamcheck.yaml"),
+        path.join(cwd, "seamcheck.yml"),
+        path.join(cwd, "seamcheck.json"),
+        path.join(cwd, "mintforge.config.json"),
+        path.join(cwd, ".seamcheck.yaml"),
+        path.join(cwd, ".seamcheck.json"),
+      ];
 
   for (const file of candidates) {
     if (fs.existsSync(file)) {

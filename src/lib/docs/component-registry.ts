@@ -620,4 +620,235 @@ export function TabsContent({
       },
     ],
   },
+
+  accordion: {
+    id: "accordion",
+    title: "Accordion",
+    description: "Vertically stacked interactive disclosure headings that reveal and hide related content sections.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";`,
+    sourceCode: `export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";`,
+    props: [
+      { name: "type", type: '"single" | "multiple"', defaultValue: '"single"', description: "Expansion behavior mode." },
+      { name: "defaultValue", type: "string | string[]", defaultValue: "undefined", description: "Initially open item key(s)." },
+      { name: "collapsible", type: "boolean", defaultValue: "true", description: "Whether an open single item can be collapsed." },
+    ],
+    examples: [
+      {
+        title: "Standard Accordion",
+        code: `<Accordion type="single" defaultValue="item-1" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Is Mintforge contract-aware?</AccordionTrigger>
+    <AccordionContent>Yes, it verifies frontend payloads against FastAPI models.</AccordionContent>
+  </AccordionItem>
+</Accordion>`,
+      },
+    ],
+  },
+
+  alert: {
+    id: "alert",
+    title: "Alert",
+    description: "Prominent contextual callout banner communicating important status messages, warnings, or notifications.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`,
+    sourceCode: `export { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`,
+    props: [
+      { name: "variant", type: '"default" | "brand" | "info" | "success" | "warning" | "destructive"', defaultValue: '"default"', description: "Semantic color treatment." },
+      { name: "icon", type: "React.ReactNode", defaultValue: "auto", description: "Custom leading accessory icon." },
+      { name: "onClose", type: "() => void", defaultValue: "undefined", description: "Dismiss callback rendering close button." },
+    ],
+    examples: [
+      {
+        title: "Brand Alert",
+        code: `<Alert variant="brand">
+  <AlertTitle>Contract Verified</AlertTitle>
+  <AlertDescription>All frontend API calls match FastAPI Pydantic models.</AlertDescription>
+</Alert>`,
+      },
+    ],
+  },
+
+  avatar: {
+    id: "avatar",
+    title: "Avatar",
+    description: "Visual user representation primitive supporting image thumbnails, fallback initials, and active presence status indicators.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: [],
+    importSnippet: `import { Avatar, AvatarImage, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";`,
+    sourceCode: `export { Avatar, AvatarImage, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";`,
+    props: [
+      { name: "size", type: '"sm" | "md" | "lg" | "xl"', defaultValue: '"md"', description: "Pixel dimension preset." },
+    ],
+    examples: [
+      {
+        title: "User Avatar",
+        code: `<Avatar size="lg">
+  <AvatarImage src="/avatar.png" alt="Sarah" />
+  <AvatarFallback initials="SC" />
+  <AvatarBadge status="online" />
+</Avatar>`,
+      },
+    ],
+  },
+
+  "seam-status": {
+    id: "seam-status",
+    title: "Seam Status",
+    description: "Contract-aware developer badge and live modal displaying real-time frontend to FastAPI contract health.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { SeamStatus } from "@/components/ui/seam-status";`,
+    sourceCode: `export { SeamStatus } from "@/components/ui/seam-status";`,
+    props: [
+      { name: "variant", type: '"pill" | "banner" | "card"', defaultValue: '"pill"', description: "Visual display mode." },
+      { name: "endpoint", type: "SeamContractEndpoint", defaultValue: "auto", description: "Single endpoint contract details." },
+      { name: "showInspectorOnClick", type: "boolean", defaultValue: "true", description: "Opens interactive inspector modal on click." },
+    ],
+    examples: [
+      {
+        title: "Contract Dev Pill",
+        code: `<SeamStatus variant="pill" />`,
+      },
+    ],
+  },
+
+  "alert-dialog": {
+    id: "alert-dialog",
+    title: "Alert Dialog",
+    description: "Modal confirmation dialog interrupting the user with important content and expecting a response.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: [],
+    importSnippet: `import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";`,
+    sourceCode: `export { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";`,
+    props: [
+      { name: "open", type: "boolean", defaultValue: "undefined", description: "Controlled open state." },
+      { name: "onOpenChange", type: "(open: boolean) => void", defaultValue: "undefined", description: "Event handler called when the open state changes." },
+    ],
+    examples: [
+      {
+        title: "Destructive Confirmation",
+        code: `<AlertDialog>
+  <AlertDialogTrigger>
+    <Button variant="destructive">Delete Project</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone. This will permanently delete your workspace contract models.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>`,
+      },
+    ],
+  },
+
+  bubble: {
+    id: "bubble",
+    title: "Bubble",
+    description: "AI chat bubble primitive supporting streaming indicators, collapsible reasoning steps, and Seam verification.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
+    sourceCode: `export { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
+    props: [
+      { name: "role", type: '"user" | "assistant" | "system"', defaultValue: '"assistant"', description: "Chat participant role determining alignment and visual style." },
+      { name: "isStreaming", type: "boolean", defaultValue: "false", description: "Renders animated streaming cursor pulse." },
+      { name: "seamVerified", type: "boolean", defaultValue: "false", description: "Displays Seam contract parity badge." },
+    ],
+    examples: [
+      {
+        title: "AI Response with Contract Badge",
+        code: `<Bubble role="assistant" seamVerified seamEndpoint="POST /v1/feedback">
+  <BubbleThinking duration="1.4s">
+    Verified 5/5 payload keys against FastAPI SubmitTeamFeedbackRequest schema.
+  </BubbleThinking>
+  Your team feedback has been recorded and synchronized with the backend.
+</Bubble>`,
+      },
+    ],
+  },
+
+  attachment: {
+    id: "attachment",
+    title: "Attachment",
+    description: "File upload dropzone and item cards with mime-type icons, size formatting, and progress indicators.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { AttachmentDropzone, AttachmentItem } from "@/components/ui/attachment";`,
+    sourceCode: `export { AttachmentDropzone, AttachmentItem } from "@/components/ui/attachment";`,
+    props: [
+      { name: "onFilesSelected", type: "(files: File[]) => void", defaultValue: "undefined", description: "Callback fired when files are dropped or selected." },
+      { name: "maxSizeBytes", type: "number", defaultValue: "10485760", description: "Maximum file size allowed in bytes." },
+    ],
+    examples: [
+      {
+        title: "File Dropzone & Upload Item",
+        code: `<div className="space-y-4">
+  <AttachmentDropzone onFilesSelected={(files) => console.log(files)} />
+  <AttachmentItem
+    file={{ id: "1", name: "openapi-spec.json", size: 142000, progress: 100 }}
+  />
+</div>`,
+      },
+    ],
+  },
+
+  "seam-form": {
+    id: "seam-form",
+    title: "Seam Form",
+    description: "Contract-aware form wrapper that detects casing drift and missing fields between frontend inputs and FastAPI models in real time.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { SeamForm, SeamFormField } from "@/components/ui/seam-form";`,
+    sourceCode: `export { SeamForm, SeamFormField } from "@/components/ui/seam-form";`,
+    props: [
+      { name: "endpoint", type: "string", defaultValue: "required", description: "Target backend API endpoint path." },
+      { name: "method", type: '"GET" | "POST" | "PUT" | "PATCH" | "DELETE"', defaultValue: '"POST"', description: "HTTP method." },
+      { name: "backendModel", type: "string", defaultValue: "undefined", description: "Target Pydantic / OpenAPI schema model." },
+      { name: "expectedFields", type: "string[]", defaultValue: "[]", description: "Backend expected field names." },
+    ],
+    examples: [
+      {
+        title: "FastAPI-Backed Contact Form",
+        code: `<SeamForm
+  endpoint="/api/v1/users/register"
+  method="POST"
+  backendModel="UserRegisterRequest"
+  expectedFields={["user_name", "email_address"]}
+>
+  <SeamFormField name="user_name" label="Username" required>
+    <Input placeholder="sarah_dev" />
+  </SeamFormField>
+  <Button type="submit">Register</Button>
+</SeamForm>`,
+      },
+    ],
+  },
 };

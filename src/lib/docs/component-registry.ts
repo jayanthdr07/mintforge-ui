@@ -701,6 +701,34 @@ export function TabsContent({
     ],
   },
 
+  "alert-dialog": {
+    id: "alert-dialog",
+    title: "Alert Dialog",
+    description: "Accessible modal confirmation dialog with 5 custom designs (Confirm, Destructive with scooped notch, Form, Success, and Detail), focus trap, and customizable appearance.",
+    category: "Feedback",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel, AlertDialogConfirm, AlertDialogDestructive, AlertDialogForm, AlertDialogSuccess, AlertDialogDetail } from "@/components/ui/alert-dialog";`,
+    sourceCode: `export * from "@/components/ui/alert-dialog";`,
+    props: [
+      { name: "open", type: "boolean", defaultValue: "undefined", description: "Controlled open state of the dialog." },
+      { name: "size", type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: "Width scale of the modal dialog." },
+      { name: "appearance", type: '"standard" | "tinted" | "bordered"', defaultValue: '"standard"', description: "Surface aesthetic styling." },
+      { name: "closeOnEscape", type: "boolean", defaultValue: "true", description: "Dismiss modal on Escape key press." },
+      { name: "closeOnOverlayClick", type: "boolean", defaultValue: "true", description: "Dismiss modal when clicking outside on backdrop." },
+    ],
+    examples: [
+      {
+        title: "Confirm Dialog",
+        code: `<AlertDialogConfirm />`,
+      },
+      {
+        title: "Destructive Scooped Notch Dialog",
+        code: `<AlertDialogDestructive />`,
+      },
+    ],
+  },
+
   avatar: {
     id: "avatar",
     title: "Avatar",
@@ -747,52 +775,6 @@ export function TabsContent({
     ],
   },
 
-  "alert-dialog": {
-    id: "alert-dialog",
-    title: "Alert Dialog",
-    description: "Modal confirmation dialog interrupting the user with important content and expecting a response.",
-    category: "Primitives",
-    status: "Ready",
-    dependencies: [],
-    importSnippet: `import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog";`,
-    sourceCode: `export { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";`,
-    props: [
-      { name: "open", type: "boolean", defaultValue: "undefined", description: "Controlled open state." },
-      { name: "onOpenChange", type: "(open: boolean) => void", defaultValue: "undefined", description: "Event handler called when the open state changes." },
-    ],
-    examples: [
-      {
-        title: "Destructive Confirmation",
-        code: `<AlertDialog>
-  <AlertDialogTrigger>
-    <Button variant="destructive">Delete Project</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-      <AlertDialogDescription>
-        This action cannot be undone. This will permanently delete your workspace contract models.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>`,
-      },
-    ],
-  },
 
   bubble: {
     id: "bubble",

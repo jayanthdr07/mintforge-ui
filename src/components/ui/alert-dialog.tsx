@@ -1,20 +1,33 @@
 "use client";
 
 import * as React from "react";
+import { X } from "lucide-react";
 
-interface AlertDialogContextType {
+export type AlertDialogSize = "sm" | "md" | "lg";
+export type AlertDialogAppearance = "standard" | "tinted" | "bordered";
+
+export interface AlertDialogContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
   titleId: string;
   descriptionId: string;
+  closeOnEscape: boolean;
+  closeOnOverlayClick: boolean;
 }
 
 const AlertDialogContext = React.createContext<AlertDialogContextType | null>(null);
 
-function useAlertDialog() {
+export function useAlertDialog() {
   const context = React.useContext(AlertDialogContext);
   if (!context) {
-    throw new Error("AlertDialog components must be used within an <AlertDialog />");
+    return {
+      open: true,
+      setOpen: () => {},
+      titleId: "alert-dialog-title",
+      descriptionId: "alert-dialog-description",
+      closeOnEscape: false,
+      closeOnOverlayClick: false,
+    };
   }
   return context;
 }
@@ -22,15 +35,21 @@ function useAlertDialog() {
 export interface AlertDialogProps {
   children: React.ReactNode;
   open?: boolean;
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  closeOnEscape?: boolean;
+  closeOnOverlayClick?: boolean;
 }
 
 export function AlertDialog({
   children,
   open: controlledOpen,
+  defaultOpen = false,
   onOpenChange,
+  closeOnEscape = true,
+  closeOnOverlayClick = true,
 }: AlertDialogProps) {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
   const titleId = React.useId();
@@ -45,7 +64,16 @@ export function AlertDialog({
   );
 
   return (
-    <AlertDialogContext.Provider value={{ open, setOpen, titleId, descriptionId }}>
+    <AlertDialogContext.Provider
+      value={{
+        open,
+        setOpen,
+        titleId,
+        descriptionId,
+        closeOnEscape,
+        closeOnOverlayClick,
+      }}
+    >
       {children}
     </AlertDialogContext.Provider>
   );
@@ -53,7 +81,7 @@ export function AlertDialog({
 
 export interface AlertDialogTriggerProps {
   asChild?: boolean;
-  children: React.ReactElement<{ onClick?: React.MouseEventHandler }>;
+  children: React.ReactElement<any>;
 }
 
 export function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {
@@ -61,7 +89,7 @@ export function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {
 
   return React.cloneElement(children, {
     onClick: (e: React.MouseEvent) => {
-      children.props.onClick?.(e);
+      children.props?.onClick?.(e);
       setOpen(true);
     },
   });
@@ -69,54 +97,159 @@ export function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {
 
 export interface AlertDialogContentProps
   extends React.HTMLAttributes<HTMLDivElement> {
+  size?: AlertDialogSize;
+  appearance?: AlertDialogAppearance;
+  showCloseButton?: boolean;
   children: React.ReactNode;
 }
 
 export const AlertDialogContent = React.forwardRef<
   HTMLDivElement,
   AlertDialogContentProps
->(({ className = "", children, ...props }, ref) => {
-  const { open, setOpen, titleId, descriptionId } = useAlertDialog();
+>(
+  (
+    {
+      className = "",
+      size = "md",
+      appearance = "standard",
+      showCloseButton = true,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const { open, setOpen, titleId, descriptionId, closeOnEscape, closeOnOverlayClick } =
+      useAlertDialog();
+    const contentRef = React.useRef<HTMLDivElement | null>(null);
 
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    if (open) {
+    // Sync refs
+    const setRefs = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        contentRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      },
+      [ref]
+    );
+
+    // Escape listener & Body scroll locking & Focus trap
+    React.useEffect(() => {
+      if (!open) return;
+
+      const previousActiveElement = document.activeElement as HTMLElement | null;
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+
+      // Focus first focusable element inside modal
+      const focusableSelector =
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const timer = setTimeout(() => {
+        if (contentRef.current) {
+          const focusable = contentRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+          if (focusable.length > 0) {
+            focusable[0].focus();
+          } else {
+            contentRef.current.focus();
+          }
+        }
+      }, 50);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && closeOnEscape) {
+          e.preventDefault();
+          setOpen(false);
+          return;
+        }
+
+        // Accessible Focus Trap within modal
+        if (e.key === "Tab" && contentRef.current) {
+          const focusable = Array.from(
+            contentRef.current.querySelectorAll<HTMLElement>(focusableSelector)
+          );
+          if (focusable.length === 0) return;
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      };
+
       window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, setOpen]);
 
-  if (!open) return null;
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = originalOverflow || "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+        previousActiveElement?.focus();
+      };
+    }, [open, closeOnEscape, setOpen]);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150"
-        onClick={() => setOpen(false)}
-      />
+    if (!open) return null;
 
-      {/* Dialog Body */}
-      <div
-        ref={ref}
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
-        className={`relative z-10 w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl text-card-foreground animate-in zoom-in-95 duration-150 focus:outline-none ${className}`}
-        {...props}
-      >
-        {children}
+    const sizeClasses = {
+      sm: "max-w-sm",
+      md: "max-w-md",
+      lg: "max-w-xl",
+    }[size];
+
+    const appearanceClasses = {
+      standard: "bg-white border-[#E5E7EB] text-[#111827] shadow-[0_20px_50px_rgba(0,0,0,0.12)]",
+      tinted: "bg-[#FAFAFF] border-[#E0E7FF] text-[#111827] shadow-[0_20px_50px_rgba(81,69,255,0.08)]",
+      bordered: "bg-white border-2 border-[#CBD5E1] text-[#111827] shadow-[0_16px_40px_rgba(0,0,0,0.08)]",
+    }[appearance];
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        {/* Backdrop */}
+        <div
+          className="fixed inset-0 bg-black/45 backdrop-blur-[4px] transition-opacity duration-200 animate-in fade-in"
+          onClick={() => {
+            if (closeOnOverlayClick) setOpen(false);
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Modal Surface */}
+        <div
+          ref={setRefs}
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+          tabIndex={-1}
+          className={`relative z-10 w-full ${sizeClasses} rounded-2xl sm:rounded-3xl border p-6 sm:p-7 transition-all duration-200 animate-in zoom-in-95 fade-in focus:outline-none ${appearanceClasses} ${className}`}
+          {...props}
+        >
+          {showCloseButton && (
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close dialog"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 p-1.5 rounded-full text-[#64748B] hover:text-[#111827] hover:bg-black/5 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5145FF]"
+            >
+              <X size={16} />
+            </button>
+          )}
+          {children}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 AlertDialogContent.displayName = "AlertDialogContent";
 
 export function AlertDialogHeader({
@@ -125,7 +258,7 @@ export function AlertDialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`flex flex-col space-y-2 text-left mb-5 ${className}`}
+      className={`flex flex-col space-y-2 text-left ${className}`}
       {...props}
     />
   );
@@ -140,7 +273,7 @@ export function AlertDialogTitle({
   return (
     <h3
       id={titleId}
-      className={`text-base font-bold text-foreground flex items-center gap-2 ${className}`}
+      className={`text-lg sm:text-xl font-bold text-[#111827] leading-snug tracking-tight ${className}`}
       {...props}
     >
       {children}
@@ -157,7 +290,7 @@ export function AlertDialogDescription({
   return (
     <p
       id={descriptionId}
-      className={`text-xs text-muted-foreground leading-relaxed ${className}`}
+      className={`text-xs sm:text-sm text-[#64748B] leading-relaxed ${className}`}
       {...props}
     >
       {children}
@@ -171,7 +304,7 @@ export function AlertDialogFooter({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`flex items-center justify-end gap-2.5 pt-4 border-t border-border mt-5 ${className}`}
+      className={`flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-4 mt-6 border-t border-[#EEF2F6] ${className}`}
       {...props}
     />
   );
@@ -194,7 +327,7 @@ export const AlertDialogCancel = React.forwardRef<
         onClick?.(e);
         setOpen(false);
       }}
-      className={`px-3.5 py-2 text-xs font-semibold rounded-lg border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
+      className={`w-full sm:w-auto px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#E5E7EB] bg-white text-[#111827] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5145FF] ${className}`}
       {...props}
     >
       {children}
@@ -205,7 +338,7 @@ AlertDialogCancel.displayName = "AlertDialogCancel";
 
 export interface AlertDialogActionProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "destructive";
+  variant?: "default" | "destructive" | "success";
 }
 
 export const AlertDialogAction = React.forwardRef<
@@ -226,10 +359,12 @@ export const AlertDialogAction = React.forwardRef<
 
     const variantStyles = {
       default:
-        "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm",
+        "bg-[#5145FF] text-white hover:bg-[#4338CA] shadow-sm focus-visible:ring-[#5145FF]",
       destructive:
-        "bg-red-600 text-white hover:bg-red-700 shadow-sm focus-visible:ring-red-500",
-    };
+        "bg-[#DC2626] text-white hover:bg-red-700 shadow-sm focus-visible:ring-red-500",
+      success:
+        "bg-[#15803D] text-white hover:bg-emerald-800 shadow-sm focus-visible:ring-emerald-500",
+    }[variant];
 
     return (
       <button
@@ -239,7 +374,7 @@ export const AlertDialogAction = React.forwardRef<
           onClick?.(e);
           setOpen(false);
         }}
-        className={`px-4 py-2 text-xs font-semibold rounded-lg transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 ${variantStyles[variant]} ${className}`}
+        className={`w-full sm:w-auto px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 ${variantStyles} ${className}`}
         {...props}
       >
         {children}
@@ -248,3 +383,34 @@ export const AlertDialogAction = React.forwardRef<
   }
 );
 AlertDialogAction.displayName = "AlertDialogAction";
+
+export const AlertDialogClose = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className = "", children, onClick, ...props }, ref) => {
+  const { setOpen } = useAlertDialog();
+  return (
+    <button
+      ref={ref}
+      type="button"
+      onClick={(e) => {
+        onClick?.(e);
+        setOpen(false);
+      }}
+      aria-label="Close dialog"
+      className={className}
+      {...props}
+    >
+      {children || <X size={16} />}
+    </button>
+  );
+});
+AlertDialogClose.displayName = "AlertDialogClose";
+
+// Re-export presets and preset types for convenient unified import
+export * from "./alert-dialog/alert-dialog.types";
+export * from "./alert-dialog/alert-dialog-confirm";
+export * from "./alert-dialog/alert-dialog-destructive";
+export * from "./alert-dialog/alert-dialog-form";
+export * from "./alert-dialog/alert-dialog-success";
+export * from "./alert-dialog/alert-dialog-detail";

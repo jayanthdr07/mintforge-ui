@@ -41,27 +41,30 @@ export function useBubble() {
 
 const variantStyles: Record<BubbleVariant, string> = {
   default:
-    "bg-[#5145FF] text-white border-transparent shadow-xs [&_a]:text-white [&_a]:underline [&_button]:text-white",
+    "bg-[#5145FF] text-white border-transparent shadow-[0_2px_8px_rgba(81,69,255,0.18)] [&_a]:text-white [&_a]:underline [&_button]:text-white",
   secondary:
-    "bg-white text-[#111827] border-[#E5E7EB] shadow-xs [&_a]:text-[#5145FF] [&_a]:underline",
+    "bg-white text-[#111827] border-[#E5E7EB] shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:border-[#D1D5DB] [&_a]:text-[#5145FF] [&_a]:underline",
   muted:
-    "bg-[#F1F5F9] text-[#111827] border-transparent [&_a]:text-[#2563EB] [&_a]:underline",
+    "bg-[#F1F5F9] text-[#1E293B] border-transparent [&_a]:text-[#2563EB] [&_a]:underline",
   tinted:
-    "bg-[#F2F0FF] text-[#5145FF] border-[#E0DAFF] [&_a]:text-[#4338CA] [&_a]:underline",
+    "bg-[#F5F3FF] text-[#5145FF] border-[#E0DAFF] [&_a]:text-[#4338CA] [&_a]:underline",
   outline:
-    "bg-transparent text-[#111827] border-[#CBD5E1] [&_a]:text-[#5145FF] [&_a]:underline",
+    "bg-white text-[#111827] border-[#CBD5E1] hover:border-[#94A3B8] [&_a]:text-[#5145FF] [&_a]:underline",
   ghost:
-    "bg-transparent text-[#111827] border-transparent hover:bg-slate-100/60 [&_a]:text-[#5145FF] [&_a]:underline",
+    "bg-transparent text-[#111827] border-transparent hover:bg-slate-100/70 [&_a]:text-[#5145FF] [&_a]:underline",
   destructive:
-    "bg-[#FEE2E2] text-[#DC2626] border-[#FECACA] [&_a]:text-[#B91C1C] [&_a]:underline",
+    "bg-[#FEF2F2] text-[#DC2626] border-[#FECACA] [&_a]:text-[#B91C1C] [&_a]:underline",
 };
 
 export interface BubbleProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: BubbleVariant;
   align?: BubbleAlign;
+  // Conversational metadata
+  name?: string;
+  timestamp?: string;
+  avatar?: React.ReactNode;
   // AI assistant backwards-compatibility properties
   role?: BubbleRole;
-  avatar?: React.ReactNode;
   isStreaming?: boolean;
   seamVerified?: boolean;
   seamEndpoint?: string;
@@ -74,8 +77,10 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
     {
       variant,
       align,
-      role,
+      name,
+      timestamp,
       avatar,
+      role,
       isStreaming = false,
       seamVerified = false,
       seamEndpoint,
@@ -87,7 +92,6 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
     },
     ref
   ) => {
-    // Deduce alignment and variant from role if not explicitly passed
     const isUser = role === "user";
     const resolvedAlign: BubbleAlign =
       align !== undefined ? align : isUser ? "end" : "start";
@@ -112,64 +116,83 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
       setTimeout(() => setCopied(false), 2000);
     };
 
-    // If role or avatar is present, render with conversational avatar wrapper
-    if (role !== undefined || avatar !== undefined) {
+    // If role, avatar, name, or timestamp is provided, wrap in an authentic conversation item
+    if (role !== undefined || avatar !== undefined || name !== undefined || timestamp !== undefined) {
       return (
         <BubbleContext.Provider
           value={{ variant: resolvedVariant, align: resolvedAlign }}
         >
           <div
             ref={ref}
-            className={`flex items-start gap-3 w-full group ${
+            data-slot="bubble-item"
+            data-align={resolvedAlign}
+            className={`flex items-start gap-2.5 w-full group ${
               resolvedAlign === "end" ? "flex-row-reverse" : "flex-row"
             } ${className}`}
             {...props}
           >
-            {/* Avatar */}
-            <div className="shrink-0 mt-0.5">
-              {avatar !== undefined ? (
-                avatar
-              ) : (
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shadow-xs ${
-                    isUser
-                      ? "bg-[#5145FF] text-white"
-                      : "bg-[#F2F0FF] text-[#5145FF] border border-[#E0DAFF]"
-                  }`}
-                >
-                  {isUser ? <User size={15} /> : <Bot size={15} />}
-                </div>
-              )}
-            </div>
+            {/* Avatar Slot */}
+            {(avatar !== undefined || role !== undefined) && (
+              <div className="shrink-0 mt-0.5">
+                {avatar !== undefined ? (
+                  avatar
+                ) : (
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shadow-2xs select-none ${
+                      isUser
+                        ? "bg-[#5145FF] text-white"
+                        : "bg-[#F2F0FF] text-[#5145FF] border border-[#E0DAFF]"
+                    }`}
+                  >
+                    {isUser ? <User size={13} /> : <Bot size={13} />}
+                  </div>
+                )}
+              </div>
+            )}
 
-            {/* Message Container */}
+            {/* Message Stack */}
             <div
-              className={`flex flex-col gap-1.5 max-w-[85%] sm:max-w-[75%] ${
+              className={`flex flex-col gap-1 max-w-[85%] sm:max-w-[78%] ${
                 resolvedAlign === "end" ? "items-end" : "items-start"
               }`}
             >
-              {/* Main Bubble Content */}
+              {/* Header: Name & Timestamp */}
+              {(name || timestamp) && (
+                <div
+                  className={`flex items-center gap-1.5 px-1 text-[11px] font-medium text-[#64748B] ${
+                    resolvedAlign === "end" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  {name && <span className="font-semibold text-[#111827]">{name}</span>}
+                  {name && timestamp && <span className="text-[#94A3B8]">•</span>}
+                  {timestamp && <span className="text-[#94A3B8]">{timestamp}</span>}
+                </div>
+              )}
+
+              {/* Speech Bubble Container */}
               <div
-                className={`rounded-3xl px-4 py-3 text-sm leading-relaxed transition-all border ${
+                className={`relative rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed border transition-all duration-150 ${
                   variantStyles[resolvedVariant]
                 } ${
-                  resolvedAlign === "end" ? "rounded-tr-xs" : "rounded-tl-xs"
+                  resolvedAlign === "end"
+                    ? "rounded-br-[4px] text-left"
+                    : "rounded-bl-[4px] text-left"
                 }`}
               >
                 {children}
 
-                {/* Streaming Cursor */}
+                {/* Streaming Indicator */}
                 {isStreaming && (
-                  <span className="inline-block w-1.5 h-4 ml-1 bg-[#10B981] align-middle animate-pulse" />
+                  <span className="inline-block w-1.5 h-3.5 ml-1 bg-[#10B981] align-middle animate-pulse" />
                 )}
               </div>
 
-              {/* Assistant Footnote: Actions & Seam Check Status */}
-              {!isUser && (
-                <div className="flex items-center gap-3 px-1 text-xs text-[#64748B]">
+              {/* Assistant Footer Accessories */}
+              {!isUser && (seamVerified || onRetry || onCopy) && (
+                <div className="flex items-center gap-2 px-1 text-xs text-[#64748B]">
                   {seamVerified && (
                     <div className="inline-flex items-center gap-1 text-[11px] font-mono text-[#15803D] bg-[#DCFCE7] border border-[#BBF7D0] px-2 py-0.5 rounded-full">
-                      <ShieldCheck size={12} />
+                      <ShieldCheck size={11} />
                       <span>Seam Verified</span>
                       {seamEndpoint && (
                         <span className="opacity-75">({seamEndpoint})</span>
@@ -177,7 +200,6 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
                     </div>
                   )}
 
-                  {/* Action Buttons */}
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       type="button"
@@ -187,9 +209,9 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
                       className="p-1 rounded hover:bg-slate-200/60 text-[#64748B] hover:text-[#111827] transition"
                     >
                       {copied ? (
-                        <Check size={13} className="text-[#15803D]" />
+                        <Check size={12} className="text-[#15803D]" />
                       ) : (
-                        <Copy size={13} />
+                        <Copy size={12} />
                       )}
                     </button>
                     {onRetry && (
@@ -200,7 +222,7 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
                         aria-label="Retry generation"
                         className="p-1 rounded hover:bg-slate-200/60 text-[#64748B] hover:text-[#111827] transition"
                       >
-                        <RotateCw size={13} />
+                        <RotateCw size={12} />
                       </button>
                     )}
                   </div>
@@ -222,7 +244,7 @@ export const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
           data-slot="bubble"
           data-variant={resolvedVariant}
           data-align={resolvedAlign}
-          className={`relative flex w-fit max-w-[85%] sm:max-w-[75%] min-w-0 flex-col gap-1 ${
+          className={`relative flex w-fit max-w-[85%] sm:max-w-[78%] min-w-0 flex-col gap-1 ${
             resolvedAlign === "end" ? "self-end ml-auto" : "self-start mr-auto"
           } ${className}`}
           {...props}
@@ -250,12 +272,12 @@ export const BubbleContent = React.forwardRef<
     <div
       ref={ref}
       data-slot="bubble-content"
-      className={`w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border px-4 py-3 text-sm leading-relaxed break-words transition-all duration-150 ${
+      className={`relative w-fit max-w-full min-w-0 overflow-hidden rounded-2xl border px-3.5 py-2.5 text-sm leading-relaxed break-words transition-all duration-150 ${
         variantStyles[variant]
       } ${
         align === "end"
-          ? "rounded-tr-xs ml-auto text-left"
-          : "rounded-tl-xs mr-auto text-left"
+          ? "rounded-br-[4px] ml-auto text-left"
+          : "rounded-bl-[4px] mr-auto text-left"
       } ${className}`}
       {...props}
     >
@@ -277,7 +299,7 @@ export const BubbleGroup = React.forwardRef<HTMLDivElement, BubbleGroupProps>(
       <div
         ref={ref}
         data-slot="bubble-group"
-        className={`flex flex-col gap-1.5 w-full ${
+        className={`flex flex-col gap-1 w-full ${
           align === "end" ? "items-end" : "items-start"
         } ${className}`}
         {...props}
@@ -303,10 +325,10 @@ export const BubbleReactions = React.forwardRef<
 >(({ side = "bottom", align = "start", className = "", children, ...props }, ref) => {
   const sideClass =
     side === "top"
-      ? "-top-3 -translate-y-1/2"
-      : "-bottom-3 translate-y-1/2";
+      ? "-top-2.5 -translate-y-1/2"
+      : "-bottom-2.5 translate-y-1/2";
 
-  const alignClass = align === "end" ? "right-3" : "left-3";
+  const alignClass = align === "end" ? "right-2" : "left-2";
 
   return (
     <div
@@ -321,6 +343,32 @@ export const BubbleReactions = React.forwardRef<
   );
 });
 BubbleReactions.displayName = "BubbleReactions";
+
+// ─── BUBBLE ACTIONS ──────────────────────────────────────────────────────────
+
+export interface BubbleActionsProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  align?: BubbleAlign;
+}
+
+export const BubbleActions = React.forwardRef<
+  HTMLDivElement,
+  BubbleActionsProps
+>(({ align = "start", className = "", children, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-slot="bubble-actions"
+      className={`flex items-center gap-1 text-[#64748B] pt-0.5 ${
+        align === "end" ? "justify-end" : "justify-start"
+      } ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+});
+BubbleActions.displayName = "BubbleActions";
 
 // ─── BUBBLE COLLAPSIBLE ──────────────────────────────────────────────────────
 
@@ -347,7 +395,7 @@ export const BubbleCollapsible = React.forwardRef<
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:underline opacity-90 cursor-pointer"
+        className="inline-flex items-center gap-1 mt-1.5 text-xs font-semibold hover:underline opacity-90 cursor-pointer"
         aria-expanded={expanded}
       >
         <span>{expanded ? "Show less" : "Show more"}</span>
@@ -379,19 +427,19 @@ export function BubbleThinking({
 
   return (
     <div
-      className={`w-full rounded-2xl border border-[#E5E7EB] bg-[#F8FAFC] overflow-hidden mb-2 text-xs ${className}`}
+      className={`w-full rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] overflow-hidden mb-2 text-xs ${className}`}
       {...props}
     >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-3.5 py-2.5 text-left text-[#64748B] hover:text-[#111827] hover:bg-slate-100/60 transition font-medium"
+        className="flex items-center justify-between w-full px-3 py-2 text-left text-[#64748B] hover:text-[#111827] hover:bg-slate-100/60 transition font-medium"
       >
         <div className="flex items-center gap-2">
-          <Sparkles size={13} className="text-[#F59E0B]" />
+          <Sparkles size={13} className="text-[#5145FF]" />
           <span className="font-semibold text-[#111827]">{title}</span>
           {duration && (
-            <span className="text-[10px] text-[#64748B] font-mono bg-white px-1.5 py-0.5 rounded border border-[#E5E7EB]">
+            <span className="text-[10px] text-[#64748B] font-mono bg-white px-1.5 py-0.2 rounded border border-[#E5E7EB]">
               {duration}
             </span>
           )}
@@ -400,7 +448,7 @@ export function BubbleThinking({
       </button>
 
       {isOpen && (
-        <div className="px-3.5 pb-3 pt-1 border-t border-[#E5E7EB] text-[#475569] font-mono text-[11px] leading-relaxed whitespace-pre-wrap">
+        <div className="px-3 pb-2.5 pt-1 border-t border-[#E5E7EB] text-[#475569] font-mono text-[11px] leading-relaxed whitespace-pre-wrap">
           {children}
         </div>
       )}

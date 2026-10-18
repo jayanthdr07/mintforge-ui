@@ -761,8 +761,8 @@ export function TabsContent({
     category: "Feedback",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
-    sourceCode: `export { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
+    importSnippet: `import { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleActions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
+    sourceCode: `export { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleActions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
     props: [
       { name: "variant", type: '"default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive"', defaultValue: '"default"', description: "Visual surface style." },
       { name: "align", type: '"start" | "end"', defaultValue: '"start"', description: "Horizontal layout alignment." },

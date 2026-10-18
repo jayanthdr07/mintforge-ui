@@ -6,280 +6,350 @@ import {
   BubbleContent,
   BubbleGroup,
   BubbleReactions,
+  BubbleActions,
   BubbleCollapsible,
   BubbleThinking,
 } from "@/components/ui/bubble";
-import { ExternalLink, Play, LifeBuoy, Check, Bot } from "lucide-react";
+import {
+  Sparkles,
+  Copy,
+  Check,
+  RotateCw,
+  Share2,
+  ThumbsUp,
+  ThumbsDown,
+  Bot,
+  User,
+  CheckCircle2,
+  ExternalLink,
+} from "lucide-react";
 
-export function BubbleVariantsCard() {
+/* -------------------------------------------------------------------------------------------------
+ * 1. Basic Variations Card (Column 1)
+ * -----------------------------------------------------------------------------------------------*/
+export function BubbleBasicVariationsCard() {
   return (
-    <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Visual Variants
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Seven clearly distinguishable visual surface variants with balanced contrast and refined geometry.
-      </p>
+    <div className="mf-showcase-card h-full flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-base font-bold text-[#111827]">
+            Basic &amp; Variations
+          </h3>
+          <span className="text-[11px] font-mono text-[#5145FF] bg-[#F2F0FF] px-2 py-0.5 rounded-full border border-[#E0DAFF]">
+            7 Surfaces
+          </span>
+        </div>
 
-      <div className="flex flex-col gap-3">
-        <Bubble variant="default" align="start">
-          <BubbleContent>
-            <strong>Default:</strong> Vibrant primary surface for user prompts or high-emphasis messages.
-          </BubbleContent>
-        </Bubble>
+        {/* 1. Primary Solid */}
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Primary / Solid (User Outgoing)
+          </span>
+          <div className="w-full">
+            <Bubble variant="default" align="end">
+              <BubbleContent>
+                Can you run API contract checks against our staging PR?
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
 
-        <Bubble variant="secondary" align="start">
-          <BubbleContent>
-            <strong>Secondary:</strong> Clean white elevated card with subtle border for assistant responses.
-          </BubbleContent>
-        </Bubble>
+        {/* 2. Secondary Card */}
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Secondary / Card (Assistant Incoming)
+          </span>
+          <div className="w-full">
+            <Bubble variant="secondary" align="start">
+              <BubbleContent>
+                All 5 schema fields matched FastAPI with 0 drift.
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
 
-        <Bubble variant="muted" align="start">
-          <BubbleContent>
-            <strong>Muted:</strong> Subtle neutral gray surface for background chatter and contextual replies.
-          </BubbleContent>
-        </Bubble>
+        {/* 3. Soft Lavender Tint */}
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Soft Lavender Tint
+          </span>
+          <div className="w-full">
+            <Bubble variant="tinted" align="start">
+              <BubbleContent>
+                Automated test pipeline completed in 1.4s.
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
 
-        <Bubble variant="tinted" align="start">
-          <BubbleContent>
-            <strong>Tinted:</strong> Signature lavender wash with indigo accents for system notifications.
-          </BubbleContent>
-        </Bubble>
+        {/* 4. Muted Slate */}
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Muted Neutral
+          </span>
+          <div className="w-full">
+            <Bubble variant="muted" align="start">
+              <BubbleContent>
+                PR #142 is approved and ready to merge.
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
 
-        <Bubble variant="outline" align="start">
-          <BubbleContent>
-            <strong>Outline:</strong> Transparent background with crisp border for minimal layouts.
-          </BubbleContent>
-        </Bubble>
+        {/* 5. Minimalist Outline */}
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Minimalist Outline
+          </span>
+          <div className="w-full">
+            <Bubble variant="outline" align="start">
+              <BubbleContent>
+                View live deployment on preview server.
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
 
-        <Bubble variant="ghost" align="start">
-          <BubbleContent>
-            <strong>Ghost:</strong> Borderless lightweight bubble with subtle hover surface.
-          </BubbleContent>
-        </Bubble>
-
-        <Bubble variant="destructive" align="start">
-          <BubbleContent>
-            <strong>Destructive:</strong> Soft crimson wash for warnings, failed actions, or critical alerts.
-          </BubbleContent>
-        </Bubble>
+        {/* 6. Destructive / Error */}
+        <div className="mb-2">
+          <span className="text-xs font-semibold text-[#64748B] block mb-2">
+            Destructive / Warning
+          </span>
+          <div className="w-full">
+            <Bubble variant="destructive" align="start">
+              <BubbleContent>
+                Build check failed: Environment variable missing.
+              </BubbleContent>
+            </Bubble>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export function BubbleAlignmentCard() {
+/* -------------------------------------------------------------------------------------------------
+ * 2. Conversation Flow & Grouping Card (Column 2 Top)
+ * -----------------------------------------------------------------------------------------------*/
+export function BubbleConversationFlowCard() {
   return (
     <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Alignment &amp; Conversation Flow
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Configurable alignment through <code>align=&quot;start&quot;</code> (incoming) and <code>align=&quot;end&quot;</code> (outgoing).
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-base font-bold text-[#111827]">
+          Conversation Flow &amp; Grouping
+        </h3>
+        <span className="text-[11px] font-mono text-[#15803D] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+          Active Chat
+        </span>
+      </div>
 
-      <div className="flex flex-col gap-4 p-4 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
-        {/* Outgoing User */}
-        <Bubble variant="default" align="end">
-          <BubbleContent>
-            Can you check if our frontend interview submission payload matches our FastAPI backend?
-          </BubbleContent>
+      <div className="flex flex-col gap-3 p-3.5 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
+        {/* Outgoing Message */}
+        <Bubble
+          variant="default"
+          align="end"
+          name="You"
+          timestamp="10:24 AM"
+          avatar={
+            <div className="w-7 h-7 rounded-full bg-[#5145FF] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              <User size={13} />
+            </div>
+          }
+        >
+          Check our FastAPI feedback payload schema.
         </Bubble>
 
         {/* Incoming Assistant */}
-        <Bubble variant="secondary" align="start">
-          <BubbleContent>
-            I analyzed your form against the FastAPI <code>SubmitTeamFeedbackRequest</code> model. All 5 fields match with zero schema drift!
-          </BubbleContent>
-        </Bubble>
-
-        {/* Outgoing User */}
-        <Bubble variant="default" align="end">
-          <BubbleContent>
-            Great, push the contract report to the PR.
-          </BubbleContent>
-        </Bubble>
-      </div>
-    </div>
-  );
-}
-
-export function BubbleGroupedCard() {
-  return (
-    <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Grouped Bubbles
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Consecutive messages grouped with <code>&lt;BubbleGroup&gt;</code> apply tighter vertical spacing.
-      </p>
-
-      <div className="space-y-4 p-4 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
-        {/* Outgoing Group */}
-        <BubbleGroup align="end">
-          <Bubble variant="default" align="end">
-            <BubbleContent>Hey, did the nightly build finish?</BubbleContent>
-          </Bubble>
-          <Bubble variant="default" align="end">
-            <BubbleContent>Checking the staging server logs now.</BubbleContent>
-          </Bubble>
-        </BubbleGroup>
-
-        {/* Incoming Group */}
-        <BubbleGroup align="start">
-          <Bubble variant="secondary" align="start">
-            <BubbleContent>Yes! All 142 integration tests passed on the first run.</BubbleContent>
-          </Bubble>
-          <Bubble variant="secondary" align="start">
-            <BubbleContent>Artifacts uploaded to the CDN and ready for deployment.</BubbleContent>
-          </Bubble>
-        </BubbleGroup>
-      </div>
-    </div>
-  );
-}
-
-export function BubbleReactionsCard() {
-  const [reacted, setReacted] = React.useState(false);
-
-  return (
-    <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Reactions &amp; Floating Badges
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Floating emoji capsules with <code>role=&quot;img&quot;</code> and descriptive <code>aria-label</code> tags anchored to bubble edges.
-      </p>
-
-      <div className="flex flex-col gap-8 py-4 px-2">
-        {/* Reaction anchored at bottom right */}
-        <Bubble variant="muted" align="start">
-          <BubbleContent>
-            I don&apos;t need tests, I know my code works on the first compile!
-          </BubbleContent>
-          <BubbleReactions side="bottom" align="end">
-            <span>👍</span>
-            <span>😮</span>
-            <span className="font-mono text-[10px] text-[#64748B] font-bold">+2</span>
-          </BubbleReactions>
-        </Bubble>
-
-        {/* Reaction anchored at top left with interactive toggle */}
-        <Bubble variant="default" align="end">
-          <BubbleContent>
-            Tests passed on the first try. All 142 of them. Looking good!
-          </BubbleContent>
-          <BubbleReactions side="top" align="start">
-            <span>🎉</span>
-            <span>👏</span>
-            <button
-              type="button"
-              onClick={() => setReacted(!reacted)}
-              className="ml-0.5 text-[11px] hover:scale-125 transition-transform cursor-pointer"
-              aria-label="Add reaction"
-            >
-              {reacted ? "❤️" : "➕"}
-            </button>
-          </BubbleReactions>
-        </Bubble>
-      </div>
-    </div>
-  );
-}
-
-export function BubbleActionButtonsCard() {
-  return (
-    <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Interactive Buttons &amp; Action Prompts
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Embed action buttons, quick suggestions, and links directly inside bubble content.
-      </p>
-
-      <div className="flex flex-col gap-4">
-        <Bubble variant="secondary" align="start">
-          <BubbleContent>
-            <p className="mb-2">Are you sure you want to run the database migration on production?</p>
-            <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#E5E7EB]">
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#5145FF] text-white text-xs font-semibold hover:bg-[#4338CA] transition shadow-xs cursor-pointer"
-              >
-                <Play size={11} fill="currentColor" />
-                <span>Yes, run migration</span>
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-[#475569] text-xs font-medium hover:bg-slate-200 transition cursor-pointer"
-              >
-                <LifeBuoy size={11} />
-                <span>Talk to a human</span>
-              </button>
+        <Bubble
+          variant="secondary"
+          align="start"
+          name="Mintforge AI"
+          timestamp="10:24 AM"
+          avatar={
+            <div className="w-7 h-7 rounded-full bg-[#F2F0FF] text-[#5145FF] border border-[#E0DAFF] flex items-center justify-center font-bold text-xs shadow-xs">
+              <Bot size={13} />
             </div>
-          </BubbleContent>
+          }
+        >
+          Verified against <code>SubmitTeamFeedbackRequest</code>. All 5 keys pass.
         </Bubble>
 
-        <Bubble variant="tinted" align="start">
-          <BubbleContent>
-            Review the updated specification in our{" "}
-            <a
-              href="/docs/components/bubble"
-              className="font-semibold underline inline-flex items-center gap-0.5"
-            >
-              <span>Architecture Documentation</span>
-              <ExternalLink size={11} />
-            </a>.
-          </BubbleContent>
-        </Bubble>
+        {/* Grouped Consecutive Follow-up */}
+        <div className="pt-1">
+          <div className="text-[11px] font-semibold text-[#64748B] mb-1.5 flex items-center gap-1.5 pl-9">
+            <span>Grouped Consecutive Messages</span>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-[#F2F0FF] text-[#5145FF] border border-[#E0DAFF] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+              <Bot size={13} />
+            </div>
+            <BubbleGroup align="start">
+              <Bubble variant="secondary" align="start">
+                <BubbleContent>Generated contract diff report.</BubbleContent>
+              </Bubble>
+              <Bubble variant="secondary" align="start">
+                <BubbleContent>Synchronized automatically with GitHub PR #41.</BubbleContent>
+              </Bubble>
+            </BubbleGroup>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export function BubbleCollapsibleCard() {
+/* -------------------------------------------------------------------------------------------------
+ * 3. Reactions & Action Controls Card (Column 2 Middle)
+ * -----------------------------------------------------------------------------------------------*/
+export function BubbleReactionsActionsCard() {
+  const [reactionCounts, setReactionCounts] = React.useState({
+    thumbs: 3,
+    heart: 2,
+    rocket: 4,
+  });
+
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        Collapsible Content
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Long messages can be collapsed by default with an accessible &quot;Show more / Show less&quot; toggle.
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-base font-bold text-[#111827]">
+          Reactions &amp; Actions
+        </h3>
+        <span className="text-[11px] font-mono text-[#5145FF] bg-[#F2F0FF] px-2 py-0.5 rounded-full border border-[#E0DAFF]">
+          Interactive
+        </span>
+      </div>
 
-      <Bubble variant="muted" align="start">
-        <BubbleContent>
-          <BubbleCollapsible defaultExpanded={false}>
-            The accessibility audit identified 3 focus states that were visually too subtle in dark mode.
-            Specifically, the dialog backdrop, tab lists, and drawer action groups lacked high-contrast outline rings.
-            We adjusted the focus ring tokens from <code>ring-1</code> to <code>ring-2 ring-offset-2</code> across all primitives.
-            All 45 automated Axe core accessibility tests now report 100% compliance with zero violations!
-          </BubbleCollapsible>
-        </BubbleContent>
-      </Bubble>
+      <div className="space-y-4">
+        {/* Bubble with Floating Reaction Pills */}
+        <div className="relative pt-1 pb-3">
+          <span className="text-xs font-semibold text-[#64748B] block mb-1.5">
+            Floating Reaction Pill (Clickable)
+          </span>
+          <div className="relative w-fit">
+            <Bubble variant="muted" align="start">
+              <BubbleContent>
+                The frontend test suite completed with 100% test coverage!
+              </BubbleContent>
+            </Bubble>
+
+            <BubbleReactions side="bottom" align="end">
+              <button
+                type="button"
+                onClick={() =>
+                  setReactionCounts((p) => ({ ...p, thumbs: p.thumbs + 1 }))
+                }
+                className="hover:scale-110 active:scale-95 transition-transform flex items-center gap-1 cursor-pointer pr-1"
+                aria-label="React thumbs up"
+              >
+                <span>👍</span>
+                <span className="font-mono text-[10px] text-[#475569]">{reactionCounts.thumbs}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setReactionCounts((p) => ({ ...p, heart: p.heart + 1 }))
+                }
+                className="hover:scale-110 active:scale-95 transition-transform flex items-center gap-1 cursor-pointer pr-1"
+                aria-label="React heart"
+              >
+                <span>❤️</span>
+                <span className="font-mono text-[10px] text-[#475569]">{reactionCounts.heart}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setReactionCounts((p) => ({ ...p, rocket: p.rocket + 1 }))
+                }
+                className="hover:scale-110 active:scale-95 transition-transform flex items-center gap-1 cursor-pointer"
+                aria-label="React rocket"
+              >
+                <span>🚀</span>
+                <span className="font-mono text-[10px] text-[#475569]">{reactionCounts.rocket}</span>
+              </button>
+            </BubbleReactions>
+          </div>
+        </div>
+
+        {/* Bubble with Action Bar */}
+        <div className="pt-2">
+          <span className="text-xs font-semibold text-[#64748B] block mb-1.5">
+            Action Controls &amp; Disclosures
+          </span>
+          <div className="w-fit max-w-full">
+            <Bubble variant="secondary" align="start">
+              <BubbleContent>
+                <BubbleCollapsible defaultExpanded={false}>
+                  Antigravity agent checked 14 component test suites, resolved all TypeScript lint definitions, and built the production bundle in 5.8s with zero warnings across 37 routes.
+                </BubbleCollapsible>
+              </BubbleContent>
+            </Bubble>
+
+            <BubbleActions align="start" className="mt-1">
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-[#64748B] hover:text-[#111827] hover:bg-[#F1F5F9] transition"
+              >
+                {copied ? <Check size={12} className="text-[#15803D]" /> : <Copy size={12} />}
+                <span>{copied ? "Copied" : "Copy"}</span>
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-[#64748B] hover:text-[#111827] hover:bg-[#F1F5F9] transition"
+              >
+                <RotateCw size={12} />
+                <span>Retry</span>
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium text-[#64748B] hover:text-[#111827] hover:bg-[#F1F5F9] transition"
+              >
+                <Share2 size={12} />
+                <span>Share</span>
+              </button>
+            </BubbleActions>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
+/* -------------------------------------------------------------------------------------------------
+ * 4. AI Reasoning Drawer Card (Column 2 Bottom)
+ * -----------------------------------------------------------------------------------------------*/
 export function BubbleThinkingCard() {
   return (
     <div className="mf-showcase-card">
-      <h3 className="text-base font-bold text-[#111827] mb-2">
-        AI Reasoning &amp; Chain-of-Thought
-      </h3>
-      <p className="text-xs text-[#64748B] mb-5">
-        Built-in <code>&lt;BubbleThinking&gt;</code> drawer for reasoning models (DeepSeek R1, OpenAI o-series) with duration badges.
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-base font-bold text-[#111827]">
+          AI Reasoning Drawer
+        </h3>
+        <span className="text-[11px] font-mono text-[#D97706] bg-[#FEF3C7] px-2 py-0.5 rounded-full border border-[#FDE68A]">
+          Signature Feature
+        </span>
+      </div>
 
-      <Bubble role="assistant" seamVerified seamEndpoint="POST /v1/interviews/feedback">
-        <BubbleThinking duration="1.2s" title="Contract Parity Analysis" defaultOpen={true}>
-{`Scanning AST:
-- Frontend field "scores" -> Backend "scores" (List[int]) -> MATCH
-- Frontend field "detailed_feedback" -> Backend "detailed_feedback" (str) -> MATCH
-- Zero camelCase drift detected. HTTP 200 guaranteed.`}
+      <div className="w-full">
+        <BubbleThinking duration="1.2s" defaultOpen={true} title="Thinking Process">
+{`✓ Analyzed input JSON against OpenAPI 3.1 specification
+✓ Validated 5/5 payload keys with FastAPI models
+✓ Verified zero contract drift between client and server`}
         </BubbleThinking>
-        Your frontend form submission is fully verified and compliant with the FastAPI schema.
-      </Bubble>
+
+        <Bubble variant="secondary" align="start">
+          <BubbleContent>
+            Backend integration contract confirmed. You are ready to deploy to production.
+          </BubbleContent>
+        </Bubble>
+      </div>
     </div>
   );
 }

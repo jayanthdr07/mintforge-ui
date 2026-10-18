@@ -8,8 +8,7 @@ import { BubblePlaygroundState } from "./bubble-playground";
 export type BubbleCodeTab =
   | "playground"
   | "variants"
-  | "alignment"
-  | "groups"
+  | "flow"
   | "reactions"
   | "collapsible"
   | "thinking";
@@ -37,12 +36,13 @@ export type BubbleVariant =
 
 export type BubbleAlign = "start" | "end";
 
-// Mintforge UI Bubble Primitive
+// Exported Mintforge UI Bubble Primitives
 export {
   Bubble,
   BubbleContent,
   BubbleGroup,
   BubbleReactions,
+  BubbleActions,
   BubbleCollapsible,
   BubbleThinking,
 } from "@/components/ui/bubble";`;
@@ -67,157 +67,167 @@ export {
         isCollapsible,
       } = playgroundState;
 
-      const lines = [`<Bubble variant="${variant}" align="${align}">`];
-      lines.push(`  <BubbleContent>`);
+      const lines = [
+        `import { Bubble, BubbleContent, BubbleReactions, BubbleActions, BubbleCollapsible } from "@/components/ui/bubble";`,
+        "",
+        `<div className="flex items-start gap-2.5">`,
+        `  <Bubble variant="${variant}" align="${align}">`,
+        `    <BubbleContent>`,
+      ];
 
       if (isCollapsible) {
-        lines.push(`    <BubbleCollapsible defaultExpanded={false}>`);
-        lines.push(`      ${content}`);
-        lines.push(`    </BubbleCollapsible>`);
+        lines.push(`      <BubbleCollapsible defaultExpanded={false}>`);
+        lines.push(`        ${content}`);
+        lines.push(`      </BubbleCollapsible>`);
       } else {
-        lines.push(`    ${content}`);
+        lines.push(`      ${content}`);
       }
 
-      if (actionButton === "proceed") {
-        lines.push(`    <div className="mt-2 pt-2 border-t border-white/20">`);
-        lines.push(`      <button className="px-3 py-1 rounded-xl bg-white text-[#5145FF] text-xs font-semibold">`);
-        lines.push(`        Yes, proceed`);
-        lines.push(`      </button>`);
-        lines.push(`    </div>`);
-      } else if (actionButton === "contact") {
-        lines.push(`    <div className="mt-2 pt-2 border-t border-slate-200">`);
-        lines.push(`      <button className="px-3 py-1 rounded-xl bg-[#5145FF] text-white text-xs font-semibold">`);
-        lines.push(`        Talk to a human`);
-        lines.push(`      </button>`);
-        lines.push(`    </div>`);
+      lines.push(`    </BubbleContent>`);
+
+      if (reactionType !== "none") {
+        lines.push(
+          `    <BubbleReactions side="bottom" align="${align === "end" ? "end" : "start"}">`
+        );
+        if (reactionType === "thumbs-heart") {
+          lines.push(`      <span>👍 2</span><span>❤️ 1</span>`);
+        } else if (reactionType === "fire-rocket") {
+          lines.push(`      <span>🔥 3</span><span>🚀 2</span>`);
+        } else if (reactionType === "party-trophy") {
+          lines.push(`      <span>🎉 5</span><span>🏆 1</span>`);
+        }
+        lines.push(`    </BubbleReactions>`);
       }
 
-      lines.push(`  </BubbleContent>`);
-
-      if (reactionType === "thumbs") {
-        lines.push(`  <BubbleReactions side="bottom" align="${align === "end" ? "end" : "start"}">`);
-        lines.push(`    <span>👍</span><span>😮</span><span className="font-mono text-xs">+2</span>`);
-        lines.push(`  </BubbleReactions>`);
-      } else if (reactionType === "party") {
-        lines.push(`  <BubbleReactions side="top" align="${align === "end" ? "start" : "end"}">`);
-        lines.push(`    <span>🎉</span><span>👏</span>`);
-        lines.push(`  </BubbleReactions>`);
-      } else if (reactionType === "heart") {
-        lines.push(`  <BubbleReactions side="bottom" align="end">`);
-        lines.push(`    <span>❤️</span><span>🔥</span>`);
-        lines.push(`  </BubbleReactions>`);
+      if (actionButton !== "none") {
+        lines.push(`    <BubbleActions align="${align}">`);
+        lines.push(`      <button className="text-xs text-slate-500 hover:text-slate-900">Copy</button>`);
+        lines.push(`      <button className="text-xs text-slate-500 hover:text-slate-900">Retry</button>`);
+        if (actionButton === "full") {
+          lines.push(`      <button className="text-xs text-slate-500 hover:text-slate-900">Share</button>`);
+        }
+        lines.push(`    </BubbleActions>`);
       }
 
-      lines.push(`</Bubble>`);
+      lines.push(`  </Bubble>`);
+      lines.push(`</div>`);
       return lines.join("\n");
     }
 
     case "variants":
-      return `// 1. Default (Primary emphasis)
-<Bubble variant="default" align="start">
-  <BubbleContent>Vibrant primary surface for user prompts.</BubbleContent>
-</Bubble>
-
-// 2. Secondary (White elevated card)
-<Bubble variant="secondary" align="start">
-  <BubbleContent>Clean surface with subtle border for replies.</BubbleContent>
-</Bubble>
-
-// 3. Muted (Subtle neutral)
-<Bubble variant="muted" align="start">
-  <BubbleContent>Soft gray surface for background chatter.</BubbleContent>
-</Bubble>
-
-// 4. Tinted (Soft Lavender)
-<Bubble variant="tinted" align="start">
-  <BubbleContent>Signature lavender wash for notifications.</BubbleContent>
-</Bubble>
-
-// 5. Destructive (Soft red)
-<Bubble variant="destructive" align="start">
-  <BubbleContent>Soft crimson wash for warnings or errors.</BubbleContent>
-</Bubble>`;
-
-    case "alignment":
-      return `// Outgoing message (User)
+      return `// 1. Primary Solid (User Outgoing)
 <Bubble variant="default" align="end">
-  <BubbleContent>
-    Can you check if our frontend interview submission payload matches our FastAPI backend?
-  </BubbleContent>
+  <BubbleContent>Can you run API contract checks against our staging PR?</BubbleContent>
 </Bubble>
 
-// Incoming message (Assistant)
+// 2. Secondary Card (Assistant Incoming)
 <Bubble variant="secondary" align="start">
-  <BubbleContent>
-    All 5 fields match the expected casing and types with zero drift!
-  </BubbleContent>
+  <BubbleContent>All 5 schema fields matched FastAPI with 0 drift.</BubbleContent>
+</Bubble>
+
+// 3. Soft Lavender Tint
+<Bubble variant="tinted" align="start">
+  <BubbleContent>Automated test pipeline completed in 1.4s.</BubbleContent>
+</Bubble>
+
+// 4. Muted Neutral
+<Bubble variant="muted" align="start">
+  <BubbleContent>PR #142 is approved and ready to merge.</BubbleContent>
+</Bubble>
+
+// 5. Minimalist Outline
+<Bubble variant="outline" align="start">
+  <BubbleContent>View live deployment on preview server.</BubbleContent>
+</Bubble>
+
+// 6. Destructive / Warning
+<Bubble variant="destructive" align="start">
+  <BubbleContent>Build check failed: Environment variable missing.</BubbleContent>
 </Bubble>`;
 
-    case "groups":
-      return `// Group of consecutive messages
-<BubbleGroup align="end">
-  <Bubble variant="default" align="end">
-    <BubbleContent>Hey, did the nightly build finish?</BubbleContent>
-  </Bubble>
-  <Bubble variant="default" align="end">
-    <BubbleContent>Checking the staging server logs now.</BubbleContent>
-  </Bubble>
-</BubbleGroup>
+    case "flow":
+      return `// Outgoing user message with avatar & metadata
+<Bubble
+  variant="default"
+  align="end"
+  name="You"
+  timestamp="10:24 AM"
+  avatar={<UserAvatar />}
+>
+  Check our FastAPI feedback payload schema.
+</Bubble>
 
+// Incoming assistant message with avatar & metadata
+<Bubble
+  variant="secondary"
+  align="start"
+  name="Mintforge AI"
+  timestamp="10:24 AM"
+  avatar={<BotAvatar />}
+>
+  Verified against SubmitTeamFeedbackRequest. All 5 keys pass.
+</Bubble>
+
+// Grouped consecutive follow-up messages
 <BubbleGroup align="start">
   <Bubble variant="secondary" align="start">
-    <BubbleContent>Yes! All 142 integration tests passed.</BubbleContent>
+    <BubbleContent>Generated contract diff report.</BubbleContent>
   </Bubble>
   <Bubble variant="secondary" align="start">
-    <BubbleContent>Artifacts uploaded and ready for deployment.</BubbleContent>
+    <BubbleContent>Synchronized automatically with GitHub PR #41.</BubbleContent>
   </Bubble>
 </BubbleGroup>`;
 
     case "reactions":
-      return `// Reactions anchored to bubble edge with accessible label
-<Bubble variant="muted" align="start">
-  <BubbleContent>
-    I don't need tests, I know my code works!
-  </BubbleContent>
-  <BubbleReactions side="bottom" align="end">
-    <span>👍</span>
-    <span>😮</span>
-    <span className="font-mono text-xs">+2</span>
-  </BubbleReactions>
-</Bubble>
+      return `// Floating reaction capsule anchored to bubble edge
+<div className="relative w-fit">
+  <Bubble variant="muted" align="start">
+    <BubbleContent>
+      The frontend test suite completed with 100% test coverage!
+    </BubbleContent>
+  </Bubble>
 
-<Bubble variant="default" align="end">
-  <BubbleContent>
-    Tests passed on the first try. All 142 of them!
-  </BubbleContent>
-  <BubbleReactions side="top" align="start">
-    <span>🎉</span>
-    <span>👏</span>
+  <BubbleReactions side="bottom" align="end">
+    <button>👍 3</button>
+    <button>❤️ 2</button>
+    <button>🚀 4</button>
   </BubbleReactions>
-</Bubble>`;
+</div>
+
+// Bubble with action buttons
+<Bubble variant="secondary" align="start">
+  <BubbleContent>All changes deployed to staging.</BubbleContent>
+</Bubble>
+<BubbleActions align="start">
+  <button>Copy</button>
+  <button>Retry</button>
+  <button>Share</button>
+</BubbleActions>`;
 
     case "collapsible":
-      return `// Long content with collapsible show more / show less toggle
-<Bubble variant="muted" align="start">
+      return `// Truncated long content with interactive disclosure
+<Bubble variant="secondary" align="start">
   <BubbleContent>
     <BubbleCollapsible defaultExpanded={false}>
-      The accessibility audit identified 3 focus states that were visually too subtle in dark mode.
-      Specifically, the dialog backdrop, tab lists, and drawer action groups lacked high-contrast outline rings.
-      All 45 automated Axe core accessibility tests now report 100% compliance with zero violations!
+      Antigravity agent checked 14 component test suites, resolved all
+      TypeScript lint definitions, and built the production bundle in 5.8s
+      with zero warnings across 37 routes.
     </BubbleCollapsible>
   </BubbleContent>
 </Bubble>`;
 
     case "thinking":
-      return `// Reasoning chain-of-thought drawer for AI models
-<Bubble role="assistant" seamVerified seamEndpoint="POST /v1/interviews/feedback">
-  <BubbleThinking duration="1.2s" title="Contract Parity Analysis" defaultOpen={true}>
-    Scanning AST:
-    - Frontend field "scores" -> Backend "scores" (List[int]) -> MATCH
-    - Frontend field "detailed_feedback" -> Backend "detailed_feedback" (str) -> MATCH
-    - Zero camelCase drift detected. HTTP 200 guaranteed.
-  </BubbleThinking>
-  Your frontend form submission is fully verified and compliant with the FastAPI schema.
+      return `// Signature AI chain-of-thought drawer
+<BubbleThinking duration="1.2s" defaultOpen={true} title="Thinking Process">
+  ✓ Analyzed input JSON against OpenAPI 3.1 specification
+  ✓ Validated 5/5 payload keys with FastAPI models
+  ✓ Verified zero contract drift between client and server
+</BubbleThinking>
+
+<Bubble variant="secondary" align="start">
+  <BubbleContent>
+    Backend integration contract confirmed. You are ready to deploy to production.
+  </BubbleContent>
 </Bubble>`;
   }
 }
@@ -259,15 +269,14 @@ export function BubbleBigCodeSection({
   const tabs: { id: BubbleCodeTab; label: string }[] = [
     { id: "playground", label: "Playground Live JSX" },
     { id: "variants", label: "Visual Variants" },
-    { id: "alignment", label: "Alignment" },
-    { id: "groups", label: "Grouped Bubbles" },
-    { id: "reactions", label: "Reactions" },
+    { id: "flow", label: "Conversation Flow" },
+    { id: "reactions", label: "Reactions & Actions" },
     { id: "collapsible", label: "Collapsible" },
     { id: "thinking", label: "AI Reasoning" },
   ];
 
   return (
-    <section className="mt-12 space-y-4">
+    <section className="mt-14 space-y-4">
       {/* Title & CLI Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -280,7 +289,7 @@ export function BubbleBigCodeSection({
           </p>
         </div>
 
-        {/* CLI pill */}
+        {/* CLI command pill */}
         <div className="inline-flex items-center gap-2 bg-[#0F172A] border border-[#334155] rounded-xl px-3 py-1.5 shadow-sm">
           <Terminal size={14} className="text-[#38BDF8]" />
           <code className="text-xs font-mono text-[#F8FAFC]">
@@ -289,7 +298,7 @@ export function BubbleBigCodeSection({
           <button
             type="button"
             onClick={handleCopyCli}
-            className="text-[#94A3B8] hover:text-white transition-colors ml-1"
+            className="text-[#94A3B8] hover:text-white transition-colors ml-1 cursor-pointer"
             title="Copy CLI command"
             aria-label="Copy CLI command"
           >
@@ -302,57 +311,41 @@ export function BubbleBigCodeSection({
         </div>
       </div>
 
-      {/* Dark Terminal Window */}
+      {/* Terminal Card */}
       <div className="mf-dark-terminal">
         {/* Terminal Header */}
-        <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-[#0F172A] border-b border-[#1E293B] gap-3">
-          {/* Mac window dots + Tab pills */}
-          <div className="flex items-center gap-4 overflow-x-auto">
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="w-3 h-3 rounded-full bg-[#EF4444]" />
-              <span className="w-3 h-3 rounded-full bg-[#F59E0B]" />
-              <span className="w-3 h-3 rounded-full bg-[#10B981]" />
+        <div className="flex flex-wrap items-center justify-between border-b border-[#1E293B] px-4 py-3 bg-[#0B0F19]">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 mr-3">
+              <span className="w-3 h-3 rounded-full bg-[#EF4444]/80 inline-block" />
+              <span className="w-3 h-3 rounded-full bg-[#F59E0B]/80 inline-block" />
+              <span className="w-3 h-3 rounded-full bg-[#10B981]/80 inline-block" />
             </div>
-
-            <div className="flex items-center gap-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? "bg-[#5145FF] text-white shadow-sm"
-                      : "text-[#94A3B8] hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <span className="text-xs font-mono text-[#94A3B8]">
+              bubble.tsx &mdash; React 19 / TypeScript / Tailwind
+            </span>
           </div>
 
-          {/* Mode Switch + Copy Code */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Mode switch */}
-            <div className="inline-flex items-center bg-[#1E293B] rounded-lg p-0.5 border border-[#334155]">
+          {/* Full Code vs JSX Toggle + Copy */}
+          <div className="flex items-center gap-2 mt-2 sm:mt-0">
+            <div className="inline-flex rounded-lg bg-[#1E293B] p-0.5 text-xs">
               <button
                 type="button"
                 onClick={() => setViewMode("snippet")}
-                className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-all ${
+                className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
                   viewMode === "snippet"
-                    ? "bg-[#0F172A] text-white shadow-sm"
+                    ? "bg-[#5145FF] text-white"
                     : "text-[#94A3B8] hover:text-white"
                 }`}
               >
-                JSX Snippet
+                Snippet JSX
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode("full")}
-                className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-all ${
+                className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
                   viewMode === "full"
-                    ? "bg-[#0F172A] text-white shadow-sm"
+                    ? "bg-[#5145FF] text-white"
                     : "text-[#94A3B8] hover:text-white"
                 }`}
               >
@@ -360,11 +353,10 @@ export function BubbleBigCodeSection({
               </button>
             </div>
 
-            {/* Copy Button */}
             <button
               type="button"
               onClick={handleCopyCode}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[#5145FF] hover:bg-[#4338CA] rounded-lg shadow-sm transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1E293B] hover:bg-[#334155] text-xs font-medium text-white transition cursor-pointer border border-[#334155]"
             >
               {copiedCode ? (
                 <>
@@ -381,8 +373,28 @@ export function BubbleBigCodeSection({
           </div>
         </div>
 
-        {/* Code Body */}
-        <div className="p-4 sm:p-6 bg-[#0B0F19] overflow-x-auto">
+        {/* Tab Strip */}
+        {viewMode === "snippet" && (
+          <div className="flex overflow-x-auto border-b border-[#1E293B] bg-[#0A0E17] px-2 py-1 scrollbar-none">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3.5 py-2 text-xs font-medium whitespace-nowrap transition cursor-pointer border-b-2 -mb-[1px] ${
+                  activeTab === tab.id
+                    ? "border-[#5145FF] text-white bg-[#1E293B]/40"
+                    : "border-transparent text-[#94A3B8] hover:text-white hover:bg-white/5"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Code View Area */}
+        <div className="p-4 overflow-x-auto">
           <BubbleCodeHighlighter code={displayCode} />
         </div>
       </div>

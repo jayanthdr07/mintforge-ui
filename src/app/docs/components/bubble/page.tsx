@@ -11,12 +11,9 @@ import "@/styles/bubble-showcase.css";
 
 import { BubbleHero } from "@/components/docs/bubble-showcase/bubble-hero";
 import {
-  BubbleVariantsCard,
-  BubbleAlignmentCard,
-  BubbleGroupedCard,
-  BubbleReactionsCard,
-  BubbleActionButtonsCard,
-  BubbleCollapsibleCard,
+  BubbleBasicVariationsCard,
+  BubbleConversationFlowCard,
+  BubbleReactionsActionsCard,
   BubbleThinkingCard,
 } from "@/components/docs/bubble-showcase/bubble-cards";
 import {
@@ -33,7 +30,7 @@ export default function BubbleDocPage() {
   const [playgroundState, setPlaygroundState] = React.useState<BubblePlaygroundState>({
     variant: "default",
     align: "end",
-    content: "Can you analyze our frontend interview submission payload against the FastAPI backend?",
+    content: "Can you analyze our interview submission payload against the FastAPI backend?",
     reactionType: "none",
     actionButton: "none",
     isCollapsible: false,
@@ -51,6 +48,24 @@ export default function BubbleDocPage() {
       type: '"start" | "end"',
       defaultValue: '"start"',
       description: "Horizontal alignment. 'start' for incoming messages, 'end' for outgoing user prompts.",
+    },
+    {
+      name: "name",
+      type: "string",
+      defaultValue: "undefined",
+      description: "Sender label displayed in conversational bubble header.",
+    },
+    {
+      name: "timestamp",
+      type: "string",
+      defaultValue: "undefined",
+      description: "Timestamp string (e.g. '10:24 AM') rendered alongside sender name.",
+    },
+    {
+      name: "avatar",
+      type: "React.ReactNode",
+      defaultValue: "undefined",
+      description: "Avatar element rendered alongside the message bubble.",
     },
     {
       name: "role",
@@ -117,6 +132,21 @@ export default function BubbleDocPage() {
     },
   ];
 
+  const bubbleActionsProps: PropItem[] = [
+    {
+      name: "align",
+      type: '"start" | "end"',
+      defaultValue: '"start"',
+      description: "Horizontal alignment matching the parent bubble.",
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      defaultValue: "required",
+      description: "Interactive button controls (Copy, Retry, Share).",
+    },
+  ];
+
   const bubbleCollapsibleProps: PropItem[] = [
     {
       name: "defaultExpanded",
@@ -158,21 +188,22 @@ export default function BubbleDocPage() {
       {/* 1. Hero Section */}
       <BubbleHero />
 
-      {/* 2. Visual Showcase Grid (Showcase Cards + Interactive Playground) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Showcase Cards */}
-        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
-          <BubbleVariantsCard />
-          <BubbleAlignmentCard />
-          <BubbleGroupedCard />
-          <BubbleReactionsCard />
-          <BubbleActionButtonsCard />
-          <BubbleCollapsibleCard />
+      {/* 2. Visual Showcase Grid (3 Columns Matching Badge / Avatar System) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Column 1 (Left): Basic Variations & Surfaces */}
+        <div className="lg:col-span-4">
+          <BubbleBasicVariationsCard />
+        </div>
+
+        {/* Column 2 (Middle): Stacked Flow, Reactions & Reasoning */}
+        <div className="lg:col-span-4 space-y-6">
+          <BubbleConversationFlowCard />
+          <BubbleReactionsActionsCard />
           <BubbleThinkingCard />
         </div>
 
-        {/* Right Column: Interactive Playground (Sticky alongside cards) */}
-        <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-20">
+        {/* Column 3 (Right): Interactive Playground */}
+        <div className="lg:col-span-4">
           <BubblePlayground
             state={playgroundState}
             onChange={setPlaygroundState}
@@ -231,6 +262,14 @@ export default function BubbleDocPage() {
           <div>
             <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleActions /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleActionsProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
               <span>&lt;BubbleCollapsible /&gt;</span>
             </h3>
             <ComponentPropsTable props={bubbleCollapsibleProps} />
@@ -267,7 +306,7 @@ export default function BubbleDocPage() {
               Labeling Reactions
             </h4>
             <p className="text-xs text-[#64748B] leading-relaxed">
-              Reaction capsules use <code>role=&quot;img&quot;</code> with descriptive <code>aria-label</code> tags so screen readers announce summary text instead of individual unformatted glyphs.
+              Reaction capsules use <code>role=&quot;img&quot;</code> with descriptive labels so screen readers announce summary text instead of raw unformatted emoji glyphs.
             </p>
           </div>
 

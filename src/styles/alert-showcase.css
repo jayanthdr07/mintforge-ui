@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Alert Showcase Styles
+   Theme Specification:
+   - Light Theme Canvas: #F8F9FC and #FFFFFF
+   - Cards: #FFFFFF with crisp subtle borders (#E5E7EB / #EEF2F6) and soft shadow
+   - Primary Accent: #5145FF (Blue-Purple)
+   - Secondary Accent / Hover: #4338CA
+   - Accent Subtle / Tint: #EEF2FF
+   - Text Primary: #111827 (Dark Navy)
+   - Text Secondary: #4B5563 / #6B7280
+   ========================================================================== */
+
+.mf-alert-doc-scope {
+  --mf-acc-primary: #5145FF;
+  --mf-acc-primary-hover: #4338CA;
+  --mf-acc-primary-light: #EEF2FF;
+  --mf-acc-primary-border: #E0E7FF;
+  --mf-acc-bg: #F8F9FC;
+  --mf-acc-card-bg: #FFFFFF;
+  --mf-acc-border: #E5E7EB;
+  --mf-acc-border-subtle: #EEF2F6;
+  --mf-acc-text-primary: #111827;
+  --mf-acc-text-secondary: #4B5563;
+  --mf-acc-text-muted: #6B7280;
+
+  --mf-alert-primary: #5145FF;
+  --mf-alert-primary-hover: #4338CA;
+  --mf-alert-primary-light: #EEF2FF;
+  --mf-alert-primary-border: #E0E7FF;
+  --mf-alert-bg: #F8F9FC;
+  --mf-alert-card-bg: #FFFFFF;
+  --mf-alert-border: #E5E7EB;
+  --mf-alert-border-subtle: #EEF2F6;
+  --mf-alert-text-primary: #111827;
+  --mf-alert-text-secondary: #4B5563;
+  --mf-alert-text-muted: #6B7280;
+
+  background-color: var(--mf-alert-bg);
+  color: var(--mf-alert-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 1.5rem 4rem 1.5rem;
+  border-radius: 28px;
+  border: 1px solid #E5E7EB;
+  padding: 36px 44px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-alert-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+}
+
+.mf-alert-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Variant Nav Pill Buttons */
+.mf-alert-doc-scope .mf-acc-pill-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+  color: #4B5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
+.mf-alert-doc-scope .mf-acc-pill-btn:hover {
+  border-color: #D1D5DB;
+  color: #111827;
+  background-color: #F9FAFB;
+}
+
+.mf-alert-doc-scope .mf-acc-pill-btn.active {
+  background-color: #5145FF !important;
+  border-color: #5145FF !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(81, 69, 255, 0.35) !important;
+}
+
+.mf-alert-doc-scope .mf-acc-pill-btn.active:hover {
+  background-color: #4338CA !important;
+  border-color: #4338CA !important;
+  color: #FFFFFF !important;
+}
+
+/* Signature Style Badge */
+.mf-alert-doc-scope .mf-acc-signature-badge {
+  background: #EEF2FF;
+  color: #5145FF;
+  border: 1px solid #E0E7FF;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Interactive Card Highlights */
+.mf-alert-card-selectable {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  cursor: pointer;
+}
+
+.mf-alert-card-selectable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px -4px rgba(81, 69, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-color: #C7D2FE;
+}
+
+.mf-alert-card-active {
+  border-color: #818CF8 !important;
+  box-shadow: 0 0 0 2px rgba(81, 69, 255, 0.25), 0 10px 32px -4px rgba(81, 69, 255, 0.12) !important;
+}
+
+@media (max-width: 768px) {
+  .mf-alert-doc-scope {
+    margin: 0.5rem 0.5rem 3rem 0.5rem;
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}

@@ -661,24 +661,42 @@ export function TabsContent({
   alert: {
     id: "alert",
     title: "Alert",
-    description: "Prominent contextual callout banner communicating important status messages, warnings, or notifications.",
+    description: "Contextual feedback banner with signature morph glow, enterprise accent rail, floating glass, and semantic palettes.",
     category: "Feedback",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`,
-    sourceCode: `export { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";`,
+    importSnippet: `import { Alert, AlertTitle, AlertDescription, AlertAction } from "@/components/ui/alert";`,
+    sourceCode: `export { Alert, AlertTitle, AlertDescription, AlertAction, AlertMorph, AlertRail, AlertFloating, AlertSolid } from "@/components/ui/alert";`,
     props: [
-      { name: "variant", type: '"default" | "brand" | "info" | "success" | "warning" | "destructive"', defaultValue: '"default"', description: "Semantic color treatment." },
-      { name: "icon", type: "React.ReactNode", defaultValue: "auto", description: "Custom leading accessory icon." },
-      { name: "onClose", type: "() => void", defaultValue: "undefined", description: "Dismiss callback rendering close button." },
+      { name: "status", type: '"brand" | "info" | "success" | "warning" | "destructive" | "neutral"', defaultValue: '"brand"', description: "Semantic color palette and default icon theme for the alert banner." },
+      { name: "design", type: '"morph" | "rail" | "floating" | "subtle" | "solid" | "outline" | "card"', defaultValue: '"morph"', description: "Visual structural treatment. 'morph' renders Mintforge's signature card with soft ambient glow." },
+      { name: "size", type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: "Controls internal padding, icon scale, and font sizes across the banner." },
+      { name: "title", type: "React.ReactNode", defaultValue: "undefined", description: "Primary alert title heading displayed at the top." },
+      { name: "description", type: "React.ReactNode", defaultValue: "undefined", description: "Informative body copy rendered underneath the title heading." },
+      { name: "action", type: "React.ReactNode", defaultValue: "undefined", description: "Right-aligned accessory slot for interactive action buttons or recovery links." },
+      { name: "onClose", type: "() => void", defaultValue: "undefined", description: "Callback invoked upon dismissal. When provided, renders an accessible close button." },
     ],
     examples: [
       {
-        title: "Brand Alert",
-        code: `<Alert variant="brand">
-  <AlertTitle>Contract Verified</AlertTitle>
-  <AlertDescription>All frontend API calls match FastAPI Pydantic models.</AlertDescription>
-</Alert>`,
+        title: "Signature Morph Alert",
+        code: `<Alert
+  status="brand"
+  design="morph"
+  title="Design System v0.1.2 Released"
+  description="New token synchronizers and zero-drift contract verification."
+  action={<Button size="sm">View Changelog</Button>}
+  onClose={() => console.log("dismissed")}
+/>`,
+      },
+      {
+        title: "Accent Rail Alert",
+        code: `<Alert
+  status="warning"
+  design="rail"
+  title="Storage Approaching Threshold"
+  description="Current cluster storage utilization is at 88%. Auto-expansion enabled."
+  onClose={() => console.log("dismissed")}
+/>`,
       },
     ],
   },

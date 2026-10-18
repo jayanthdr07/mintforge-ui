@@ -19,7 +19,15 @@ export type AlertStatus =
   | "destructive"
   | "neutral";
 
-export type AlertDesign = "subtle" | "rail" | "card" | "solid" | "outline";
+export type AlertDesign =
+  | "morph"
+  | "subtle"
+  | "rail"
+  | "card"
+  | "solid"
+  | "outline"
+  | "floating";
+
 export type AlertSize = "sm" | "md" | "lg";
 
 export interface AlertProps
@@ -36,8 +44,8 @@ export interface AlertProps
   onClose?: () => void;
 }
 
-function getDefaultIcon(status: AlertStatus, size: AlertSize) {
-  const iconSize = size === "sm" ? 16 : size === "lg" ? 22 : 18;
+export function getDefaultAlertIcon(status: AlertStatus, size: AlertSize = "md") {
+  const iconSize = size === "sm" ? 15 : size === "lg" ? 20 : 17;
   switch (status) {
     case "brand":
       return <Sparkles size={iconSize} />;
@@ -59,7 +67,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     {
       status,
       variant = "brand",
-      design = "subtle",
+      design = "morph",
       size = "md",
       icon,
       title,
@@ -73,118 +81,163 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     ref
   ) => {
     const activeStatus = status || variant;
-    const displayIcon =
-      icon !== undefined ? icon : getDefaultIcon(activeStatus, size);
+    const [isDismissed, setIsDismissed] = React.useState(false);
 
-    // Dynamic style computation based on (activeStatus x design)
+    if (isDismissed) {
+      return null;
+    }
+
+    const handleDismiss = () => {
+      setIsDismissed(true);
+      onClose?.();
+    };
+
+    const displayIcon =
+      icon !== undefined ? icon : getDefaultAlertIcon(activeStatus, size);
+
+    // Dynamic container styles
     const getContainerStyles = (): string => {
-      if (design === "solid") {
-        switch (activeStatus) {
-          case "brand":
-            return "bg-primary text-primary-foreground border-transparent shadow-sm";
-          case "info":
-            return "bg-blue-600 text-white border-transparent shadow-sm";
-          case "success":
-            return "bg-emerald-600 text-white border-transparent shadow-sm";
-          case "warning":
-            return "bg-amber-600 text-white border-transparent shadow-sm";
-          case "destructive":
-            return "bg-red-600 text-white border-transparent shadow-sm";
-          case "neutral":
-            return "bg-foreground text-background border-transparent shadow-sm";
-        }
+      // 1. Signature Morph (Elevated white card with soft ambient color tint & refined border)
+      if (design === "morph") {
+        const morphStyles = {
+          brand: "bg-white border-[#E0E7FF] hover:border-[#C7D2FE] shadow-[0_4px_20px_-2px_rgba(81,69,255,0.07)] text-[#111827]",
+          info: "bg-white border-blue-100 hover:border-blue-200 shadow-[0_4px_20px_-2px_rgba(59,130,246,0.07)] text-[#111827]",
+          success: "bg-white border-emerald-100 hover:border-emerald-200 shadow-[0_4px_20px_-2px_rgba(16,185,129,0.07)] text-[#111827]",
+          warning: "bg-white border-amber-100 hover:border-amber-200 shadow-[0_4px_20px_-2px_rgba(245,158,11,0.07)] text-[#111827]",
+          destructive: "bg-white border-red-100 hover:border-red-200 shadow-[0_4px_20px_-2px_rgba(239,68,68,0.07)] text-[#111827]",
+          neutral: "bg-white border-[#E5E7EB] hover:border-[#D1D5DB] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] text-[#111827]",
+        }[activeStatus];
+
+        return `border rounded-2xl ${morphStyles}`;
       }
 
+      // 2. Floating Glass (Floating pill/banner with backdrop blur)
+      if (design === "floating") {
+        const floatingGlow = {
+          brand: "shadow-[0_8px_30px_rgba(81,69,255,0.12)] border-[#E0E7FF]/80",
+          info: "shadow-[0_8px_30px_rgba(59,130,246,0.12)] border-blue-200/80",
+          success: "shadow-[0_8px_30px_rgba(16,185,129,0.12)] border-emerald-200/80",
+          warning: "shadow-[0_8px_30px_rgba(245,158,11,0.12)] border-amber-200/80",
+          destructive: "shadow-[0_8px_30px_rgba(239,68,68,0.12)] border-red-200/80",
+          neutral: "shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-[#E5E7EB]",
+        }[activeStatus];
+
+        return `backdrop-blur-md bg-white/95 border rounded-2xl ${floatingGlow} text-[#111827]`;
+      }
+
+      // 3. Rail (4px left border accent)
       if (design === "rail") {
         const borderRail = {
-          brand: "border-l-primary",
+          brand: "border-l-[#5145FF]",
           info: "border-l-blue-500",
           success: "border-l-emerald-500",
           warning: "border-l-amber-500",
           destructive: "border-l-red-500",
-          neutral: "border-l-muted-foreground",
+          neutral: "border-l-gray-400",
         }[activeStatus];
 
-        return `bg-card text-foreground border border-border border-l-4 ${borderRail} shadow-2xs`;
+        return `bg-white text-[#111827] border border-[#E5E7EB] border-l-4 ${borderRail} rounded-xl shadow-xs`;
       }
 
+      // 4. Solid (Vibrant filled banner for critical notices)
+      if (design === "solid") {
+        switch (activeStatus) {
+          case "brand":
+            return "bg-[#5145FF] text-white border-transparent shadow-sm rounded-xl";
+          case "info":
+            return "bg-blue-600 text-white border-transparent shadow-sm rounded-xl";
+          case "success":
+            return "bg-emerald-600 text-white border-transparent shadow-sm rounded-xl";
+          case "warning":
+            return "bg-amber-500 text-white border-transparent shadow-sm rounded-xl";
+          case "destructive":
+            return "bg-red-600 text-white border-transparent shadow-sm rounded-xl";
+          case "neutral":
+            return "bg-[#111827] text-white border-transparent shadow-sm rounded-xl";
+        }
+      }
+
+      // 5. Card (Neutral boxed card)
       if (design === "card") {
-        return "bg-card text-foreground border border-border shadow-xs hover:shadow-sm transition-shadow";
+        return "bg-white text-[#111827] border border-[#E5E7EB] rounded-xl shadow-xs hover:border-[#D1D5DB] transition-colors";
       }
 
+      // 6. Outline (Clean transparent background with colored border)
       if (design === "outline") {
         const outlineColors = {
-          brand: "border-primary/40 text-foreground",
-          info: "border-blue-500/40 text-foreground",
-          success: "border-emerald-500/40 text-foreground",
-          warning: "border-amber-500/40 text-foreground",
-          destructive: "border-red-500/40 text-foreground",
-          neutral: "border-border-strong text-foreground",
+          brand: "border-[#5145FF]/40 text-[#111827]",
+          info: "border-blue-500/40 text-[#111827]",
+          success: "border-emerald-500/40 text-[#111827]",
+          warning: "border-amber-500/40 text-[#111827]",
+          destructive: "border-red-500/40 text-[#111827]",
+          neutral: "border-[#9CA3AF] text-[#111827]",
         }[activeStatus];
 
-        return `bg-transparent border ${outlineColors}`;
+        return `bg-transparent border rounded-xl ${outlineColors}`;
       }
 
-      // Default: "subtle"
+      // 7. Subtle (Default light pastel wash)
       switch (activeStatus) {
         case "brand":
-          return "bg-brand-subtle text-foreground border-primary/20";
+          return "bg-[#EEF2FF] text-[#111827] border border-[#E0E7FF] rounded-xl";
         case "info":
-          return "bg-blue-500/10 text-foreground border-blue-500/20";
+          return "bg-blue-50 text-[#111827] border border-blue-100 rounded-xl";
         case "success":
-          return "bg-emerald-500/10 text-foreground border-emerald-500/20";
+          return "bg-emerald-50 text-[#111827] border border-emerald-100 rounded-xl";
         case "warning":
-          return "bg-amber-500/10 text-foreground border-amber-500/20";
+          return "bg-amber-50 text-[#111827] border border-amber-100 rounded-xl";
         case "destructive":
-          return "bg-red-500/10 text-foreground border-red-500/20";
+          return "bg-red-50 text-[#111827] border border-red-100 rounded-xl";
         case "neutral":
-          return "bg-secondary text-foreground border-border";
+          return "bg-[#F3F4F6] text-[#111827] border border-[#E5E7EB] rounded-xl";
       }
     };
 
-    const getIconStyles = (): string => {
+    // Dynamic icon container styles
+    const getIconBadgeStyles = (): string => {
       if (design === "solid") {
-        return "text-white/90 bg-white/15";
+        return "text-white bg-white/20";
       }
 
       switch (activeStatus) {
         case "brand":
-          return "text-primary bg-primary/10 border-primary/20";
+          return "text-[#5145FF] bg-[#EEF2FF] border border-[#E0E7FF]";
         case "info":
-          return "text-blue-500 bg-blue-500/10 border-blue-500/20";
+          return "text-blue-600 bg-blue-50 border border-blue-200/60";
         case "success":
-          return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
+          return "text-emerald-600 bg-emerald-50 border border-emerald-200/60";
         case "warning":
-          return "text-amber-500 bg-amber-500/10 border-amber-500/20";
+          return "text-amber-600 bg-amber-50 border border-amber-200/60";
         case "destructive":
-          return "text-red-500 bg-red-500/10 border-red-500/20";
+          return "text-red-600 bg-red-50 border border-red-200/60";
         case "neutral":
-          return "text-muted-foreground bg-muted border-border";
+          return "text-gray-600 bg-gray-100 border border-gray-200";
       }
     };
 
     const sizePadding = {
-      sm: "p-3 gap-2.5 rounded-lg text-xs",
-      md: "p-4 gap-3.5 rounded-xl text-sm",
-      lg: "p-5 gap-4 rounded-2xl text-base",
+      sm: "p-3 gap-2.5 text-xs",
+      md: "p-4 gap-3.5 text-sm",
+      lg: "p-5 gap-4 text-base",
     }[size];
 
     const iconBadgeSize = {
-      sm: "w-6 h-6 rounded-md",
-      md: "w-8 h-8 rounded-lg",
-      lg: "w-10 h-10 rounded-xl",
+      sm: "w-7 h-7 rounded-lg text-xs",
+      md: "w-9 h-9 rounded-xl text-sm",
+      lg: "w-11 h-11 rounded-2xl text-base",
     }[size];
 
     return (
       <div
         ref={ref}
-        role="alert"
-        className={`relative flex items-start border transition-all ${sizePadding} ${getContainerStyles()} ${className}`}
+        role={activeStatus === "destructive" ? "alert" : "status"}
+        aria-live={activeStatus === "destructive" ? "assertive" : "polite"}
+        className={`relative flex items-start transition-all duration-200 ${sizePadding} ${getContainerStyles()} ${className}`}
         {...props}
       >
         {displayIcon && (
           <span
-            className={`shrink-0 inline-flex items-center justify-center border border-transparent shadow-2xs ${iconBadgeSize} ${getIconStyles()}`}
+            className={`shrink-0 inline-flex items-center justify-center shadow-2xs ${iconBadgeSize} ${getIconBadgeStyles()}`}
           >
             {displayIcon}
           </span>
@@ -193,8 +246,8 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         <div className="flex-1 min-w-0 space-y-1">
           {title && (
             <h5
-              className={`font-semibold tracking-tight ${
-                design === "solid" ? "text-white" : "text-foreground"
+              className={`font-semibold tracking-tight text-sm leading-snug ${
+                design === "solid" ? "text-white" : "text-[#111827]"
               }`}
             >
               {title}
@@ -203,11 +256,11 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
           {description && (
             <div
               className={`leading-relaxed ${
-                size === "sm" ? "text-[11px]" : "text-xs"
+                size === "sm" ? "text-[11.5px]" : "text-xs"
               } ${
                 design === "solid"
                   ? "text-white/90"
-                  : "text-foreground-secondary"
+                  : "text-[#4B5563]"
               }`}
             >
               {description}
@@ -225,15 +278,15 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         {onClose && (
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleDismiss}
             aria-label="Dismiss alert"
-            className={`shrink-0 -mr-1 -mt-1 p-1 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 cursor-pointer ${
+            className={`shrink-0 -mr-1 -mt-1 p-1.5 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 cursor-pointer ${
               design === "solid"
-                ? "text-white/70 hover:text-white hover:bg-white/10 focus-visible:ring-white"
-                : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 focus-visible:ring-primary"
+                ? "text-white/70 hover:text-white hover:bg-white/15 focus-visible:ring-white"
+                : "text-[#9CA3AF] hover:text-[#111827] hover:bg-black/5 focus-visible:ring-[#5145FF]"
             }`}
           >
-            <X size={size === "sm" ? 13 : 15} />
+            <X size={size === "sm" ? 14 : 16} />
           </button>
         )}
       </div>
@@ -250,7 +303,7 @@ export const AlertTitle = React.forwardRef<
 >(({ className = "", children, ...props }, ref) => (
   <h5
     ref={ref}
-    className={`font-semibold tracking-tight text-foreground leading-snug ${className}`}
+    className={`font-semibold tracking-tight text-[#111827] text-sm leading-snug ${className}`}
     {...props}
   >
     {children}
@@ -264,7 +317,7 @@ export const AlertDescription = React.forwardRef<
 >(({ className = "", children, ...props }, ref) => (
   <div
     ref={ref}
-    className={`text-xs text-foreground-secondary leading-relaxed mt-0.5 ${className}`}
+    className={`text-xs text-[#4B5563] leading-relaxed mt-0.5 ${className}`}
     {...props}
   >
     {children}

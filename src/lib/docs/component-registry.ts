@@ -732,23 +732,33 @@ export function TabsContent({
   avatar: {
     id: "avatar",
     title: "Avatar",
-    description: "Visual user representation primitive supporting image thumbnails, fallback initials, and active presence status indicators.",
+    description: "Visual user representation primitive supporting image thumbnails, fallback initials, multiple shapes, active presence status indicators, and avatar groups.",
     category: "Primitives",
     status: "Ready",
-    dependencies: [],
-    importSnippet: `import { Avatar, AvatarImage, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";`,
-    sourceCode: `export { Avatar, AvatarImage, AvatarFallback, AvatarBadge } from "@/components/ui/avatar";`,
+    dependencies: ["lucide-react"],
+    importSnippet: `import { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup } from "@/components/ui/avatar";`,
+    sourceCode: `export { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup } from "@/components/ui/avatar";`,
     props: [
-      { name: "size", type: '"sm" | "md" | "lg" | "xl"', defaultValue: '"md"', description: "Pixel dimension preset." },
+      { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl" | "2xl"', defaultValue: '"md"', description: "Controls avatar dimensions, fallback typography scale, and badge offsets." },
+      { name: "shape", type: '"circle" | "rounded" | "square" | "squircle"', defaultValue: '"circle"', description: "Mask shape applied to container and image." },
+      { name: "ringColor", type: "string", defaultValue: "undefined", description: "Tailwind ring class for highlights or group borders." },
     ],
     examples: [
       {
-        title: "User Avatar",
+        title: "User Avatar with Status",
         code: `<Avatar size="lg">
   <AvatarImage src="/avatar.png" alt="Sarah" />
   <AvatarFallback initials="SC" />
   <AvatarBadge status="online" />
 </Avatar>`,
+      },
+      {
+        title: "Avatar Group",
+        code: `<div className="inline-flex items-center -space-x-3">
+  <Avatar size="lg" className="ring-2 ring-blue-500 ring-offset-2"><AvatarImage src="/p1.jpg" /></Avatar>
+  <Avatar size="lg" className="ring-2 ring-emerald-500 ring-offset-2"><AvatarImage src="/p2.jpg" /></Avatar>
+  <div className="w-12 h-12 rounded-full font-mono text-sm bg-slate-100 flex items-center justify-center">+4</div>
+</div>`,
       },
     ],
   },

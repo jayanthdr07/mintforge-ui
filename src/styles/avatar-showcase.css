@@ -1,0 +1,119 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Avatar Showcase Styles
+   Theme Specification:
+   - Page Canvas: #F8F9FC
+   - Card Surfaces: #FFFFFF with subtle borders (#E5E7EB / #EEF2F6) and soft elevation
+   - Primary Accent: #5145FF (Indigo-Purple)
+   - Primary Hover: #4338CA
+   - Lavender Tint: #F2F0FF
+   - Lavender Border: #E0DAFF
+   - Primary Text: #111827
+   - Secondary Text: #64748B
+   - Borders: #E5E7EB
+   - Success: #15803D (Online: #10B981)
+   - Warning: #B45309 (Away: #F59E0B)
+   - Destructive / Busy: #DC2626 (Busy: #EF4444)
+   - Offline: #94A3B8
+   ========================================================================== */
+
+.mf-avatar-doc-scope {
+  --mf-ava-primary: #5145FF;
+  --mf-ava-primary-hover: #4338CA;
+  --mf-ava-primary-light: #EEF2FF;
+  --mf-ava-primary-border: #E0E7FF;
+  --mf-ava-lavender: #F2F0FF;
+  --mf-ava-lavender-border: #E0DAFF;
+  --mf-ava-bg: #F8F9FC;
+  --mf-ava-card-bg: #FFFFFF;
+  --mf-ava-border: #E5E7EB;
+  --mf-ava-border-subtle: #EEF2F6;
+  --mf-ava-text-primary: #111827;
+  --mf-ava-text-secondary: #64748B;
+  --mf-ava-success: #15803D;
+  --mf-ava-warning: #B45309;
+  --mf-ava-error: #DC2626;
+
+  background-color: var(--mf-ava-bg);
+  color: var(--mf-ava-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 1.5rem 4rem 1.5rem;
+  border-radius: 28px;
+  border: 1px solid #E5E7EB;
+  padding: 36px 44px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-avatar-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+}
+
+.mf-avatar-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Feature Badge Pills */
+.mf-avatar-doc-scope .mf-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mf-avatar-doc-scope .mf-feature-pill:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+}
+
+/* Showcase Cards */
+.mf-avatar-doc-scope .mf-showcase-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-avatar-doc-scope .mf-showcase-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark Code Terminal */
+.mf-avatar-doc-scope .mf-dark-terminal {
+  background-color: #0B0F19;
+  border: 1px solid #1E293B;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+/* Squircle Clip Path Utilities */
+.mf-clip-squircle {
+  border-radius: 28%;
+}
+
+@media (max-width: 1024px) {
+  .mf-avatar-doc-scope {
+    padding: 24px 20px;
+    margin: 1rem 0 3rem 0;
+    border-radius: 20px;
+  }
+}

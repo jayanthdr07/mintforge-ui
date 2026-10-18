@@ -73,10 +73,6 @@ export const DOCS_NAVIGATION: NavSection[] = [
         href: "/docs/components/alert-dialog",
       },
       {
-        title: "Aspect Ratio",
-        href: "/docs/components/aspect-ratio",
-      },
-      {
         title: "Attachment",
         href: "/docs/components/attachment",
       },

@@ -634,8 +634,24 @@ export function AttachmentPlayground({
               )}
             </div>
           ) : (
-            <div className="rounded-2xl bg-[#0B0F19] border border-[#1E293B] overflow-hidden">
-              <AttachmentCodeHighlighter code={generatedCode} />
+            <div className="rounded-2xl bg-[#0B0F19] border border-slate-800 shadow-xl overflow-hidden text-left">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/70 border-b border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-white">playground-attachment.tsx</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Dynamic JSX</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCopyCode}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 transition cursor-pointer"
+                >
+                  {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                  <span>{copied ? "Copied" : "Copy"}</span>
+                </button>
+              </div>
+              <div className="p-4 max-h-[360px] overflow-y-auto">
+                <AttachmentCodeHighlighter code={generatedCode} />
+              </div>
             </div>
           )}
         </div>

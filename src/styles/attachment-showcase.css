@@ -196,3 +196,11 @@
     background: rgba(81, 69, 255, 0.12);
   }
 }
+
+/* Ensure code blocks and pre elements match Geist Mono / JetBrains Mono Developer Font */
+.mf-attachment-doc-scope pre,
+.mf-attachment-doc-scope code,
+.mf-attachment-doc-scope .font-mono {
+  font-family: var(--mf-font-mono, "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace) !important;
+}
+

@@ -1,30 +1,155 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, Terminal, Code2 } from "lucide-react";
+import { Copy, Check, FileCode, Terminal, Code2, Layers } from "lucide-react";
 import { AttachmentCodeHighlighter } from "./attachment-code-highlighter";
 
-export type CodeTab = "file" | "image" | "progress" | "lifecycle" | "group";
+export type AttachmentCodeTab = "file" | "image" | "progress" | "lifecycle" | "group";
+export type CodeViewMode = "snippet" | "full";
 
-export function AttachmentBigCodeSection() {
-  const [activeTab, setActiveTab] = React.useState<CodeTab>("file");
-  const [mode, setMode] = React.useState<"component" | "usage">("usage");
-  const [copiedCode, setCopiedCode] = React.useState(false);
-  const [copiedCli, setCopiedCli] = React.useState(false);
+export function getAttachmentDisplayCode(
+  variant: AttachmentCodeTab,
+  mode: CodeViewMode
+): string {
+  if (mode === "snippet") {
+    switch (variant) {
+      case "file":
+        return `<Attachment state="done" size="default" orientation="horizontal">
+  <AttachmentMedia category="document" alt="product-requirements.pdf" />
 
-  const cliCommand = "npx mintforge add attachment";
+  <AttachmentContent>
+    <AttachmentTitle>product-requirements.pdf</AttachmentTitle>
+    <AttachmentDescription>
+      <span className="font-semibold text-[#5145FF] text-[10px] bg-[#F2F0FF] px-1.5 py-0.5 rounded">
+        PDF
+      </span>
+      <span>·</span>
+      <span>2.4 MB</span>
+    </AttachmentDescription>
+  </AttachmentContent>
 
-  const handleCopyCli = () => {
-    if (typeof window !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(cliCommand);
-      setCopiedCli(true);
-      setTimeout(() => setCopiedCli(false), 2000);
+  <AttachmentActions>
+    <AttachmentAction onClick={() => handlePreview()} aria-label="Preview">
+      <Eye size={15} />
+    </AttachmentAction>
+    <AttachmentAction onClick={() => handleDownload()} aria-label="Download">
+      <Download size={15} />
+    </AttachmentAction>
+    <AttachmentAction onClick={() => handleRemove()} aria-label="Remove">
+      <X size={15} />
+    </AttachmentAction>
+  </AttachmentActions>
+</Attachment>`;
+
+      case "image":
+        return `<Attachment state="done" size="default" orientation="horizontal">
+  <AttachmentMedia
+    src="/assets/workspace-preview.png"
+    alt="workspace-preview.png"
+  />
+
+  <AttachmentContent>
+    <AttachmentTitle>workspace-preview.png</AttachmentTitle>
+    <AttachmentDescription>
+      <span className="font-semibold text-[#0284C7] text-[10px] bg-[#E0F2FE] px-1.5 py-0.5 rounded">
+        PNG
+      </span>
+      <span>·</span>
+      <span>3.8 MB</span>
+    </AttachmentDescription>
+  </AttachmentContent>
+
+  <AttachmentActions>
+    <AttachmentAction onClick={() => handleZoom()} aria-label="Preview image">
+      <Eye size={15} />
+    </AttachmentAction>
+    <AttachmentAction onClick={() => handleRemove()} aria-label="Remove image">
+      <X size={15} />
+    </AttachmentAction>
+  </AttachmentActions>
+</Attachment>`;
+
+      case "progress":
+        return `<Attachment state="uploading" size="default" orientation="horizontal">
+  <AttachmentMedia category="archive" alt="design-system.zip" />
+
+  <AttachmentContent>
+    <div className="flex items-center justify-between">
+      <AttachmentTitle>design-system.zip</AttachmentTitle>
+      <span className="text-[11px] font-mono text-[#64748B]">14.8 MB</span>
+    </div>
+
+    <AttachmentProgress value={64} />
+
+    <div className="flex justify-between text-[11px] font-mono mt-1 text-[#5145FF]">
+      <span>Uploading...</span>
+      <span>64%</span>
+    </div>
+  </AttachmentContent>
+
+  <AttachmentActions>
+    <AttachmentAction onClick={() => handleCancel()} aria-label="Cancel upload">
+      <X size={15} />
+    </AttachmentAction>
+  </AttachmentActions>
+</Attachment>`;
+
+      case "lifecycle":
+        return `<Attachment state="error" size="default">
+  <AttachmentMedia category="data" alt="financial-model.xlsx" />
+
+  <AttachmentContent>
+    <AttachmentTitle>financial-model.xlsx</AttachmentTitle>
+    <div className="text-[11px] text-[#DC2626] font-medium flex items-center gap-1 mt-0.5">
+      <AlertCircle size={13} />
+      <span>Upload failed. Connection timed out. Try again.</span>
+    </div>
+  </AttachmentContent>
+
+  <AttachmentActions>
+    <button
+      type="button"
+      onClick={handleRetry}
+      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#DC2626] text-white text-[11px] font-semibold hover:bg-[#B91C1C] transition cursor-pointer"
+    >
+      <RotateCw size={11} />
+      <span>Retry</span>
+    </button>
+  </AttachmentActions>
+</Attachment>`;
+
+      case "group":
+        return `<AttachmentGroup>
+  {files.map((file) => (
+    <Attachment
+      key={file.id}
+      size="sm"
+      orientation="horizontal"
+      className="w-[240px] shrink-0 bg-white snap-start"
+    >
+      <AttachmentMedia category={file.category} alt={file.name} />
+
+      <AttachmentContent>
+        <AttachmentTitle className="text-xs">{file.name}</AttachmentTitle>
+        <AttachmentDescription>{file.formattedSize}</AttachmentDescription>
+      </AttachmentContent>
+
+      <AttachmentActions>
+        <AttachmentAction onClick={() => handleRemove(file.id)} aria-label="Remove">
+          <X size={13} />
+        </AttachmentAction>
+      </AttachmentActions>
+    </Attachment>
+  ))}
+</AttachmentGroup>`;
     }
-  };
+  }
 
-  const codeSnippets: Record<CodeTab, { usage: string; component: string }> = {
-    file: {
-      usage: `import {
+  // Full Component Mode
+  switch (variant) {
+    case "file":
+      return `import * as React from "react";
+import {
   Attachment,
   AttachmentMedia,
   AttachmentContent,
@@ -35,67 +160,48 @@ export function AttachmentBigCodeSection() {
 } from "@/components/ui/attachment";
 import { Eye, Download, X } from "lucide-react";
 
-export function FileAttachmentExample() {
+export function FileAttachmentDemo() {
+  const [downloaded, setDownloaded] = React.useState(false);
+
   return (
-    <Attachment state="done" size="default" orientation="horizontal">
-      <AttachmentMedia category="document" alt="product-requirements.pdf" />
+    <div className="space-y-2.5 max-w-md w-full">
+      <Attachment state="done" size="default" orientation="horizontal">
+        <AttachmentMedia category="document" alt="product-requirements.pdf" />
 
-      <AttachmentContent>
-        <AttachmentTitle>product-requirements.pdf</AttachmentTitle>
-        <AttachmentDescription>
-          <span className="font-semibold text-[#5145FF] text-[10px] bg-[#F2F0FF] px-1.5 py-0.5 rounded">
-            PDF
-          </span>
-          <span>·</span>
-          <span>2.4 MB</span>
-        </AttachmentDescription>
-      </AttachmentContent>
+        <AttachmentContent>
+          <AttachmentTitle>product-requirements.pdf</AttachmentTitle>
+          <AttachmentDescription>
+            <span className="font-semibold text-[#5145FF] text-[10px] bg-[#F2F0FF] px-1.5 py-0.5 rounded">
+              PDF
+            </span>
+            <span>·</span>
+            <span className="font-mono">2.4 MB</span>
+          </AttachmentDescription>
+        </AttachmentContent>
 
-      <AttachmentActions>
-        <AttachmentAction onClick={() => console.log("Preview")} aria-label="Preview">
-          <Eye size={15} />
-        </AttachmentAction>
-        <AttachmentAction onClick={() => console.log("Download")} aria-label="Download">
-          <Download size={15} />
-        </AttachmentAction>
-        <AttachmentAction onClick={() => console.log("Remove")} aria-label="Remove">
-          <X size={15} />
-        </AttachmentAction>
-      </AttachmentActions>
-    </Attachment>
-  );
-}`,
-      component: `// Reusable Preset from Mintforge UI
-import { AttachmentFileCard } from "@/components/ui/attachment";
-
-export function DocumentList() {
-  return (
-    <div className="space-y-2.5 max-w-md">
-      <AttachmentFileCard
-        name="product-requirements.pdf"
-        size={2400000}
-        type="application/pdf"
-        onPreview={(file) => openPreview(file)}
-        onDownload={(file) => downloadFile(file)}
-        onRemove={(id) => handleRemove(id)}
-      />
-      <AttachmentFileCard
-        name="design-system.tsx"
-        size={84000}
-        type="text/typescript"
-      />
-      <AttachmentFileCard
-        name="customer-data.csv"
-        size={560000}
-        type="text/csv"
-      />
+        <AttachmentActions>
+          <AttachmentAction onClick={() => alert("Opening preview...")} aria-label="Preview">
+            <Eye size={15} />
+          </AttachmentAction>
+          <AttachmentAction
+            variant={downloaded ? "subtle" : "ghost"}
+            onClick={() => setDownloaded(true)}
+            aria-label="Download"
+          >
+            <Download size={15} />
+          </AttachmentAction>
+          <AttachmentAction onClick={() => alert("Removed file")} aria-label="Remove">
+            <X size={15} />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
     </div>
   );
-}`,
-    },
+}`;
 
-    image: {
-      usage: `import {
+    case "image":
+      return `import * as React from "react";
+import {
   Attachment,
   AttachmentMedia,
   AttachmentContent,
@@ -106,64 +212,42 @@ export function DocumentList() {
 } from "@/components/ui/attachment";
 import { Eye, X } from "lucide-react";
 
-export function ImageAttachmentExample() {
+export function ImagePreviewDemo() {
   return (
-    <Attachment state="done" size="default" orientation="horizontal">
-      <AttachmentMedia
-        src="/assets/workspace-preview.png"
-        alt="workspace-preview.png"
-      />
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+      <Attachment state="done" size="default" orientation="vertical">
+        <AttachmentMedia
+          src="/assets/workspace-preview.png"
+          alt="workspace-preview.png"
+        />
 
-      <AttachmentContent>
-        <AttachmentTitle>workspace-preview.png</AttachmentTitle>
-        <AttachmentDescription>
-          <span className="font-semibold text-[#0284C7] text-[10px] bg-[#E0F2FE] px-1.5 py-0.5 rounded">
-            PNG
-          </span>
-          <span>·</span>
-          <span>3.8 MB</span>
-        </AttachmentDescription>
-      </AttachmentContent>
+        <AttachmentContent>
+          <AttachmentTitle>workspace-preview.png</AttachmentTitle>
+          <AttachmentDescription>
+            <span className="font-semibold text-[#0284C7] text-[10px] bg-[#E0F2FE] px-1.5 py-0.5 rounded">
+              PNG
+            </span>
+            <span>·</span>
+            <span>3.8 MB</span>
+          </AttachmentDescription>
+        </AttachmentContent>
 
-      <AttachmentActions>
-        <AttachmentAction onClick={() => console.log("Zoom")} aria-label="Preview image">
-          <Eye size={15} />
-        </AttachmentAction>
-        <AttachmentAction onClick={() => console.log("Remove")} aria-label="Remove image">
-          <X size={15} />
-        </AttachmentAction>
-      </AttachmentActions>
-    </Attachment>
-  );
-}`,
-      component: `import { AttachmentImagePreview } from "@/components/ui/attachment";
-
-export function CreativeGallery() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <AttachmentImagePreview
-        name="workspace-preview.png"
-        size={3840000}
-        orientation="vertical"
-        onPreview={(img) => setLightbox(img)}
-      />
-      <AttachmentImagePreview
-        name="brand-guidelines.jpg"
-        size={1950000}
-        orientation="vertical"
-      />
-      <AttachmentImagePreview
-        name="dashboard-design.webp"
-        size={2420000}
-        orientation="vertical"
-      />
+        <AttachmentActions>
+          <AttachmentAction onClick={() => alert("Zooming image...")} aria-label="Preview">
+            <Eye size={15} />
+          </AttachmentAction>
+          <AttachmentAction onClick={() => alert("Removed image")} aria-label="Remove">
+            <X size={15} />
+          </AttachmentAction>
+        </AttachmentActions>
+      </Attachment>
     </div>
   );
-}`,
-    },
+}`;
 
-    progress: {
-      usage: `import {
+    case "progress":
+      return `import * as React from "react";
+import {
   Attachment,
   AttachmentMedia,
   AttachmentContent,
@@ -172,9 +256,11 @@ export function CreativeGallery() {
   AttachmentActions,
   AttachmentAction,
 } from "@/components/ui/attachment";
-import { X } from "lucide-react";
+import { X, CheckCircle2 } from "lucide-react";
 
-export function UploadProgressExample({ progress = 64 }: { progress: number }) {
+export function UploadProgressDemo() {
+  const [progress, setProgress] = React.useState(64);
+
   return (
     <Attachment state="uploading" size="default" orientation="horizontal">
       <AttachmentMedia category="archive" alt="design-system.zip" />
@@ -194,80 +280,107 @@ export function UploadProgressExample({ progress = 64 }: { progress: number }) {
       </AttachmentContent>
 
       <AttachmentActions>
-        <AttachmentAction onClick={() => console.log("Cancel")} aria-label="Cancel upload">
+        <AttachmentAction onClick={() => alert("Cancelled upload")} aria-label="Cancel">
           <X size={15} />
         </AttachmentAction>
       </AttachmentActions>
     </Attachment>
   );
-}`,
-      component: `import { AttachmentUploadProgress } from "@/components/ui/attachment";
+}`;
 
-export function UploadWidget() {
-  return (
-    <AttachmentUploadProgress
-      name="design-system.zip"
-      size={14800000}
-      initialProgress={64}
-      autoStart={false}
-      onComplete={() => alert("File ready")}
-      onCancel={() => console.log("Cancelled")}
-    />
-  );
-}`,
-    },
+    case "lifecycle":
+      return `import * as React from "react";
+import {
+  Attachment,
+  AttachmentMedia,
+  AttachmentContent,
+  AttachmentTitle,
+  AttachmentDescription,
+  AttachmentActions,
+  AttachmentAction,
+} from "@/components/ui/attachment";
+import { AlertCircle, RotateCw } from "lucide-react";
 
-    lifecycle: {
-      usage: `import { Attachment, AttachmentTitle, AttachmentDescription } from "@/components/ui/attachment";
+export function StatusLifecycleDemo() {
+  const [retrying, setRetrying] = React.useState(false);
 
-// States: "idle" | "uploading" | "processing" | "error" | "done"
-export function ErrorStateExample() {
+  const handleRetry = () => {
+    setRetrying(true);
+    setTimeout(() => {
+      setRetrying(false);
+      alert("Successfully re-uploaded file");
+    }, 1500);
+  };
+
   return (
     <Attachment state="error" size="default">
       <AttachmentMedia category="data" alt="financial-model.xlsx" />
+
       <AttachmentContent>
         <AttachmentTitle>financial-model.xlsx</AttachmentTitle>
         <div className="text-[11px] text-[#DC2626] font-medium flex items-center gap-1 mt-0.5">
+          <AlertCircle size={13} />
           <span>Upload failed. Connection timed out. Try again.</span>
         </div>
       </AttachmentContent>
+
       <AttachmentActions>
-        <button onClick={handleRetry} className="px-2.5 py-1 bg-[#DC2626] text-white text-xs rounded-lg">
-          Retry
+        <button
+          type="button"
+          onClick={handleRetry}
+          disabled={retrying}
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#DC2626] text-white text-[11px] font-semibold hover:bg-[#B91C1C] transition cursor-pointer disabled:opacity-50"
+        >
+          <RotateCw size={11} className={retrying ? "animate-spin" : ""} />
+          <span>Retry</span>
         </button>
       </AttachmentActions>
     </Attachment>
   );
-}`,
-      component: `import { AttachmentStatusErrorList } from "@/components/ui/attachment";
+}`;
 
-export function LifecycleBoard() {
-  return (
-    <AttachmentStatusErrorList />
-  );
-}`,
-    },
-
-    group: {
-      usage: `import { Attachment, AttachmentGroup, AttachmentTitle, AttachmentAction } from "@/components/ui/attachment";
+    case "group":
+      return `import * as React from "react";
+import {
+  Attachment,
+  AttachmentGroup,
+  AttachmentMedia,
+  AttachmentContent,
+  AttachmentTitle,
+  AttachmentDescription,
+  AttachmentActions,
+  AttachmentAction,
+} from "@/components/ui/attachment";
 import { X } from "lucide-react";
 
-export function ComposerAttachmentStrip({ files, onRemove }) {
+export function AttachmentGroupDemo() {
+  const [items, setItems] = React.useState([
+    { id: "1", name: "specs.pdf", size: "2.4 MB", category: "document" },
+    { id: "2", name: "hero.png", size: "3.8 MB", category: "image" },
+    { id: "3", name: "schema.ts", size: "84 KB", category: "code" },
+  ]);
+
   return (
     <AttachmentGroup>
-      {files.map((file) => (
+      {items.map((item) => (
         <Attachment
-          key={file.id}
+          key={item.id}
           size="sm"
           orientation="horizontal"
-          className="w-[240px] shrink-0 bg-white"
+          className="w-[240px] shrink-0 bg-white snap-start"
         >
-          <AttachmentMedia category={file.category} alt={file.name} />
+          <AttachmentMedia category={item.category as any} alt={item.name} />
+
           <AttachmentContent>
-            <AttachmentTitle className="text-xs">{file.name}</AttachmentTitle>
+            <AttachmentTitle className="text-xs">{item.name}</AttachmentTitle>
+            <AttachmentDescription>{item.size}</AttachmentDescription>
           </AttachmentContent>
+
           <AttachmentActions>
-            <AttachmentAction onClick={() => onRemove(file.id)} aria-label="Remove">
+            <AttachmentAction
+              onClick={() => setItems((p) => p.filter((x) => x.id !== item.id))}
+              aria-label="Remove"
+            >
               <X size={13} />
             </AttachmentAction>
           </AttachmentActions>
@@ -275,146 +388,163 @@ export function ComposerAttachmentStrip({ files, onRemove }) {
       ))}
     </AttachmentGroup>
   );
-}`,
-      component: `import { AttachmentGroupShowcase } from "@/components/ui/attachment";
+}`;
+  }
+}
 
-export function ChatUploadSection() {
-  return (
-    <AttachmentGroupShowcase />
+export function AttachmentBigCodeSection() {
+  const [activeTab, setActiveTab] = React.useState<AttachmentCodeTab>("file");
+  const [viewMode, setViewMode] = React.useState<CodeViewMode>("full");
+  const [copiedCode, setCopiedCode] = React.useState(false);
+  const [copiedCli, setCopiedCli] = React.useState(false);
+
+  const displayCode = React.useMemo(
+    () => getAttachmentDisplayCode(activeTab, viewMode),
+    [activeTab, viewMode]
   );
-}`,
-    },
-  };
 
-  const currentCode = codeSnippets[activeTab][mode];
-
-  const handleCopyCode = () => {
-    if (typeof window !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(currentCode);
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(displayCode);
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
+    } catch {
+      window.prompt("Copy code:", displayCode);
     }
   };
 
+  const handleCopyCli = async () => {
+    const cliCmd = "npx mintforge add attachment";
+    try {
+      await navigator.clipboard.writeText(cliCmd);
+      setCopiedCli(true);
+      setTimeout(() => setCopiedCli(false), 2000);
+    } catch {
+      window.prompt("Copy CLI command:", cliCmd);
+    }
+  };
+
+  const tabs: { id: AttachmentCodeTab; label: string }[] = [
+    { id: "file", label: "File Card" },
+    { id: "image", label: "Image Preview" },
+    { id: "progress", label: "Upload Progress" },
+    { id: "lifecycle", label: "Status & Error" },
+    { id: "group", label: "Group Row" },
+  ];
+
   return (
-    <div className="space-y-4">
-      {/* CLI Installation Header Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#0B0F19] border border-[#1E293B]">
-        <div className="flex items-center gap-2 text-white text-xs font-mono px-1">
-          <Terminal size={15} className="text-[#5145FF]" />
-          <span className="text-[#64748B]">$</span>
-          <span>{cliCommand}</span>
+    <div className="w-full bg-[#0B0F19] rounded-3xl border border-slate-800 shadow-2xl overflow-hidden text-left">
+      {/* Top Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-slate-800/90 bg-slate-900/70">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-[#5145FF]/20 text-[#5145FF] border border-[#5145FF]/30 flex items-center justify-center shrink-0">
+            <FileCode size={16} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-white font-mono tracking-tight">
+                attachment-{activeTab}.tsx
+              </span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#5145FF]/20 text-[#818CF8] border border-[#5145FF]/30">
+                {viewMode === "full" ? "Full Component" : "JSX Snippet"}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Interactive code dynamically synchronized with selected attachment design.
+            </p>
+          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleCopyCli}
-          className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1E293B] hover:bg-[#334155] text-white text-xs font-medium transition cursor-pointer select-none"
-        >
-          {copiedCli ? (
-            <>
-              <Check size={13} className="text-[#15803D]" />
-              <span>Copied CLI</span>
-            </>
-          ) : (
-            <>
-              <Copy size={13} />
-              <span>Copy CLI</span>
-            </>
-          )}
-        </button>
-      </div>
+        {/* Center: Variant Tabs */}
+        <div className="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-3 py-1 text-xs font-semibold rounded-lg capitalize transition-all cursor-pointer ${
+                activeTab === tab.id
+                  ? "bg-[#5145FF] text-white shadow-xs"
+                  : "text-slate-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Main Terminal Editor */}
-      <div className="rounded-2xl bg-[#0B0F19] border border-[#1E293B] overflow-hidden shadow-2xl">
-        {/* Terminal Title Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-[#1E293B] bg-[#070A12]">
-          <div className="flex items-center gap-3">
-            {/* macOS / Unix Dots */}
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-[#EF4444]/80 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-[#F59E0B]/80 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-[#10B981]/80 inline-block" />
-            </div>
-
-            {/* Mode Switcher */}
-            <div className="inline-flex rounded-lg bg-[#1E293B]/70 p-0.5 border border-[#334155]/50">
-              <button
-                type="button"
-                onClick={() => setMode("usage")}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
-                  mode === "usage"
-                    ? "bg-[#5145FF] text-white font-semibold"
-                    : "text-[#94A3B8] hover:text-white"
-                }`}
-              >
-                JSX Usage
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("component")}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
-                  mode === "component"
-                    ? "bg-[#5145FF] text-white font-semibold"
-                    : "text-[#94A3B8] hover:text-white"
-                }`}
-              >
-                Preset Component
-              </button>
-            </div>
+        {/* Right: View Mode Toggle & Copy Actions */}
+        <div className="flex items-center gap-2.5">
+          {/* Mode Switcher */}
+          <div className="flex items-center bg-slate-950/80 p-0.5 rounded-lg border border-slate-800">
+            <button
+              type="button"
+              onClick={() => setViewMode("snippet")}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer ${
+                viewMode === "snippet"
+                  ? "bg-slate-800 text-white font-semibold"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Show JSX Snippet only"
+            >
+              <Code2 size={12} />
+              <span>Snippet</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("full")}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer ${
+                viewMode === "full"
+                  ? "bg-slate-800 text-white font-semibold"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Show full React component with imports"
+            >
+              <Layers size={12} />
+              <span>Full Component</span>
+            </button>
           </div>
 
-          {/* Copy Button */}
+          {/* CLI Copy */}
+          <button
+            type="button"
+            onClick={handleCopyCli}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all cursor-pointer"
+          >
+            <Terminal size={13} className="text-emerald-400" />
+            <span>{copiedCli ? "CLI Copied!" : "npx mintforge add attachment"}</span>
+          </button>
+
+          {/* Code Copy */}
           <button
             type="button"
             onClick={handleCopyCode}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1E293B] hover:bg-[#334155] text-white text-xs font-medium transition cursor-pointer select-none"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#5145FF] hover:bg-[#4338CA] shadow-sm transition-all cursor-pointer"
           >
             {copiedCode ? (
               <>
-                <Check size={13} className="text-[#10B981]" />
-                <span>Copied</span>
+                <Check size={14} className="text-emerald-300" />
+                <span>Copied Code!</span>
               </>
             ) : (
               <>
-                <Copy size={13} />
+                <Copy size={14} />
                 <span>Copy Code</span>
               </>
             )}
           </button>
         </div>
+      </div>
 
-        {/* Preset Tabs */}
-        <div className="flex items-center gap-1 px-3 py-2 border-b border-[#1E293B] bg-[#0B0F19] overflow-x-auto">
-          {[
-            { id: "file" as CodeTab, label: "File Card (Design 1)" },
-            { id: "image" as CodeTab, label: "Image Preview (Design 2)" },
-            { id: "progress" as CodeTab, label: "Upload Progress (Design 3)" },
-            { id: "lifecycle" as CodeTab, label: "Status & Error (Design 4)" },
-            { id: "group" as CodeTab, label: "Group Row (Design 5)" },
-          ].map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition cursor-pointer whitespace-nowrap ${
-                  isActive
-                    ? "bg-[#1E293B] text-white font-semibold border border-[#334155]"
-                    : "text-[#64748B] hover:text-[#94A3B8] hover:bg-[#1E293B]/50"
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Code Body */}
+      <div className="p-6 overflow-x-auto max-h-[460px] overflow-y-auto">
+        <AttachmentCodeHighlighter code={displayCode} />
+      </div>
 
-        {/* Code View */}
-        <div className="max-h-[460px] overflow-y-auto">
-          <AttachmentCodeHighlighter code={currentCode} />
-        </div>
+      {/* Footer Info Pill */}
+      <div className="px-6 py-2.5 bg-slate-900/40 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+        <span>Includes full compound components: &lt;Attachment /&gt;, &lt;AttachmentMedia /&gt;, &lt;AttachmentContent /&gt;, &lt;AttachmentProgress /&gt;</span>
+        <span className="text-slate-500 font-mono text-[11px]">Design: {activeTab} · Mode: {viewMode}</span>
       </div>
     </div>
   );

@@ -757,25 +757,32 @@ export function TabsContent({
   bubble: {
     id: "bubble",
     title: "Bubble",
-    description: "AI chat bubble primitive supporting streaming indicators, collapsible reasoning steps, and Seam verification.",
+    description: "Conversational message bubble primitive supporting 7 visual surface variants, alignment, grouping, reactions, action buttons, collapsible content, and AI reasoning drawers.",
     category: "Feedback",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
-    sourceCode: `export { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
+    importSnippet: `import { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
+    sourceCode: `export { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
     props: [
-      { name: "role", type: '"user" | "assistant" | "system"', defaultValue: '"assistant"', description: "Chat participant role determining alignment and visual style." },
-      { name: "isStreaming", type: "boolean", defaultValue: "false", description: "Renders animated streaming cursor pulse." },
-      { name: "seamVerified", type: "boolean", defaultValue: "false", description: "Displays Seam contract parity badge." },
+      { name: "variant", type: '"default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive"', defaultValue: '"default"', description: "Visual surface style." },
+      { name: "align", type: '"start" | "end"', defaultValue: '"start"', description: "Horizontal layout alignment." },
+      { name: "role", type: '"user" | "assistant" | "system"', defaultValue: "undefined", description: "Conversational role automatically configuring alignment and avatar." },
+      { name: "isStreaming", type: "boolean", defaultValue: "false", description: "Displays animated streaming pulse cursor." },
     ],
     examples: [
       {
-        title: "AI Response with Contract Badge",
-        code: `<Bubble role="assistant" seamVerified seamEndpoint="POST /v1/feedback">
-  <BubbleThinking duration="1.4s">
-    Verified 5/5 payload keys against FastAPI SubmitTeamFeedbackRequest schema.
-  </BubbleThinking>
-  Your team feedback has been recorded and synchronized with the backend.
+        title: "Conversational Bubble",
+        code: `<Bubble variant="default" align="end">
+  <BubbleContent>Can you check our frontend payload?</BubbleContent>
+</Bubble>`,
+      },
+      {
+        title: "Bubble with Reactions",
+        code: `<Bubble variant="muted" align="start">
+  <BubbleContent>Tests passed on the first run!</BubbleContent>
+  <BubbleReactions side="bottom" align="end">
+    <span>👍</span><span>🎉</span>
+  </BubbleReactions>
 </Bubble>`,
       },
     ],

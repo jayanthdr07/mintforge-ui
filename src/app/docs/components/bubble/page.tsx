@@ -1,132 +1,306 @@
 "use client";
 
 import * as React from "react";
-import { Bubble, BubbleThinking } from "@/components/ui/bubble";
-import { DocsHeader } from "@/components/docs/docs-header";
-import { ComponentPreview } from "@/components/docs/component-preview";
-import { ComponentCode } from "@/components/docs/component-code";
+import "@/styles/accordion-showcase.css";
+import "@/styles/alert-showcase.css";
+import "@/styles/alert-dialog-showcase.css";
+import "@/styles/attachment-showcase.css";
+import "@/styles/avatar-showcase.css";
+import "@/styles/badge-showcase.css";
+import "@/styles/bubble-showcase.css";
+
+import { BubbleHero } from "@/components/docs/bubble-showcase/bubble-hero";
+import {
+  BubbleVariantsCard,
+  BubbleAlignmentCard,
+  BubbleGroupedCard,
+  BubbleReactionsCard,
+  BubbleActionButtonsCard,
+  BubbleCollapsibleCard,
+  BubbleThinkingCard,
+} from "@/components/docs/bubble-showcase/bubble-cards";
+import {
+  BubblePlayground,
+  BubblePlaygroundState,
+} from "@/components/docs/bubble-showcase/bubble-playground";
+import { BubbleBigCodeSection } from "@/components/docs/bubble-showcase/bubble-code-section";
+import { ComponentPropsTable } from "@/components/docs/component-props-table";
 import { ComponentPagination } from "@/components/docs/component-pagination";
-import { DocsTableOfContents } from "@/components/docs/docs-table-of-contents";
+import { BookOpen, ShieldCheck } from "lucide-react";
+import { PropItem } from "@/types/docs";
 
 export default function BubbleDocPage() {
-  const tocItems = [
-    { id: "overview", title: "Overview" },
-    { id: "ai-conversation", title: "AI Agent Conversation" },
-    { id: "reasoning-steps", title: "Reasoning & Thought Process" },
-    { id: "streaming-state", title: "Streaming Response" },
-    { id: "installation", title: "Installation" },
+  const [playgroundState, setPlaygroundState] = React.useState<BubblePlaygroundState>({
+    variant: "default",
+    align: "end",
+    content: "Can you analyze our frontend interview submission payload against the FastAPI backend?",
+    reactionType: "none",
+    actionButton: "none",
+    isCollapsible: false,
+  });
+
+  const bubbleProps: PropItem[] = [
+    {
+      name: "variant",
+      type: '"default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive"',
+      defaultValue: '"default"',
+      description: "Visual surface style determining background color, border, and text contrast.",
+    },
+    {
+      name: "align",
+      type: '"start" | "end"',
+      defaultValue: '"start"',
+      description: "Horizontal alignment. 'start' for incoming messages, 'end' for outgoing user prompts.",
+    },
+    {
+      name: "role",
+      type: '"user" | "assistant" | "system"',
+      defaultValue: "undefined",
+      description: "Optional conversational persona that automatically deduces alignment and avatar wrapper.",
+    },
+    {
+      name: "className",
+      type: "string",
+      defaultValue: '""',
+      description: "Custom CSS classes applied to root container.",
+    },
   ];
 
-  const conversationCode = `<div className="space-y-4 w-full max-w-xl">
-  <Bubble role="user">
-    Can you check if our frontend interview submission payload matches our FastAPI backend?
-  </Bubble>
+  const bubbleContentProps: PropItem[] = [
+    {
+      name: "className",
+      type: "string",
+      defaultValue: '""',
+      description: "Additional CSS classes applied to the rounded message surface.",
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      defaultValue: "required",
+      description: "Message body text, interactive links, action buttons, or collapsible blocks.",
+    },
+  ];
 
-  <Bubble role="assistant" seamVerified seamEndpoint="POST /v1/feedback">
-    I analyzed your Next.js form against the FastAPI \`SubmitTeamFeedbackRequest\` model.
-    All 5 fields match the expected casing and types with zero drift!
-  </Bubble>
-</div>`;
+  const bubbleGroupProps: PropItem[] = [
+    {
+      name: "align",
+      type: '"start" | "end"',
+      defaultValue: '"start"',
+      description: "Alignment applied to the grouped stack of consecutive messages.",
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      defaultValue: "required",
+      description: "Multiple Bubble components grouped with tight vertical gap.",
+    },
+  ];
 
-  const thinkingCode = `<Bubble role="assistant" seamVerified seamEndpoint="POST /v1/interviews/feedback">
-  <BubbleThinking duration="1.2s" title="Contract Parity Analysis">
-    Scanning AST:
-    - Frontend field "scores" -> Backend "scores" (List[int]) -> MATCH
-    - Frontend field "detailed_feedback" -> Backend "detailed_feedback" (str) -> MATCH
-    - Zero camelCase drift detected. HTTP 200 guaranteed.
-  </BubbleThinking>
-  Your frontend form submission is fully verified and compliant with the FastAPI schema.
-</Bubble>`;
+  const bubbleReactionsProps: PropItem[] = [
+    {
+      name: "side",
+      type: '"top" | "bottom"',
+      defaultValue: '"bottom"',
+      description: "Vertical anchor edge relative to the message bubble.",
+    },
+    {
+      name: "align",
+      type: '"start" | "end"',
+      defaultValue: '"start"',
+      description: "Horizontal anchor alignment along the bubble edge.",
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      defaultValue: "required",
+      description: "Emoji elements or reaction buttons rendered inside the floating pill.",
+    },
+  ];
+
+  const bubbleCollapsibleProps: PropItem[] = [
+    {
+      name: "defaultExpanded",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Initial expanded state of the multi-line message content.",
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      defaultValue: "required",
+      description: "Long content that can be collapsed with 'Show more / Show less' toggle.",
+    },
+  ];
+
+  const bubbleThinkingProps: PropItem[] = [
+    {
+      name: "title",
+      type: "string",
+      defaultValue: '"Thinking Process"',
+      description: "Header label for the collapsible chain-of-thought drawer.",
+    },
+    {
+      name: "duration",
+      type: "string",
+      defaultValue: "undefined",
+      description: "Execution timer badge (e.g. '1.2s') displayed alongside title.",
+    },
+    {
+      name: "defaultOpen",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Whether reasoning steps are expanded by default.",
+    },
+  ];
 
   return (
-    <>
-      <div className="mf-docs-main max-w-4xl">
-        <DocsHeader
-          title="Bubble"
-          description="An AI-native chat bubble primitive supporting user and assistant roles, reasoning disclosures, streaming cursors, and Seam contract verification."
-        />
+    <div className="mf-bubble-doc-scope">
+      {/* 1. Hero Section */}
+      <BubbleHero />
 
-        <div className="space-y-10 mt-6">
-          {/* Conversation Example */}
-          <section id="ai-conversation" className="space-y-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              AI Agent Conversation
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Standard user and assistant bubbles with built-in copy actions, role badges, and Seam contract verification chips.
-            </p>
-            <ComponentPreview code={conversationCode}>
-              <div className="space-y-4 w-full max-w-xl">
-                <Bubble role="user">
-                  Can you check if our frontend interview submission payload matches our FastAPI backend?
-                </Bubble>
-
-                <Bubble role="assistant" seamVerified seamEndpoint="POST /v1/feedback">
-                  I analyzed your Next.js form against the FastAPI <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">SubmitTeamFeedbackRequest</code> model.
-                  All 5 fields match the expected casing and types with zero drift!
-                </Bubble>
-              </div>
-            </ComponentPreview>
-          </section>
-
-          {/* Reasoning / Thinking Example */}
-          <section id="reasoning-steps" className="space-y-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              Reasoning & Thought Process
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Display collapsible chain-of-thought blocks for reasoning models (DeepSeek R1, OpenAI o-series) with duration timers.
-            </p>
-            <ComponentPreview code={thinkingCode}>
-              <div className="w-full max-w-xl">
-                <Bubble role="assistant" seamVerified seamEndpoint="POST /v1/interviews/feedback">
-                  <BubbleThinking duration="1.2s" title="Contract Parity Analysis" defaultOpen={true}>
-{`Scanning AST:
-- Frontend field "scores" -> Backend "scores" (List[int]) -> MATCH
-- Frontend field "detailed_feedback" -> Backend "detailed_feedback" (str) -> MATCH
-- Zero camelCase drift detected. HTTP 200 guaranteed.`}
-                  </BubbleThinking>
-                  Your frontend form submission is fully verified and compliant with the FastAPI schema.
-                </Bubble>
-              </div>
-            </ComponentPreview>
-          </section>
-
-          {/* Streaming State */}
-          <section id="streaming-state" className="space-y-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              Streaming Response
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Real-time response token generation with an animated cursor.
-            </p>
-            <ComponentPreview code={`<Bubble role="assistant" isStreaming>\n  Synthesizing contract parity report across all FastAPI routers\n</Bubble>`}>
-              <div className="w-full max-w-xl">
-                <Bubble role="assistant" isStreaming>
-                  Synthesizing contract parity report across all FastAPI routers
-                </Bubble>
-              </div>
-            </ComponentPreview>
-          </section>
-
-          {/* Installation */}
-          <section id="installation" className="space-y-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              Installation
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Add the Bubble primitive to your project:
-            </p>
-            <ComponentCode code="npx mintforge add bubble" language="bash" />
-          </section>
+      {/* 2. Visual Showcase Grid (Showcase Cards + Interactive Playground) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Showcase Cards */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+          <BubbleVariantsCard />
+          <BubbleAlignmentCard />
+          <BubbleGroupedCard />
+          <BubbleReactionsCard />
+          <BubbleActionButtonsCard />
+          <BubbleCollapsibleCard />
+          <BubbleThinkingCard />
         </div>
 
-        <div className="mt-16">
-          <ComponentPagination currentHref="/docs/components/bubble" />
+        {/* Right Column: Interactive Playground (Sticky alongside cards) */}
+        <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-20">
+          <BubblePlayground
+            state={playgroundState}
+            onChange={setPlaygroundState}
+          />
         </div>
       </div>
 
-      <DocsTableOfContents items={tocItems} />
-    </>
+      {/* 3. Dedicated Code Preview & Implementation Section (Separated from Playground) */}
+      <BubbleBigCodeSection playgroundState={playgroundState} />
+
+      {/* 4. API Reference & Props Specifications */}
+      <section className="mt-14 space-y-8">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111827] flex items-center gap-2">
+            <BookOpen size={22} className="text-[#5145FF]" />
+            <span>API Reference</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+            Complete props documentation and default values for all Bubble compound primitives.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;Bubble /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleContent /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleContentProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleGroup /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleGroupProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleReactions /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleReactionsProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleCollapsible /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleCollapsibleProps} />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;BubbleThinking /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={bubbleThinkingProps} />
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Accessibility & Design System Principles */}
+      <section className="mt-14 space-y-6">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111827] flex items-center gap-2">
+            <ShieldCheck size={22} className="text-[#15803D]" />
+            <span>Accessibility &amp; Standards</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+            Compliant with W3C WAI-ARIA conversational patterns and assistive technologies.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              01
+            </div>
+            <h4 className="text-sm font-bold text-[#111827]">
+              Labeling Reactions
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              Reaction capsules use <code>role=&quot;img&quot;</code> with descriptive <code>aria-label</code> tags so screen readers announce summary text instead of individual unformatted glyphs.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              02
+            </div>
+            <h4 className="text-sm font-bold text-[#111827]">
+              Visible Focus States
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              All links and interactive action buttons inside bubbles feature explicit <code>focus-visible:ring-2</code> indicators to support keyboard navigation cleanly.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              03
+            </div>
+            <h4 className="text-sm font-bold text-[#111827]">
+              Accessible Disclosures
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              Collapsible content and thinking drawers declare <code>aria-expanded</code> states, notifying screen readers when content is revealed or hidden.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pagination Footer */}
+      <div className="mt-14 pt-8 border-t border-[#E5E7EB]">
+        <ComponentPagination currentHref="/docs/components/bubble" />
+      </div>
+    </div>
   );
 }

@@ -277,56 +277,24 @@ export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HT
   badge: {
     id: "badge",
     title: "Badge",
-    description: "Compact status indicator and counter pill for badges, tags, and category chips.",
+    description: "Compact status indicator, count pill, and metadata chip supporting solid, soft, outline, and ghost appearances.",
     category: "Feedback",
     status: "Ready",
     dependencies: [],
-    importSnippet: `import { Badge } from "@/components/ui/badge";`,
-    sourceCode: `import * as React from "react";
-
-export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "brand" | "outline" | "success" | "warning" | "destructive";
-  size?: "sm" | "md";
-}
-
-export function Badge({
-  className = "",
-  variant = "default",
-  size = "md",
-  children,
-  ...props
-}: BadgeProps) {
-  const variantStyles = {
-    default: "bg-secondary text-foreground border-transparent",
-    brand: "bg-brand-subtle text-brand border-brand/20 font-semibold",
-    outline: "bg-transparent text-foreground border-border-strong",
-    success: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-    destructive: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
-  };
-
-  const sizeStyles = {
-    sm: "px-2 py-0.5 text-[11px]",
-    md: "px-2.5 py-1 text-xs",
-  };
-
-  return (
-    <div
-      className={\`inline-flex items-center gap-1 font-medium rounded-full border transition-colors select-none \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}`,
+    importSnippet: `import { Badge, BadgeDot, BadgeCount } from "@/components/ui/badge";`,
+    sourceCode: `export { Badge, BadgeDot, BadgeCount } from "@/components/ui/badge";`,
     props: [
-      { name: "variant", type: '"default" | "brand" | "outline" | "success" | "warning" | "destructive"', defaultValue: '"default"', description: "Color scheme of the badge." },
-      { name: "size", type: '"sm" | "md"', defaultValue: '"md"', description: "Font size and padding scale." },
+      { name: "appearance", type: '"solid" | "soft" | "outline" | "ghost"', defaultValue: '"soft"', description: "Visual styling container treatment." },
+      { name: "variant", type: '"default" | "brand" | "primary" | "info" | "success" | "warning" | "destructive" | "neutral" | "lavender"', defaultValue: '"default"', description: "Semantic color intent." },
+      { name: "size", type: '"xs" | "sm" | "md" | "lg"', defaultValue: '"md"', description: "Dimensions and typography scale." },
+      { name: "shape", type: '"pill" | "rounded" | "square"', defaultValue: '"pill"', description: "Border radius profile." },
     ],
     examples: [
       {
-        title: "Status Badges",
-        code: `<Badge variant="brand">v0.1.0 Ready</Badge>`,
+        title: "Status Badge with Indicator Dot",
+        code: `<Badge appearance="soft" variant="success" leadingIcon={<BadgeDot status="active" ping />}>
+  Active
+</Badge>`,
       },
     ],
   },

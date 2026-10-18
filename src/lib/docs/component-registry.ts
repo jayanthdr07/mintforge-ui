@@ -806,25 +806,46 @@ export function TabsContent({
   attachment: {
     id: "attachment",
     title: "Attachment",
-    description: "File upload dropzone and item cards with mime-type icons, size formatting, and progress indicators.",
+    description: "Display files, images, and upload activity with thoughtful previews, clear metadata, progress states, and intuitive actions.",
     category: "Primitives",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { AttachmentDropzone, AttachmentItem } from "@/components/ui/attachment";`,
-    sourceCode: `export { AttachmentDropzone, AttachmentItem } from "@/components/ui/attachment";`,
+    importSnippet: `import {
+  Attachment,
+  AttachmentMedia,
+  AttachmentContent,
+  AttachmentTitle,
+  AttachmentDescription,
+  AttachmentProgress,
+  AttachmentActions,
+  AttachmentAction,
+  AttachmentTrigger,
+  AttachmentGroup,
+  AttachmentFileCard,
+  AttachmentImagePreview,
+  AttachmentUploadProgress,
+} from "@/components/ui/attachment";`,
+    sourceCode: `export * from "@/components/ui/attachment";`,
     props: [
-      { name: "onFilesSelected", type: "(files: File[]) => void", defaultValue: "undefined", description: "Callback fired when files are dropped or selected." },
-      { name: "maxSizeBytes", type: "number", defaultValue: "10485760", description: "Maximum file size allowed in bytes." },
+      { name: "state", type: '"idle" | "uploading" | "processing" | "error" | "done"', defaultValue: '"idle"', description: "Lifecycle state of the attachment card." },
+      { name: "size", type: '"default" | "sm" | "xs"', defaultValue: '"default"', description: "Controls internal padding, thumbnail scale, and font sizes." },
+      { name: "orientation", type: '"horizontal" | "vertical"', defaultValue: '"horizontal"', description: "Layout alignment (horizontal row or vertical card)." },
+      { name: "category", type: '"document" | "image" | "code" | "archive" | "audio" | "video" | "data" | "file"', defaultValue: '"file"', description: "Semantic category for file iconography." },
     ],
     examples: [
       {
-        title: "File Dropzone & Upload Item",
-        code: `<div className="space-y-4">
-  <AttachmentDropzone onFilesSelected={(files) => console.log(files)} />
-  <AttachmentItem
-    file={{ id: "1", name: "openapi-spec.json", size: 142000, progress: 100 }}
-  />
-</div>`,
+        title: "File Attachment Card",
+        code: `<Attachment state="done" size="default">
+  <AttachmentMedia category="document" alt="specs.pdf" />
+  <AttachmentContent>
+    <AttachmentTitle>specs.pdf</AttachmentTitle>
+    <AttachmentDescription>2.4 MB</AttachmentDescription>
+  </AttachmentContent>
+</Attachment>`,
+      },
+      {
+        title: "Upload Progress Card",
+        code: `<AttachmentUploadProgress name="design-system.zip" size={14800000} initialProgress={64} />`,
       },
     ],
   },

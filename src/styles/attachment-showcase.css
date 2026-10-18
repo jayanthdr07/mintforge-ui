@@ -1,0 +1,198 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Attachments Showcase Styles
+   Theme Specification:
+   - Page Canvas: #F8F9FC
+   - Card Surfaces: #FFFFFF with subtle borders (#E5E7EB / #EEF2F6) and soft elevation
+   - Primary Accent: #5145FF (Indigo-Purple)
+   - Primary Hover: #4338CA
+   - Lavender Tint: #F2F0FF
+   - Primary Text: #111827
+   - Secondary Text: #64748B
+   - Borders: #E5E7EB
+   - Success: #15803D
+   - Warning: #B45309
+   - Destructive / Error: #DC2626
+   ========================================================================== */
+
+.mf-attachment-doc-scope {
+  --mf-att-primary: #5145FF;
+  --mf-att-primary-hover: #4338CA;
+  --mf-att-primary-light: #EEF2FF;
+  --mf-att-primary-border: #E0E7FF;
+  --mf-att-lavender: #F2F0FF;
+  --mf-att-bg: #F8F9FC;
+  --mf-att-card-bg: #FFFFFF;
+  --mf-att-border: #E5E7EB;
+  --mf-att-border-subtle: #EEF2F6;
+  --mf-att-text-primary: #111827;
+  --mf-att-text-secondary: #64748B;
+  --mf-att-success: #15803D;
+  --mf-att-warning: #B45309;
+  --mf-att-error: #DC2626;
+
+  background-color: var(--mf-att-bg);
+  color: var(--mf-att-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 1.5rem 4rem 1.5rem;
+  border-radius: 28px;
+  border: 1px solid #E5E7EB;
+  padding: 36px 44px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-attachment-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+}
+
+.mf-attachment-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Variant Nav Pill Buttons */
+.mf-attachment-doc-scope .mf-acc-pill-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.mf-attachment-doc-scope .mf-acc-pill-btn:hover {
+  border-color: #D1D5DB;
+  color: #111827;
+  background-color: #F9FAFB;
+}
+
+.mf-attachment-doc-scope .mf-acc-pill-btn.active {
+  background-color: #5145FF !important;
+  border-color: #5145FF !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(81, 69, 255, 0.35) !important;
+}
+
+.mf-attachment-doc-scope .mf-acc-pill-btn.active:hover {
+  background-color: #4338CA !important;
+  border-color: #4338CA !important;
+  color: #FFFFFF !important;
+}
+
+/* Showcase Card Surfaces */
+.mf-attachment-showcase-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.mf-attachment-showcase-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  border-color: #D1D5DB;
+}
+
+/* Horizontally Scrolling Attachment Group Track */
+.mf-attachment-group-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 4px 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #E2E8F0 transparent;
+}
+
+.mf-attachment-group-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.mf-attachment-group-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mf-attachment-group-track::-webkit-scrollbar-thumb {
+  background-color: #E2E8F0;
+  border-radius: 9999px;
+}
+
+.mf-attachment-group-track::-webkit-scrollbar-thumb:hover {
+  background-color: #CBD5E1;
+}
+
+/* Group Container with Subtle Gradient Edge Fade */
+.mf-attachment-group-container {
+  position: relative;
+}
+
+.mf-attachment-group-container.has-overflow-left::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(to right, #FFFFFF, transparent);
+  pointer-events: none;
+  z-index: 5;
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+}
+
+.mf-attachment-group-container.has-overflow-right::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(to left, #FFFFFF, transparent);
+  pointer-events: none;
+  z-index: 5;
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* Shimmer Progress Animation */
+@keyframes mf-att-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.mf-att-shimmer-active {
+  background: linear-gradient(
+    90deg,
+    rgba(81, 69, 255, 0.08) 0%,
+    rgba(81, 69, 255, 0.22) 50%,
+    rgba(81, 69, 255, 0.08) 100%
+  );
+  background-size: 200% 100%;
+  animation: mf-att-shimmer 1.8s infinite linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-att-shimmer-active {
+    animation: none;
+    background: rgba(81, 69, 255, 0.12);
+  }
+}

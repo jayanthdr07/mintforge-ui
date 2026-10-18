@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Alert Dialog Showcase Styles
+   Theme Specification:
+   - Canvas: #F8F9FC and #FFFFFF
+   - Dialog Surfaces: #FFFFFF with crisp subtle borders (#E5E7EB / #EEF2F6) and soft elevation
+   - Primary Accent: #5145FF (Blue-Purple)
+   - Primary Hover: #4338CA
+   - Accent Subtle / Tint: #EEF2FF / #F2F0FF
+   - Text Primary: #111827 (Dark Navy)
+   - Text Secondary: #64748B
+   - Destructive: #DC2626
+   - Success: #15803D
+   - Warning: #B45309
+   ========================================================================== */
+
+.mf-alert-dialog-doc-scope {
+  --mf-ad-primary: #5145FF;
+  --mf-ad-primary-hover: #4338CA;
+  --mf-ad-primary-light: #EEF2FF;
+  --mf-ad-primary-border: #E0E7FF;
+  --mf-ad-lavender: #F2F0FF;
+  --mf-ad-bg: #F8F9FC;
+  --mf-ad-card-bg: #FFFFFF;
+  --mf-ad-border: #E5E7EB;
+  --mf-ad-border-subtle: #EEF2F6;
+  --mf-ad-text-primary: #111827;
+  --mf-ad-text-secondary: #64748B;
+  --mf-ad-destructive: #DC2626;
+  --mf-ad-success: #15803D;
+  --mf-ad-warning: #B45309;
+
+  background-color: var(--mf-ad-bg);
+  color: var(--mf-ad-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 1.5rem 4rem 1.5rem;
+  border-radius: 28px;
+  border: 1px solid #E5E7EB;
+  padding: 36px 44px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-alert-dialog-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+}
+
+.mf-alert-dialog-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Variant Nav Pill Buttons */
+.mf-alert-dialog-doc-scope .mf-acc-pill-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
+.mf-alert-dialog-doc-scope .mf-acc-pill-btn:hover {
+  border-color: #D1D5DB;
+  color: #111827;
+  background-color: #F9FAFB;
+}
+
+.mf-alert-dialog-doc-scope .mf-acc-pill-btn.active {
+  background-color: #5145FF !important;
+  border-color: #5145FF !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(81, 69, 255, 0.35) !important;
+}
+
+.mf-alert-dialog-doc-scope .mf-acc-pill-btn.active:hover {
+  background-color: #4338CA !important;
+  border-color: #4338CA !important;
+  color: #FFFFFF !important;
+}
+
+/* Card Showcase Containers */
+.mf-dialog-showcase-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.mf-dialog-showcase-card:hover {
+  transform: translateY(-2px);
+  border-color: #C7D2FE;
+  box-shadow: 0 10px 28px -4px rgba(81, 69, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.mf-dialog-showcase-card.active {
+  border-color: #818CF8 !important;
+  box-shadow: 0 0 0 2px rgba(81, 69, 255, 0.25), 0 12px 32px -4px rgba(81, 69, 255, 0.12) !important;
+}
+
+/* Scooped Notch Cut-Out for Destructive Dialog */
+.mf-scooped-notch-container {
+  position: relative;
+  overflow: visible;
+}
+
+.mf-scooped-notch-icon-wrapper {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.12);
+  border: 1px solid #FEE2E2;
+  z-index: 20;
+}
+
+/* Interactive slider track styling */
+.mf-dialog-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: #E0E7FF;
+  outline: none;
+  transition: background 0.15s ease;
+}
+
+.mf-dialog-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 4px solid #5145FF;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(81, 69, 255, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.mf-dialog-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.mf-dialog-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 4px solid #5145FF;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(81, 69, 255, 0.3);
+  transition: transform 0.15s ease;
+}
+
+@media (max-width: 768px) {
+  .mf-alert-dialog-doc-scope {
+    margin: 0.5rem 0.5rem 3rem 0.5rem;
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}

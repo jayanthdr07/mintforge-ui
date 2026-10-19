@@ -81,15 +81,19 @@ export function AlertDialog({
 
 export interface AlertDialogTriggerProps {
   asChild?: boolean;
-  children: React.ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
+  children: React.ReactElement;
 }
 
 export function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {
   const { setOpen } = useAlertDialog();
 
-  return React.cloneElement(children, {
+  const child = children as React.ReactElement<{
+    onClick?: (e: React.MouseEvent) => void;
+  }>;
+
+  return React.cloneElement(child, {
     onClick: (e: React.MouseEvent) => {
-      children.props?.onClick?.(e);
+      child.props?.onClick?.(e);
       setOpen(true);
     },
   });

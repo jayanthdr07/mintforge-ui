@@ -7,12 +7,12 @@ import { RefreshCw } from "lucide-react";
 export type AlertSolidProps = Partial<AlertProps>;
 
 export function AlertSolid(props?: AlertSolidProps) {
+  const [dismissed1, setDismissed1] = React.useState(false);
+  const [dismissed2, setDismissed2] = React.useState(false);
+
   if (props && (props.status || props.title || props.description || props.children || props.action)) {
     return <Alert design="solid" status="destructive" {...props} />;
   }
-
-  const [dismissed1, setDismissed1] = React.useState(false);
-  const [dismissed2, setDismissed2] = React.useState(false);
 
   const isAllDismissed = dismissed1 && dismissed2;
 

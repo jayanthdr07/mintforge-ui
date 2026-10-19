@@ -7,11 +7,11 @@ import { RefreshCw } from "lucide-react";
 export type AlertRailProps = Partial<AlertProps>;
 
 export function AlertRail(props?: AlertRailProps) {
+  const [dismissed, setDismissed] = React.useState(false);
+
   if (props && (props.status || props.title || props.description || props.children || props.action)) {
     return <Alert design="rail" status="info" {...props} />;
   }
-
-  const [dismissed, setDismissed] = React.useState(false);
 
   return (
     <div className="space-y-3.5">

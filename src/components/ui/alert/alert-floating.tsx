@@ -7,11 +7,11 @@ import { RefreshCw } from "lucide-react";
 export type AlertFloatingProps = Partial<AlertProps>;
 
 export function AlertFloating(props?: AlertFloatingProps) {
+  const [dismissed, setDismissed] = React.useState(false);
+
   if (props && (props.status || props.title || props.description || props.children || props.action)) {
     return <Alert design="floating" status="brand" {...props} />;
   }
-
-  const [dismissed, setDismissed] = React.useState(false);
 
   return (
     <div className="space-y-3.5">

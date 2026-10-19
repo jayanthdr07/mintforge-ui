@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Button Showcase Styles
+   Theme Specification:
+   - Page Canvas: #F8F9FC
+   - Card Surfaces: #FFFFFF with subtle borders (#E5E7EB / #EEF2F6) and soft elevation
+   - Primary Accent: #5145FF (Indigo-Purple)
+   - Primary Hover: #4338CA
+   - Lavender Tint: #F2F0FF
+   - Lavender Border: #E0DAFF
+   - Primary Text: #111827
+   - Secondary Text: #64748B
+   - Borders: #E5E7EB
+   - Success: #15803D
+   - Warning: #B45309
+   - Destructive / Error: #DC2626
+   ========================================================================== */
+
+.mf-button-doc-scope {
+  --mf-btn-primary: #5145FF;
+  --mf-btn-primary-hover: #4338CA;
+  --mf-btn-primary-light: #EEF2FF;
+  --mf-btn-primary-border: #E0E7FF;
+  --mf-btn-lavender: #F2F0FF;
+  --mf-btn-lavender-border: #E0DAFF;
+  --mf-btn-bg: #F8F9FC;
+  --mf-btn-card-bg: #FFFFFF;
+  --mf-btn-border: #E5E7EB;
+  --mf-btn-border-subtle: #EEF2F6;
+  --mf-btn-text-primary: #111827;
+  --mf-btn-text-secondary: #64748B;
+  --mf-btn-success: #15803D;
+  --mf-btn-warning: #B45309;
+  --mf-btn-error: #DC2626;
+
+  background-color: var(--mf-btn-bg);
+  color: var(--mf-btn-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.75rem auto 3rem auto;
+  border-radius: 20px;
+  border: 1px solid #E5E7EB;
+  padding: 24px 28px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-button-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1rem 1rem 4rem 1rem;
+}
+
+.mf-button-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Feature Badge Pills */
+.mf-button-doc-scope .mf-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mf-button-doc-scope .mf-feature-pill:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+}
+
+/* Showcase Cards */
+.mf-button-doc-scope .mf-showcase-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-button-doc-scope .mf-showcase-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Code Terminal */
+.mf-button-doc-scope .mf-dark-terminal {
+  background-color: #0B0F19;
+  border: 1px solid #1E293B;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Accessible Tooltip Helper */
+.mf-button-doc-scope .mf-tooltip-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.mf-button-doc-scope .mf-tooltip-container:hover .mf-tooltip-bubble,
+.mf-button-doc-scope .mf-tooltip-container:focus-within .mf-tooltip-bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.mf-button-doc-scope .mf-tooltip-bubble {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px) scale(0.95);
+  transform-origin: bottom center;
+  background-color: #111827;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 30;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mf-button-doc-scope .mf-tooltip-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #111827 transparent transparent transparent;
+}
+
+@media (max-width: 1024px) {
+  .mf-button-doc-scope {
+    padding: 18px 16px;
+    margin: 0.5rem 0 2.5rem 0;
+    border-radius: 16px;
+  }
+
+  .mf-button-doc-scope .mf-showcase-card {
+    padding: 16px 16px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mf-button-doc-scope {
+    padding: 14px 12px;
+  }
+
+  .mf-button-doc-scope .mf-showcase-card {
+    padding: 14px 14px;
+  }
+}

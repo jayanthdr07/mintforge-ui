@@ -4,20 +4,32 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMeta> = {
   button: {
     id: "button",
     title: "Button",
-    description: "Interactive button primitive supporting multiple visual variants, sizing scales, loading spinners, and icon slots.",
+    description: "Interactive button primitive supporting multiple visual variants, sizing scales, loading spinners, icon slots, and asChild slot composition.",
     category: "Primitives",
     status: "Ready",
     dependencies: ["lucide-react"],
     importSnippet: `import { Button } from "@/components/ui/button";`,
-    sourceCode: `import * as React from "react";
-import { Loader2 } from "lucide-react";
+    sourceCode: `import { Loader2 } from "lucide-react";
+import React from "react";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "secondary" | "outline" | "ghost" | "destructive";
-  size?: "sm" | "md" | "lg";
+export type ButtonVariant =
+  | "default"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "destructive"
+  | "link";
+
+export type ButtonSize = "default" | "sm" | "lg" | "icon" | "md";
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -25,47 +37,98 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className = "",
       variant = "default",
-      size = "md",
+      size = "default",
       isLoading = false,
       leftIcon,
       rightIcon,
       disabled,
       children,
+      asChild = false,
+      type = "button",
       ...props
     },
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer rounded-md";
+      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-[#5145FF] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer active:scale-[0.98]";
 
-    const variantStyles = {
+    const variantStyles: Record<ButtonVariant, string> = {
       default:
-        "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-ring shadow-sm",
+        "bg-[#5145FF] text-white hover:bg-[#4338CA] shadow-xs active:bg-[#3730A3]",
       secondary:
-        "bg-secondary text-foreground hover:bg-surface-tertiary focus-visible:ring-border border border-border",
+        "bg-slate-100 text-slate-900 hover:bg-slate-200/80 border border-slate-200/60 shadow-2xs",
       outline:
-        "bg-transparent text-foreground border border-border hover:bg-secondary focus-visible:ring-border",
+        "bg-white text-[#111827] border border-[#E5E7EB] hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-2xs",
       ghost:
-        "bg-transparent text-foreground hover:bg-secondary focus-visible:ring-border",
+        "bg-transparent text-[#111827] hover:bg-slate-100/80 active:bg-slate-200/60",
       destructive:
-        "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500 shadow-sm",
+        "bg-[#DC2626] text-white hover:bg-[#B91C1C] shadow-xs active:bg-[#991B1B]",
+      link:
+        "bg-transparent text-[#5145FF] underline-offset-4 hover:underline hover:text-[#4338CA] p-0 h-auto font-medium shadow-none active:scale-100",
     };
 
-    const sizeStyles = {
-      sm: "h-8 px-3 text-xs gap-1.5",
-      md: "h-10 px-4 text-sm gap-2",
-      lg: "h-12 px-6 text-base gap-2.5",
+    const resolvedSize = size === "md" ? "default" : size;
+
+    const sizeStyles: Record<"default" | "sm" | "lg" | "icon", string> = {
+      sm: "h-8 px-3 text-xs gap-1.5 rounded-md",
+      default: "h-10 px-4 py-2 text-sm gap-2 rounded-lg",
+      lg: "h-11 px-6 text-base gap-2.5 rounded-lg",
+      icon: "h-10 w-10 p-0 text-sm rounded-lg shrink-0 justify-center",
     };
+
+    const sizeClass =
+      variant === "link"
+        ? size === "icon"
+          ? "p-1"
+          : "text-sm"
+        : sizeStyles[resolvedSize] || sizeStyles.default;
+
+    const mergedClassName = [
+      baseStyles,
+      variantStyles[variant],
+      sizeClass,
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<{
+        className?: string;
+        disabled?: boolean;
+        "aria-busy"?: boolean;
+        children?: React.ReactNode;
+      }>;
+
+      return React.cloneElement(child, {
+        className: [mergedClassName, child.props.className].filter(Boolean).join(" "),
+        disabled: disabled || isLoading || child.props.disabled,
+        "aria-busy": isLoading || undefined,
+        children: (
+          <>
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-current shrink-0" />
+            ) : (
+              leftIcon
+            )}
+            {child.props.children}
+            {!isLoading && rightIcon}
+          </>
+        ),
+      });
+    }
 
     return (
       <button
         ref={ref}
+        type={type}
         disabled={disabled || isLoading}
-        className={\`\${baseStyles} \${variantStyles[variant]} \${sizeStyles[size]} \${className}\`}
+        aria-busy={isLoading ? "true" : undefined}
+        className={mergedClassName}
         {...props}
       >
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin text-current" />
+          <Loader2 className="h-4 w-4 animate-spin text-current shrink-0" />
         ) : (
           leftIcon
         )}
@@ -77,12 +140,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";`,
     props: [
-      { name: "variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive"', defaultValue: '"default"', description: "Controls the visual styling and elevation." },
-      { name: "size", type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: "Controls padding, line-height, and typography scale." },
+      { name: "variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"', defaultValue: '"default"', description: "Controls the visual styling and elevation." },
+      { name: "size", type: '"default" | "sm" | "lg" | "icon" | "md"', defaultValue: '"default"', description: "Controls padding, height, and typography scale." },
+      { name: "asChild", type: "boolean", defaultValue: "false", description: "Renders visual styles directly onto a custom child component." },
       { name: "isLoading", type: "boolean", defaultValue: "false", description: "Renders an animated spinner and disables pointer events." },
       { name: "leftIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Icon rendered immediately before the button label." },
       { name: "rightIcon", type: "React.ReactNode", defaultValue: "undefined", description: "Icon rendered immediately after the button label." },
       { name: "disabled", type: "boolean", defaultValue: "false", description: "Standard disabled attribute; disables interaction." },
+      { name: "type", type: '"button" | "submit" | "reset"', defaultValue: '"button"', description: "HTML button type attribute. Defaults to 'button'." },
     ],
     examples: [
       {
@@ -757,25 +822,32 @@ export function TabsContent({
   bubble: {
     id: "bubble",
     title: "Bubble",
-    description: "AI chat bubble primitive supporting streaming indicators, collapsible reasoning steps, and Seam verification.",
+    description: "Conversational message bubble primitive supporting 7 visual surface variants, alignment, grouping, reactions, action buttons, collapsible content, and AI reasoning drawers.",
     category: "Feedback",
     status: "Ready",
     dependencies: ["lucide-react"],
-    importSnippet: `import { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
-    sourceCode: `export { Bubble, BubbleThinking } from "@/components/ui/bubble";`,
+    importSnippet: `import { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleActions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
+    sourceCode: `export { Bubble, BubbleContent, BubbleGroup, BubbleReactions, BubbleActions, BubbleCollapsible, BubbleThinking } from "@/components/ui/bubble";`,
     props: [
-      { name: "role", type: '"user" | "assistant" | "system"', defaultValue: '"assistant"', description: "Chat participant role determining alignment and visual style." },
-      { name: "isStreaming", type: "boolean", defaultValue: "false", description: "Renders animated streaming cursor pulse." },
-      { name: "seamVerified", type: "boolean", defaultValue: "false", description: "Displays Seam contract parity badge." },
+      { name: "variant", type: '"default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive"', defaultValue: '"default"', description: "Visual surface style." },
+      { name: "align", type: '"start" | "end"', defaultValue: '"start"', description: "Horizontal layout alignment." },
+      { name: "role", type: '"user" | "assistant" | "system"', defaultValue: "undefined", description: "Conversational role automatically configuring alignment and avatar." },
+      { name: "isStreaming", type: "boolean", defaultValue: "false", description: "Displays animated streaming pulse cursor." },
     ],
     examples: [
       {
-        title: "AI Response with Contract Badge",
-        code: `<Bubble role="assistant" seamVerified seamEndpoint="POST /v1/feedback">
-  <BubbleThinking duration="1.4s">
-    Verified 5/5 payload keys against FastAPI SubmitTeamFeedbackRequest schema.
-  </BubbleThinking>
-  Your team feedback has been recorded and synchronized with the backend.
+        title: "Conversational Bubble",
+        code: `<Bubble variant="default" align="end">
+  <BubbleContent>Can you check our frontend payload?</BubbleContent>
+</Bubble>`,
+      },
+      {
+        title: "Bubble with Reactions",
+        code: `<Bubble variant="muted" align="start">
+  <BubbleContent>Tests passed on the first run!</BubbleContent>
+  <BubbleReactions side="bottom" align="end">
+    <span>👍</span><span>🎉</span>
+  </BubbleReactions>
 </Bubble>`,
       },
     ],

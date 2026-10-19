@@ -165,6 +165,42 @@ Button.displayName = "Button";`,
     ],
   },
 
+  "button-group": {
+    id: "button-group",
+    title: "Button Group",
+    description: "Container primitive that connects related buttons into a unified visual cluster with collapsed shared borders and accessible grouping semantics.",
+    category: "Primitives",
+    status: "Ready",
+    dependencies: ["lucide-react"],
+    importSnippet: `import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group";`,
+    sourceCode: `export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, useButtonGroup, type ButtonGroupProps, type ButtonGroupOrientation } from "@/components/ui/button-group";`,
+    props: [
+      { name: "orientation", type: '"horizontal" | "vertical"', defaultValue: '"horizontal"', description: "Controls the alignment axis and border collapsing direction." },
+      { name: "attached", type: "boolean", defaultValue: "true", description: "Seamlessly connects buttons with shared borders and corner isolation." },
+      { name: "size", type: '"default" | "sm" | "lg" | "icon" | "md"', defaultValue: '"default"', description: "Default size context passed to grouped buttons and accessories." },
+      { name: "variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive"', defaultValue: '"outline"', description: "Visual variant context passed down to child buttons." },
+      { name: "role", type: '"group" | "toolbar"', defaultValue: '"group"', description: "WAI-ARIA landmark indicating the role of the button cluster." },
+      { name: "aria-label", type: "string", defaultValue: "undefined", description: "Accessible description of the button cluster for screen readers." },
+    ],
+    examples: [
+      {
+        title: "Basic Connected Segmented Buttons",
+        code: `<ButtonGroup orientation="horizontal">
+  <Button variant="default">Day</Button>
+  <Button variant="outline">Week</Button>
+  <Button variant="outline">Month</Button>
+</ButtonGroup>`,
+      },
+      {
+        title: "Split Action Button",
+        code: `<ButtonGroup orientation="horizontal">
+  <Button variant="default" leftIcon={<Download size={14} />}>Export</Button>
+  <Button variant="default" size="icon" aria-label="Export options"><ChevronDown size={14} /></Button>
+</ButtonGroup>`,
+      },
+    ],
+  },
+
   input: {
     id: "input",
     title: "Input",

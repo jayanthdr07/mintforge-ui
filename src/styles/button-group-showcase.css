@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Mintforge UI — Premium Light-Theme Button Group Showcase Styles
+   Matches the exact design tokens, typography, and responsive 3-column architecture
+   ========================================================================== */
+
+.mf-button-group-doc-scope {
+  --mf-btn-primary: #5145FF;
+  --mf-btn-primary-hover: #4338CA;
+  --mf-btn-primary-light: #EEF2FF;
+  --mf-btn-primary-border: #E0E7FF;
+  --mf-btn-lavender: #F2F0FF;
+  --mf-btn-lavender-border: #E0DAFF;
+  --mf-btn-bg: #F8F9FC;
+  --mf-btn-card-bg: #FFFFFF;
+  --mf-btn-border: #E5E7EB;
+  --mf-btn-border-subtle: #EEF2F6;
+  --mf-btn-text-primary: #111827;
+  --mf-btn-text-secondary: #64748B;
+  --mf-btn-success: #15803D;
+  --mf-btn-warning: #B45309;
+  --mf-btn-error: #DC2626;
+
+  background-color: var(--mf-btn-bg);
+  color: var(--mf-btn-text-primary);
+  font-family: var(--mf-font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.75rem auto 3rem auto;
+  border-radius: 20px;
+  border: 1px solid #E5E7EB;
+  padding: 24px 28px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.mf-docs-main:has(.mf-button-group-doc-scope) {
+  max-width: 100%;
+  width: 100%;
+  padding: 1rem 1rem 4rem 1rem;
+}
+
+.mf-button-group-doc-scope * {
+  box-sizing: border-box;
+}
+
+/* Feature Badge Pills */
+.mf-button-group-doc-scope .mf-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mf-button-group-doc-scope .mf-feature-pill:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+}
+
+/* Showcase Cards */
+.mf-button-group-doc-scope .mf-showcase-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-button-group-doc-scope .mf-showcase-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Code Terminal */
+.mf-button-group-doc-scope .mf-dark-terminal {
+  background-color: #0B0F19;
+  border: 1px solid #1E293B;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes mf-dropdown-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.mf-dropdown-animate {
+  animation: mf-dropdown-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-width: 1024px) {
+  .mf-button-group-doc-scope {
+    padding: 18px 16px;
+    margin: 0.5rem 0 2.5rem 0;
+    border-radius: 16px;
+  }
+
+  .mf-button-group-doc-scope .mf-showcase-card {
+    padding: 16px 16px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mf-button-group-doc-scope {
+    padding: 14px 12px;
+  }
+
+  .mf-button-group-doc-scope .mf-showcase-card {
+    padding: 14px 14px;
+  }
+}

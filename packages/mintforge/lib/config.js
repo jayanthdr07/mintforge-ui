@@ -11,7 +11,6 @@ function parseSimpleYaml(content) {
   let currentKey = null;
 
   for (let rawLine of lines) {
-    // Strip comments and trailing whitespace
     const commentIdx = rawLine.indexOf("#");
     const line = (commentIdx >= 0 ? rawLine.slice(0, commentIdx) : rawLine).replace(/\r$/, "");
     if (!line.trim()) continue;
@@ -24,7 +23,6 @@ function parseSimpleYaml(content) {
     }
     const current = stack[stack.length - 1].obj;
 
-    // Handle list item
     if (trimmed.startsWith("- ")) {
       const val = trimmed.slice(2).trim();
       if (Array.isArray(current)) {
@@ -41,7 +39,6 @@ function parseSimpleYaml(content) {
       const rawVal = trimmed.slice(colonIdx + 1).trim();
 
       if (rawVal === "") {
-        // Nested object or list
         const isNextList = lines.some((l, idx) => {
           if (idx <= lines.indexOf(rawLine)) return false;
           const tr = l.trim();
@@ -67,7 +64,6 @@ function parseValue(val) {
   if (val === "false") return false;
   if (val === "null") return null;
   if (!isNaN(Number(val)) && val !== "") return Number(val);
-  // Strip quotes
   if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
     return val.slice(1, -1);
   }
@@ -116,7 +112,19 @@ function loadConfig(cwd = process.cwd(), explicitPath = null) {
     path.join(cwd, "api"),
     path.join(cwd, "server"),
     cwd,
-  ].find((p) => fs.existsSync(p) && fs.readdirSync(p).some((f) => f.endsWith(".py")));
+  ].find((p) => {
+    if (!fs.existsSync(p)) return false;
+    try {
+      const files = fs.readdirSync(p);
+      return (
+        files.some((f) => f.endsWith(".py")) ||
+        files.some((f) => f.endsWith(".js") || f.endsWith(".ts")) ||
+        files.includes("schema.prisma")
+      );
+    } catch {
+      return false;
+    }
+  });
 
   const autoFrontend = [
     path.join(cwd, "frontend"),
@@ -124,7 +132,14 @@ function loadConfig(cwd = process.cwd(), explicitPath = null) {
     path.join(cwd, "app"),
     path.join(cwd, "client"),
     cwd,
-  ].find((p) => fs.existsSync(p) && fs.readdirSync(p).some((f) => f.endsWith(".ts") || f.endsWith(".tsx")));
+  ].find((p) => {
+    if (!fs.existsSync(p)) return false;
+    try {
+      return fs.readdirSync(p).some((f) => f.endsWith(".ts") || f.endsWith(".tsx"));
+    } catch {
+      return false;
+    }
+  });
 
   if (autoBackend && autoFrontend) {
     return {
@@ -153,6 +168,8 @@ function normalizeConfig(raw, cwd) {
       path: path.resolve(cwd, typeof backendPath === "string" ? backendPath : "./backend"),
       openapi: raw.backend?.openapi ? path.resolve(cwd, raw.backend.openapi) : null,
       prefix: raw.backend?.prefix || "",
+      framework: raw.backend?.framework || "auto", // "fastapi" | "express" | "mongoose" | "prisma" | "auto"
+      prisma: raw.backend?.prisma ? path.resolve(cwd, raw.backend.prisma) : null,
     },
     frontend: {
       path: path.resolve(cwd, typeof frontendPath === "string" ? frontendPath : "./src"),
@@ -161,7 +178,7 @@ function normalizeConfig(raw, cwd) {
     mappings: raw.mappings || {},
     ignore: {
       routes: raw.ignore?.routes || ["/health", "/docs", "/openapi.json", "/redoc"],
-      fields: raw.ignore?.fields || ["id", "created_at", "updated_at"],
+      fields: raw.ignore?.fields || ["id", "_id", "created_at", "updated_at", "createdAt", "updatedAt"],
     },
     rules: {
       casing: raw.rules?.casing || "error",     // error | warn | off
@@ -182,23 +199,25 @@ function createDefaultConfigFile(cwd = process.cwd()) {
 
   const template = `# ==============================================================================
 # Mintforge Seam Check Configuration
-# Full-Stack Contract Verification (FastAPI + Next.js / Expo)
+# Full-Stack Contract Verification (FastAPI, Express, Mongoose, Prisma)
 # Docs: https://mintforge.dev/docs/seam-check
 # ==============================================================================
 
 version: 1
 
 backend:
-  path: ./backend            # FastAPI project folder or openapi.json
+  path: ./backend            # Backend folder (Python FastAPI or Node/Express)
   prefix: /v1                # Global API route prefix (optional)
+  framework: auto            # auto | fastapi | express | mongoose | prisma
   # openapi: ./backend/openapi.json
+  # prisma: ./prisma/schema.prisma
 
 frontend:
   path: ./frontend           # Next.js or Expo source directory (e.g. ./src or ./frontend)
 
 # Explicit schema mapping (optional)
 # mappings:
-#   SubmitTeamFeedbackRequest: SubmitTeamFeedbackRequest
+#   UserCreateForm: UserCreate
 
 ignore:
   routes:
@@ -208,14 +227,17 @@ ignore:
     - /redoc
   fields:
     - id
+    - _id
     - created_at
     - updated_at
+    - createdAt
+    - updatedAt
 
 # Verification rules (error | warn | off)
 rules:
   casing: error              # Flags camelCase vs snake_case field drift
   routes: error              # Flags 404 path and HTTP verb drift
-  payloads: error            # Flags missing required backend fields
+  payloads: error            # Flags missing required fields and strict-mode violations
 `;
 
   fs.writeFileSync(targetFile, template, "utf8");
@@ -226,4 +248,5 @@ module.exports = {
   loadConfig,
   createDefaultConfigFile,
   parseSimpleYaml,
+  normalizeConfig,
 };

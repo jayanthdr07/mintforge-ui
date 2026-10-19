@@ -38,7 +38,7 @@ try {
 const { loadConfig, createDefaultConfigFile } = require("../lib/config");
 const { scanBackend } = require("../lib/backend-scanner");
 const { scanFrontend } = require("../lib/frontend-scanner");
-const { detectDrift } = require("../lib/drift-detector");
+const { detectDrift, applyFixes } = require("../lib/drift-detector");
 const { renderReport } = require("../lib/reporter");
 
 function printBanner() {
@@ -56,12 +56,14 @@ function printHelp() {
   console.log(`  ${c.bold}Commands:${c.reset}`);
   console.log(`    ${c.emerald}init${c.reset}                  Initialize Mintforge in your project (creates components.json & utils)`);
   console.log(`    ${c.emerald}add${c.reset} <components...>   Add component(s) to your project (e.g. button, card, dialog)`);
-  console.log(`    ${c.emerald}check${c.reset} [options]        Verify frontend forms & fetch calls against FastAPI/Pydantic models`);
+  console.log(`    ${c.emerald}check${c.reset} [options]        Verify full-stack contracts (FastAPI, Express, Mongoose, Prisma)`);
   console.log(`    ${c.emerald}list${c.reset}                  List all available components in the registry`);
   console.log(`    ${c.emerald}diff${c.reset} <component>     Compare local component against latest registry`);
   console.log("");
   console.log(`  ${c.bold}Options:${c.reset}`);
   console.log(`    ${c.dim}--init${c.reset}                (With check) Create default seamcheck.yaml config`);
+  console.log(`    ${c.dim}--fix${c.reset}                 (With check) Automatically fix casing drift in frontend files`);
+  console.log(`    ${c.dim}--framework <name>${c.reset}    Override backend framework (fastapi | express | mongoose | prisma | auto)`);
   console.log(`    ${c.dim}-y, --yes${c.reset}             Skip confirmation prompts and accept defaults`);
   console.log(`    ${c.dim}-h, --help${c.reset}            Display this help message`);
   console.log(`    ${c.dim}-v, --version${c.reset}         Display the current version`);
@@ -298,10 +300,36 @@ function cmdCheck(args, cwd) {
     console.log(`  ${c.dim}Auto-detected paths: Backend=${config.backend.path}, Frontend=${config.frontend.path}${c.reset}`);
   }
 
+  // Handle explicit framework flag
+  const fwIdx = args.indexOf("--framework");
+  if (fwIdx !== -1 && args[fwIdx + 1]) {
+    config.backend.framework = args[fwIdx + 1];
+  }
+
   const backendData = scanBackend(config.backend);
   const frontendData = scanFrontend(config.frontend);
 
-  const { findings, stats } = detectDrift(backendData, frontendData, config);
+  if (backendData.frameworks && backendData.frameworks.length > 0) {
+    console.log(`  ${c.dim}Active Framework(s): ${c.emerald(backendData.frameworks.join(", "))}${c.reset}`);
+  }
+
+  let { findings, stats } = detectDrift(backendData, frontendData, config);
+
+  // Handle --fix
+  if (args.includes("--fix")) {
+    const fixResult = applyFixes(findings);
+    if (fixResult.fixedCount > 0) {
+      console.log(`  ${c.green}✔ Auto-fixed ${fixResult.fixedCount} casing drift issue(s) across ${fixResult.modifiedFiles.length} file(s)!${c.reset}`);
+      // Re-scan frontend to reflect fixes
+      const updatedFrontend = scanFrontend(config.frontend);
+      const recheck = detectDrift(backendData, updatedFrontend, config);
+      findings = recheck.findings;
+      stats = recheck.stats;
+    } else {
+      console.log(`  ${c.dim}ℹ No auto-fixable casing drift found.${c.reset}`);
+    }
+  }
+
   const exitCode = renderReport(findings, stats);
 
   if (exitCode !== 0 && !args.includes("--no-exit")) {

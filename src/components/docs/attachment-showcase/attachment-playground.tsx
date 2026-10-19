@@ -10,7 +10,6 @@ import {
   AttachmentProgress,
   AttachmentActions,
   AttachmentAction,
-  AttachmentTrigger,
   AttachmentGroup,
 } from "@/components/ui/attachment";
 import {
@@ -24,17 +23,13 @@ import {
   Copy,
   Check,
   RotateCcw,
-  UploadCloud,
   Eye,
-  Download,
   X,
   Play,
   Pause,
   AlertCircle,
   CheckCircle2,
-  FileText,
   Sliders,
-  Code2,
   FilePlus2,
 } from "lucide-react";
 import { AttachmentCodeHighlighter } from "./attachment-code-highlighter";

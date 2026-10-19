@@ -14,7 +14,7 @@ import {
   AlertDialogSize,
   AlertDialogAppearance,
 } from "../alert-dialog";
-import { Trash2, AlertTriangle, RotateCcw, Check } from "lucide-react";
+import { Trash2, RotateCcw, Check } from "lucide-react";
 
 export interface AlertDialogDestructiveProps {
   open?: boolean;

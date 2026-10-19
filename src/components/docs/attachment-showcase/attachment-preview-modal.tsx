@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { X, Download, FileText, ExternalLink, Check } from "lucide-react";
+import { X, Download, FileText, Check } from "lucide-react";
 import { formatFileSize } from "@/components/ui/attachment/attachment.types";
 
 export interface PreviewModalData {

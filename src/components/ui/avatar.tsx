@@ -191,8 +191,8 @@ export const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
 
     if (!src || imageError) {
       if (fallbackSrc && !imageError) {
-        /* eslint-disable-next-line @next/next/no-img-element */
         return (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img
             ref={ref}
             src={fallbackSrc}

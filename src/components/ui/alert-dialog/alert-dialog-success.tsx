@@ -8,13 +8,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogSize,
   AlertDialogAppearance,
 } from "../alert-dialog";
-import { Check, ShieldCheck, ArrowRight, ExternalLink } from "lucide-react";
+import { Check, ShieldCheck, ArrowRight } from "lucide-react";
 
 export interface AlertDialogSuccessProps {
   open?: boolean;

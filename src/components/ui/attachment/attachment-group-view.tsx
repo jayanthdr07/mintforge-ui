@@ -13,16 +13,11 @@ import {
 } from "../attachment";
 import {
   X,
-  Plus,
   RotateCcw,
   ChevronLeft,
   ChevronRight,
-  FileText,
-  FileCode,
-  Image as ImageIcon,
-  CheckCircle2,
 } from "lucide-react";
-import { formatFileSize, getFileCategory } from "./attachment.types";
+import { formatFileSize } from "./attachment.types";
 
 interface GroupItem {
   id: string;

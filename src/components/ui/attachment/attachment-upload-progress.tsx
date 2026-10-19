@@ -18,7 +18,6 @@ import {
   Play,
   Pause,
   RotateCcw,
-  Sparkles,
 } from "lucide-react";
 import { formatFileSize } from "./attachment.types";
 

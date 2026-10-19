@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, FileCode, Terminal, Code2 } from "lucide-react";
+import { Copy, Check, FileCode, Terminal } from "lucide-react";
 import { AlertDialogCodeHighlighter } from "./alert-dialog-code-highlighter";
 import { AlertDialogPlaygroundConfig } from "./alert-dialog-playground";
 import { AlertDialogNavType } from "./alert-dialog-variant-nav";
@@ -351,7 +351,7 @@ export function AlertDialogBigCodeSection({
 }) {
   const [copiedCode, setCopiedCode] = React.useState(false);
   const [copiedCli, setCopiedCli] = React.useState(false);
-  const [viewMode, setViewMode] = React.useState<CodeViewMode>("full");
+  const viewMode: CodeViewMode = "full";
 
   const selectedVariant = activeVariant;
   const displayCode = getVariantDisplayCode(selectedVariant, config);

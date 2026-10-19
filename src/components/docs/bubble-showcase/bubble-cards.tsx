@@ -11,17 +11,12 @@ import {
   BubbleThinking,
 } from "@/components/ui/bubble";
 import {
-  Sparkles,
   Copy,
   Check,
   RotateCw,
   Share2,
-  ThumbsUp,
-  ThumbsDown,
   Bot,
   User,
-  CheckCircle2,
-  ExternalLink,
 } from "lucide-react";
 
 /* -------------------------------------------------------------------------------------------------

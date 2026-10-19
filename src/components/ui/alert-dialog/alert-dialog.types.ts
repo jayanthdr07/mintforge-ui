@@ -2,7 +2,6 @@ import * as React from "react";
 import type {
   AlertDialogSize,
   AlertDialogAppearance,
-  AlertDialogProps,
 } from "../alert-dialog";
 
 export interface AlertDialogPresetBaseProps {

@@ -14,7 +14,7 @@ import {
   AlertDialogSize,
   AlertDialogAppearance,
 } from "../alert-dialog";
-import { HelpCircle, Check, Sparkles } from "lucide-react";
+import { HelpCircle, Check } from "lucide-react";
 
 export interface AlertDialogConfirmProps {
   open?: boolean;

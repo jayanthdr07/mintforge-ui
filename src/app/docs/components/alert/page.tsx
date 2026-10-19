@@ -28,8 +28,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   BookOpen,
-  Code2,
-  ArrowRight,
 } from "lucide-react";
 
 export default function AlertDocPage() {
@@ -61,19 +59,6 @@ export default function AlertDocPage() {
         design: variant as AlertDesign,
       }));
     }
-  };
-
-  const handleInspectCode = (variant: AlertVariantNavType, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setActiveVariant(variant);
-    if (variant !== "playground") {
-      setPlaygroundConfig((prev) => ({
-        ...prev,
-        design: variant as AlertDesign,
-      }));
-    }
-    const el = document.getElementById("alert-code-export-section");
-    el?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handlePlaygroundConfigChange = (newConfig: AlertPlaygroundConfig) => {

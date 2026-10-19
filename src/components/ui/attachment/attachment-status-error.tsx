@@ -9,18 +9,13 @@ import {
   AttachmentDescription,
   AttachmentProgress,
   AttachmentActions,
-  AttachmentAction,
 } from "../attachment";
 import {
-  FileText,
-  FileArchive,
-  Table,
   CheckCircle2,
   AlertCircle,
   Loader2,
   RotateCw,
   Clock,
-  Sparkles,
 } from "lucide-react";
 import { formatFileSize, AttachmentState } from "./attachment.types";
 

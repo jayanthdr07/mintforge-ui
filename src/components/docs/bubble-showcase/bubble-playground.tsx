@@ -11,15 +11,12 @@ import {
   BubbleAlign,
 } from "@/components/ui/bubble";
 import {
-  Sparkles,
   Bot,
   User,
   Copy,
   Check,
   RotateCw,
   Share2,
-  ThumbsUp,
-  ThumbsDown,
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";

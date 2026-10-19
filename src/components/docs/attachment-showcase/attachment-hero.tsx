@@ -11,7 +11,6 @@ import {
   AttachmentAction,
 } from "@/components/ui/attachment";
 import {
-  FileText,
   CheckCircle2,
   Sparkles,
   Layers,
@@ -19,7 +18,6 @@ import {
   ShieldCheck,
   Download,
   Eye,
-  X,
 } from "lucide-react";
 
 export function AttachmentHero({

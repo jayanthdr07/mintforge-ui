@@ -14,10 +14,6 @@ import {
   X,
   CheckCircle2,
   AlertCircle,
-  Loader2,
-  Download,
-  Eye,
-  RotateCw,
 } from "lucide-react";
 import {
   AttachmentState,

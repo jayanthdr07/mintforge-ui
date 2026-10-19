@@ -9,9 +9,8 @@ import {
   AttachmentDescription,
   AttachmentActions,
   AttachmentAction,
-  AttachmentTrigger,
 } from "../attachment";
-import { Eye, Download, X, Image as ImageIcon, ZoomIn } from "lucide-react";
+import { Eye, X, ZoomIn } from "lucide-react";
 import { formatFileSize } from "./attachment.types";
 
 export interface AttachmentImagePreviewProps {
@@ -37,7 +36,6 @@ export function AttachmentImagePreview({
   id = "img-1",
   name = "workspace-preview.png",
   size = 3840000,
-  type = "image/png",
   src,
   orientation = "horizontal",
   onPreview,

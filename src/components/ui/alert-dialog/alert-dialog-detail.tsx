@@ -16,8 +16,6 @@ import {
 } from "../alert-dialog";
 import {
   X,
-  Plus,
-  Users,
   Check,
 } from "lucide-react";
 

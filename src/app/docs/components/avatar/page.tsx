@@ -21,7 +21,7 @@ import {
 import { AvatarBigCodeSection } from "@/components/docs/avatar-showcase/avatar-code-section";
 import { ComponentPropsTable } from "@/components/docs/component-props-table";
 import { ComponentPagination } from "@/components/docs/component-pagination";
-import { BookOpen, ShieldCheck, Layers, Sparkles } from "lucide-react";
+import { BookOpen, ShieldCheck } from "lucide-react";
 import { PropItem } from "@/types/docs";
 
 export default function AvatarDocPage() {

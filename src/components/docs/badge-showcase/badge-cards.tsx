@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Badge, BadgeDot, BadgeCount } from "@/components/ui/badge";
+import { Badge, BadgeDot } from "@/components/ui/badge";
 import {
   Sparkles,
   Star,

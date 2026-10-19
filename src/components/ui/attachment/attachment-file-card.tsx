@@ -10,7 +10,7 @@ import {
   AttachmentActions,
   AttachmentAction,
 } from "../attachment";
-import { Eye, Download, X, Check, FileText, FileCode, Table } from "lucide-react";
+import { Eye, Download, X, Check } from "lucide-react";
 import { formatFileSize, getFileCategory } from "./attachment.types";
 
 export interface AttachmentFileCardProps {

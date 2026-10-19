@@ -6,7 +6,6 @@ import {
   AvatarImage,
   AvatarFallback,
   AvatarBadge,
-  AvatarGroup,
 } from "@/components/ui/avatar";
 import { Check, AlertCircle } from "lucide-react";
 

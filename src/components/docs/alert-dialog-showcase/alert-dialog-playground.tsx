@@ -18,9 +18,7 @@ import {
   Sparkles,
   ExternalLink,
   Layers,
-  Shield,
   Eye,
-  Check,
 } from "lucide-react";
 
 export type PlaygroundDesign = "confirm" | "destructive" | "form" | "success" | "detail";

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ButtonPlaygroundState } from "./button-playground";
 import { ButtonCodeHighlighter } from "./button-code-highlighter";
-import { Copy, Check, Terminal, Code2, Layers, DownloadCloud } from "lucide-react";
+import { Copy, Check, Code2 } from "lucide-react";
 
 interface ButtonBigCodeSectionProps {
   playgroundState: ButtonPlaygroundState;

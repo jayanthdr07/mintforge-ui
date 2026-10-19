@@ -81,7 +81,7 @@ export function AlertDialog({
 
 export interface AlertDialogTriggerProps {
   asChild?: boolean;
-  children: React.ReactElement<any>;
+  children: React.ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
 }
 
 export function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {

@@ -445,7 +445,7 @@ export default function Example() {
                     onChange((prev) => ({
                       ...prev,
                       hasLeadingIcon: true,
-                      leadingIconType: val as any,
+                      leadingIconType: val as ButtonPlaygroundState["leadingIconType"],
                     }));
                   }
                 }}
@@ -482,7 +482,7 @@ export default function Example() {
                     onChange((prev) => ({
                       ...prev,
                       hasTrailingIcon: true,
-                      trailingIconType: val as any,
+                      trailingIconType: val as ButtonPlaygroundState["trailingIconType"],
                     }));
                   }
                 }}

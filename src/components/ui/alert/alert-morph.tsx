@@ -7,12 +7,12 @@ import { RefreshCw } from "lucide-react";
 export type AlertMorphProps = Partial<AlertProps>;
 
 export function AlertMorph(props?: AlertMorphProps) {
+  const [dismissed1, setDismissed1] = React.useState(false);
+  const [dismissed2, setDismissed2] = React.useState(false);
+
   if (props && (props.status || props.title || props.description || props.children || props.action)) {
     return <Alert design="morph" status="brand" {...props} />;
   }
-
-  const [dismissed1, setDismissed1] = React.useState(false);
-  const [dismissed2, setDismissed2] = React.useState(false);
 
   const isAllDismissed = dismissed1 && dismissed2;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, Terminal, Code2, Layers } from "lucide-react";
+import { Copy, Check, Terminal, Code2 } from "lucide-react";
 import { AvatarCodeHighlighter } from "./avatar-code-highlighter";
 import { PlaygroundState } from "./avatar-playground";
 
@@ -45,7 +45,7 @@ export { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup } from "@
 </Avatar>`;
       }
       const { size, shape, status, badge, fallbackActive } = playgroundState;
-      let lines = [`<Avatar size="${size}" shape="${shape}">`];
+      const lines = [`<Avatar size="${size}" shape="${shape}">`];
 
       if (!fallbackActive) {
         const grayscale = status === "offline" ? ` className="grayscale opacity-85"` : "";

@@ -13,11 +13,9 @@ import {
 } from "@/components/docs/attachment-showcase/attachment-variant-nav";
 import {
   AttachmentFileCardGroup,
-  AttachmentFileCard,
 } from "@/components/ui/attachment/attachment-file-card";
 import {
   AttachmentImageGallery,
-  AttachmentImagePreview,
 } from "@/components/ui/attachment/attachment-image-preview";
 import { AttachmentUploadProgress } from "@/components/ui/attachment/attachment-upload-progress";
 import { AttachmentStatusErrorList } from "@/components/ui/attachment/attachment-status-error";
@@ -31,14 +29,9 @@ import {
 import { ComponentPropsTable } from "@/components/docs/component-props-table";
 import { ComponentPagination } from "@/components/docs/component-pagination";
 import {
-  FileText,
-  Image as ImageIcon,
-  UploadCloud,
-  CheckCircle2,
   ShieldCheck,
   Terminal,
   BookOpen,
-  Layers,
   Sparkles,
 } from "lucide-react";
 import { PropItem } from "@/types/docs";
@@ -391,7 +384,7 @@ export default function AttachmentDocPage() {
             </div>
             <ul className="list-disc list-inside text-xs text-[#64748B] space-y-1.5 leading-relaxed">
               <li>
-                <strong className="text-[#111827]">Semantic Landmarks:</strong> Attachment cards use <code className="text-[#5145FF] font-mono">role="group"</code> with <code className="text-[#5145FF] font-mono">aria-labelledby</code> and <code className="text-[#5145FF] font-mono">aria-describedby</code> linking to the title and metadata description.
+                <strong className="text-[#111827]">Semantic Landmarks:</strong> Attachment cards use <code className="text-[#5145FF] font-mono">{"role=\"group\""}</code> with <code className="text-[#5145FF] font-mono">aria-labelledby</code> and <code className="text-[#5145FF] font-mono">aria-describedby</code> linking to the title and metadata description.
               </li>
               <li>
                 <strong className="text-[#111827]">Accessible Action Labels:</strong> Every icon action button provides an explicit <code className="text-[#5145FF] font-mono">aria-label</code> (e.g. &ldquo;Remove product-requirements.pdf&rdquo;) so screen reader users hear the target file context.
@@ -400,7 +393,7 @@ export default function AttachmentDocPage() {
                 <strong className="text-[#111827]">Event Isolation:</strong> Action buttons automatically execute <code className="text-[#5145FF] font-mono">e.stopPropagation()</code> to prevent accidental triggering of card-level open/navigation actions.
               </li>
               <li>
-                <strong className="text-[#111827]">Progress Semantics:</strong> <code className="text-[#5145FF] font-mono">AttachmentProgress</code> enforces <code className="text-[#5145FF] font-mono">role="progressbar"</code>, <code className="text-[#5145FF] font-mono">aria-valuenow</code>, <code className="text-[#5145FF] font-mono">aria-valuemin="0"</code>, and <code className="text-[#5145FF] font-mono">aria-valuemax="100"</code>.
+                <strong className="text-[#111827]">Progress Semantics:</strong> <code className="text-[#5145FF] font-mono">AttachmentProgress</code> enforces <code className="text-[#5145FF] font-mono">{"role=\"progressbar\""}</code>, <code className="text-[#5145FF] font-mono">aria-valuenow</code>, <code className="text-[#5145FF] font-mono">{"aria-valuemin=\"0\""}</code>, and <code className="text-[#5145FF] font-mono">{"aria-valuemax=\"100\""}</code>.
               </li>
               <li>
                 <strong className="text-[#111827]">Reduced Motion:</strong> Shimmer animations automatically pause under <code className="text-[#5145FF] font-mono">prefers-reduced-motion: reduce</code>.

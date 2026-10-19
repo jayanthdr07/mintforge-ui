@@ -259,8 +259,7 @@ Bubble.displayName = "Bubble";
 
 // ─── BUBBLE CONTENT ──────────────────────────────────────────────────────────
 
-export interface BubbleContentProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+export type BubbleContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const BubbleContent = React.forwardRef<
   HTMLDivElement,

@@ -83,7 +83,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           : "text-sm"
         : sizeStyles[resolvedSize] || sizeStyles.default;
 
-    const mergedClassName = `\${baseStyles} \${variantStyles[variant]} \${sizeClass} \${className}\`.trim();
+    const mergedClassName = [
+      baseStyles,
+      variantStyles[variant],
+      sizeClass,
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     if (asChild && React.isValidElement(children)) {
       const child = children as React.ReactElement<{
@@ -94,7 +101,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }>;
 
       return React.cloneElement(child, {
-        className: `\${mergedClassName} \${child.props.className || ""}\`.trim(),
+        className: [mergedClassName, child.props.className].filter(Boolean).join(" "),
         disabled: disabled || isLoading || child.props.disabled,
         "aria-busy": isLoading || undefined,
         children: (

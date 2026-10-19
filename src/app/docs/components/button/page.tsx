@@ -1,117 +1,213 @@
 "use client";
 
-import { useState } from "react";
-import { Sparkles, ArrowRight } from "lucide-react";
-import { COMPONENT_REGISTRY } from "@/lib/docs/component-registry";
-import { Button } from "@/components/ui/button";
-import { DocsHeader } from "@/components/docs/docs-header";
-import { ComponentPreview } from "@/components/docs/component-preview";
-import { ComponentCode } from "@/components/docs/component-code";
+import * as React from "react";
+import "@/styles/accordion-showcase.css";
+import "@/styles/alert-showcase.css";
+import "@/styles/alert-dialog-showcase.css";
+import "@/styles/attachment-showcase.css";
+import "@/styles/avatar-showcase.css";
+import "@/styles/badge-showcase.css";
+import "@/styles/bubble-showcase.css";
+import "@/styles/button-showcase.css";
+
+import { ButtonHero } from "@/components/docs/button-showcase/button-hero";
+import {
+  VariantComparisonCard,
+  SizeComparisonCard,
+  IconButtonsCard,
+  InteractiveStatesCard,
+  ButtonPatternsCard,
+} from "@/components/docs/button-showcase/button-cards";
+import {
+  ButtonPlayground,
+  ButtonPlaygroundState,
+  defaultButtonPlaygroundState,
+} from "@/components/docs/button-showcase/button-playground";
+import { ButtonBigCodeSection } from "@/components/docs/button-showcase/button-code-section";
 import { ComponentPropsTable } from "@/components/docs/component-props-table";
 import { ComponentPagination } from "@/components/docs/component-pagination";
-import { DocsTableOfContents } from "@/components/docs/docs-table-of-contents";
+import { BookOpen, ShieldCheck } from "lucide-react";
+import { PropItem } from "@/types/docs";
 
 export default function ButtonDocPage() {
-  const meta = COMPONENT_REGISTRY.button;
-  const [variant, setVariant] = useState<"default" | "secondary" | "outline" | "ghost" | "destructive">("default");
-  const [size, setSize] = useState<"sm" | "md" | "lg">("md");
-  const [loading, setLoading] = useState(false);
+  const [playgroundState, setPlaygroundState] =
+    React.useState<ButtonPlaygroundState>(defaultButtonPlaygroundState);
 
-  const tocItems = [
-    { id: "interactive", title: "Interactive Playground" },
-    { id: "variants", title: "Variants & Sizes" },
-    { id: "installation", title: "Installation" },
-    { id: "props", title: "Props Reference" },
+  const buttonProps: PropItem[] = [
+    {
+      name: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      defaultValue: '"default"',
+      description:
+        "Visual style intent determining color, border, and elevation.",
+    },
+    {
+      name: "size",
+      type: '"default" | "sm" | "lg" | "icon" | "md"',
+      defaultValue: '"default"',
+      description:
+        "Controls height, padding, and typography scale ('md' supported as alias for 'default').",
+    },
+    {
+      name: "asChild",
+      type: "boolean",
+      defaultValue: "false",
+      description:
+        "Renders visual styles onto a custom child element (e.g. Next.js <Link>) without nesting buttons.",
+    },
+    {
+      name: "isLoading",
+      type: "boolean",
+      defaultValue: "false",
+      description:
+        "Replaces leading icon with an animated spinner, disables pointer events, and sets aria-busy='true'.",
+    },
+    {
+      name: "leftIcon",
+      type: "React.ReactNode",
+      defaultValue: "undefined",
+      description:
+        "Optional icon element rendered immediately before the button label.",
+    },
+    {
+      name: "rightIcon",
+      type: "React.ReactNode",
+      defaultValue: "undefined",
+      description:
+        "Optional icon element rendered immediately after the button label.",
+    },
+    {
+      name: "disabled",
+      type: "boolean",
+      defaultValue: "false",
+      description:
+        "Disables button interactions and reduces visual opacity to 50%.",
+    },
+    {
+      name: "type",
+      type: '"button" | "submit" | "reset"',
+      defaultValue: '"button"',
+      description:
+        "Native HTML button type. Defaults to 'button' to prevent accidental form submissions.",
+    },
+    {
+      name: "className",
+      type: "string",
+      defaultValue: '""',
+      description: "Additional Tailwind CSS classes merged into the button element.",
+    },
   ];
 
   return (
-    <>
-      <div className="mf-docs-main max-w-4xl">
-        <DocsHeader title={meta.title} description={meta.description} badge="Core Primitive" />
+    <div className="mf-button-doc-scope">
+      {/* 1. Hero Section */}
+      <ButtonHero />
 
-        <section id="interactive" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-foreground">Interactive Playground</h2>
+      {/* 2. Visual Showcase Grid (3 Columns: lg:col-span-4 each) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Column 1 (Left): Variants & Sizes */}
+        <div className="lg:col-span-4 space-y-6">
+          <VariantComparisonCard />
+          <SizeComparisonCard />
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3 p-3 bg-secondary rounded-md border border-border text-xs">
-            <span className="font-semibold text-foreground">Variant:</span>
-            {(["default", "secondary", "outline", "ghost", "destructive"] as const).map((v) => (
-              <button
-                key={v}
-                onClick={() => setVariant(v)}
-                className={`px-2 py-1 rounded capitalize ${
-                  variant === v
-                    ? "bg-primary text-primary-foreground font-semibold"
-                    : "bg-card text-foreground"
-                }`}
-              >
-                {v}
-              </button>
-            ))}
+        {/* Column 2 (Middle): Icon Buttons, Interactive States, Patterns */}
+        <div className="lg:col-span-4 space-y-6">
+          <IconButtonsCard />
+          <InteractiveStatesCard />
+          <ButtonPatternsCard />
+        </div>
 
-            <span className="font-semibold text-foreground ml-3">Size:</span>
-            {(["sm", "md", "lg"] as const).map((s) => (
-              <button
-                key={s}
-                onClick={() => setSize(s)}
-                className={`px-2 py-1 rounded uppercase ${
-                  size === s
-                    ? "bg-primary text-primary-foreground font-semibold"
-                    : "bg-card text-foreground"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-
-            <button
-              onClick={() => setLoading(!loading)}
-              className={`px-2 py-1 rounded ml-auto ${
-                loading ? "bg-amber-600 text-white" : "bg-card text-foreground"
-              }`}
-            >
-              Toggle Loading
-            </button>
-          </div>
-
-          <ComponentPreview
-            code={`<Button variant="${variant}" size="${size}"${loading ? " isLoading" : ""}>Click Me</Button>`}
-          >
-            <Button variant={variant} size={size} isLoading={loading}>
-              Click Me
-            </Button>
-          </ComponentPreview>
-        </section>
-
-        <section id="variants" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-foreground">Variants & Sizes</h2>
-          <div className="flex flex-wrap gap-3 p-6 border border-border rounded-lg bg-card">
-            <Button variant="default">Default</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="destructive">Destructive</Button>
-            <Button leftIcon={<Sparkles size={16} />}>With Icon</Button>
-            <Button rightIcon={<ArrowRight size={16} />}>Proceed</Button>
-          </div>
-        </section>
-
-        <section id="installation" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-foreground">Installation</h2>
-          <ComponentCode code={meta.importSnippet} language="tsx" />
-          <p className="text-xs text-muted-foreground mt-2">Source file:</p>
-          <ComponentCode code={meta.sourceCode} language="tsx" />
-        </section>
-
-        <section id="props" className="space-y-4 mb-8">
-          <h2 className="text-xl font-bold text-foreground">Props Reference</h2>
-          <ComponentPropsTable
-            props={meta.props as unknown as Parameters<typeof ComponentPropsTable>[0]["props"]}
+        {/* Column 3 (Right): Interactive Playground with Live Code & Modern Toggles */}
+        <div className="lg:col-span-4">
+          <ButtonPlayground
+            state={playgroundState}
+            onChange={setPlaygroundState}
           />
-        </section>
+        </div>
+      </div>
 
+      {/* 3. Dedicated Code Preview & Implementation Section */}
+      <ButtonBigCodeSection playgroundState={playgroundState} />
+
+      {/* 4. API Reference & Props Specifications */}
+      <section className="mt-14 space-y-8">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111827] flex items-center gap-2">
+            <BookOpen size={22} className="text-[#5145FF]" />
+            <span>API Reference</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+            Complete props documentation and default values for the &lt;Button /&gt; component.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-sm font-bold text-[#111827] flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-[#5145FF]" />
+              <span>&lt;Button /&gt;</span>
+            </h3>
+            <ComponentPropsTable props={buttonProps} />
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Accessibility & Design System Principles */}
+      <section className="mt-14 space-y-6">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#111827] flex items-center gap-2">
+            <ShieldCheck size={22} className="text-[#15803D]" />
+            <span>Accessibility &amp; Standards</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+            Engineered in adherence with WAI-ARIA authoring practices and WCAG 2.1 AA specifications.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              01
+            </div>
+            <h4 className="text-sm font-bold text-[#111827]">
+              Semantic Form Safety
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              Buttons default explicitly to <code>type=&quot;button&quot;</code> to prevent accidental submissions when used in forms.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              02
+            </div>
+            <h4 className="text-sm font-bold text-[#111827]">
+              Visible High-Contrast Focus
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              Meets WCAG 2.4.7 with an offset 2px <code>#5145FF</code> ring triggered strictly on keyboard navigation (Tab).
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E7EB] shadow-xs space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-[#F2F0FF] text-[#5145FF] flex items-center justify-center font-bold text-xs">
+              03
+            </div>
+            <h4 className="text-xs font-bold text-[#111827]">
+              Keyboard Operability &amp; ARIA
+            </h4>
+            <p className="text-xs text-[#64748B] leading-relaxed">
+              Standard <code>Enter</code> and <code>Space</code> keys trigger click. Loading states declare <code>aria-busy</code> and icon buttons declare <code>aria-label</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pagination Footer */}
+      <div className="mt-14 pt-8 border-t border-[#E5E7EB]">
         <ComponentPagination currentHref="/docs/components/button" />
       </div>
-      <DocsTableOfContents items={tocItems} />
-    </>
+    </div>
   );
 }

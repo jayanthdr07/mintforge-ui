@@ -19,7 +19,6 @@ function renderReport(findings, stats, options = {}) {
 
     for (let i = 0; i < findings.length; i++) {
       const f = findings[i];
-      const num = i + 1;
       const isErr = f.severity === "error";
 
       const badge = isErr
@@ -46,17 +45,25 @@ function renderReport(findings, stats, options = {}) {
 
   // Summary Table
   console.log(`  ${c.bold}Summary:${c.reset}`);
-  console.log(`    ${c.dim}Backend Routes Scanned:${c.reset}   ${c.bold(stats.totalBackendRoutes)}`);
-  console.log(`    ${c.dim}Frontend Calls Scanned:${c.reset}   ${c.bold(stats.totalFrontendCalls)}`);
-  console.log(`    ${c.dim}Verified Parity:${c.reset}          ${c.green(stats.verifiedMatches)}`);
-  console.log(`    ${c.dim}Casing Drifts:${c.reset}            ${stats.casingDrifts > 0 ? c.red(stats.casingDrifts) : c.green("0")}`);
-  console.log(`    ${c.dim}Route Mismatches:${c.reset}         ${stats.routeDrifts > 0 ? c.red(stats.routeDrifts) : c.green("0")}`);
-  console.log(`    ${c.dim}Payload Discrepancies:${c.reset}    ${stats.payloadDrifts > 0 ? c.red(stats.payloadDrifts) : c.green("0")}`);
+  console.log(`    ${c.dim}Backend Routes Scanned:${c.reset}    ${c.bold(stats.totalBackendRoutes)}`);
+  console.log(`    ${c.dim}Frontend Calls Scanned:${c.reset}    ${c.bold(stats.totalFrontendCalls)}`);
+  console.log(`    ${c.dim}Verified Parity:${c.reset}           ${c.green(stats.verifiedMatches)}`);
+  console.log(`    ${c.dim}Casing Drifts:${c.reset}             ${stats.casingDrifts > 0 ? c.red(stats.casingDrifts) : c.green("0")}`);
+  console.log(`    ${c.dim}Route Mismatches:${c.reset}          ${stats.routeDrifts > 0 ? c.red(stats.routeDrifts) : c.green("0")}`);
+  console.log(`    ${c.dim}Payload Discrepancies:${c.reset}     ${stats.payloadDrifts > 0 ? c.red(stats.payloadDrifts) : c.green("0")}`);
+
+  if (stats.strictModeDrifts > 0) {
+    console.log(`    ${c.dim}Strict-Mode Discards:${c.reset}      ${c.red(stats.strictModeDrifts)}`);
+  }
+  if (stats.queryParamDrifts > 0) {
+    console.log(`    ${c.dim}Query Param Drifts:${c.reset}        ${c.red(stats.queryParamDrifts)}`);
+  }
+
   console.log("");
 
   if (stats.errorCount > 0) {
     console.log(`  ${c.red}${c.bold}✖ Verification failed with ${stats.errorCount} error${stats.errorCount > 1 ? "s" : ""}.${c.reset}`);
-    console.log(`  ${c.dim}Run 'npx mintforge check' locally before pushing to CI.${c.reset}`);
+    console.log(`  ${c.dim}Run 'npx mintforge check --fix' to automatically resolve casing drift.${c.reset}`);
     console.log("");
     return 1;
   }
@@ -84,6 +91,12 @@ function formatType(type) {
       return "Missing Required Field";
     case "UNEXPECTED_FIELD":
       return "Unexpected Field";
+    case "MONGOOSE_STRICT_STRIPPING":
+      return "Mongoose Strict-Mode Stripping (Silent Key Discard)";
+    case "QUERY_PARAM_CASING_DRIFT":
+      return "Query Parameter Casing Drift";
+    case "RESPONSE_CASING_DRIFT":
+      return "Response Model Casing Drift";
     default:
       return type;
   }

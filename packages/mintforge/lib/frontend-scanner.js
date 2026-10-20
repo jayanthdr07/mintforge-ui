@@ -44,14 +44,38 @@ function extractApiCalls(content, file, basePrefix) {
     const lineNum = i + 1;
 
     // Pattern 1: api.post(...) or axios.get(...) or request.post(...)
-    const clientMatch = line.match(/(?:api|axios|client|request|http)\.(get|post|put|patch|delete)\s*\(\s*([`'"][^`'"]+[`'"])/i);
+    const clientMatch = line.match(/(?:api|axios|client|request|http)\.(get|post|put|patch|delete)(?:<([A-Za-z0-9_]+)>)?\s*\(\s*([`'"][^`'"]+[`'"])/i);
     if (clientMatch) {
       const method = clientMatch[1].toUpperCase();
-      let rawUrl = clientMatch[2].slice(1, -1); // strip quotes or backticks
+      const responseType = clientMatch[2] || null;
+      let rawUrl = clientMatch[3].slice(1, -1); // strip quotes or backticks
+
+      // Separate query string from URL path
+      const [urlOnly, queryString] = rawUrl.split("?");
 
       // Clean template string expressions: /interviews/${sessionId}/feedback -> /interviews/:session_id/feedback
-      const normalizedParamPath = rawUrl.replace(/\$\{([a-zA-Z0-9_]+)\}/g, ":$1");
+      const normalizedParamPath = urlOnly.replace(/\$\{([a-zA-Z0-9_]+)\}/g, ":$1");
       const normalized = normalizeRoutePath(normalizedParamPath);
+
+      // Extract query parameters from URL and params object
+      const queryParams = new Set();
+      if (queryString) {
+        queryString.split("&").forEach((part) => {
+          const key = part.split("=")[0].trim();
+          if (key) queryParams.add(key);
+        });
+      }
+
+      const paramsContext = lines.slice(i, Math.min(lines.length, i + 10)).join("\n");
+      const paramsMatch = paramsContext.match(/params\s*:\s*\{([^}]+)\}/);
+      if (paramsMatch) {
+        paramsMatch[1].split(",").forEach((item) => {
+          const key = item.split(":")[0].trim();
+          if (/^[a-zA-Z0-9_]+$/.test(key)) {
+            queryParams.add(key);
+          }
+        });
+      }
 
       // Attempt to inspect payload passed as 2nd argument
       let payloadFields = [];
@@ -63,7 +87,9 @@ function extractApiCalls(content, file, basePrefix) {
         method,
         rawUrl,
         path: normalized,
+        queryParams: Array.from(queryParams),
         payloadFields,
+        responseType,
         file,
         line: lineNum,
       });
@@ -74,8 +100,17 @@ function extractApiCalls(content, file, basePrefix) {
     const fetchMatch = line.match(/fetch\s*\(\s*([`'"][^`'"]+[`'"])/i);
     if (fetchMatch) {
       const rawUrl = fetchMatch[1].slice(1, -1);
-      const normalizedParamPath = rawUrl.replace(/\$\{([a-zA-Z0-9_]+)\}/g, ":$1");
+      const [urlOnly, queryString] = rawUrl.split("?");
+      const normalizedParamPath = urlOnly.replace(/\$\{([a-zA-Z0-9_]+)\}/g, ":$1");
       const normalized = normalizeRoutePath(normalizedParamPath);
+
+      const queryParams = new Set();
+      if (queryString) {
+        queryString.split("&").forEach((part) => {
+          const key = part.split("=")[0].trim();
+          if (key) queryParams.add(key);
+        });
+      }
 
       // Look ahead for method
       let method = "GET";
@@ -96,7 +131,9 @@ function extractApiCalls(content, file, basePrefix) {
         method,
         rawUrl,
         path: normalized,
+        queryParams: Array.from(queryParams),
         payloadFields,
+        responseType: null,
         file,
         line: lineNum,
       });
@@ -117,7 +154,7 @@ function extractPayloadKeysFromContext(lines, lineIdx, fullContent) {
 
   // 1. Look for inline object in the call: api.post(url, { foo, bar })
   const contextSnippet = lines.slice(Math.max(0, lineIdx - 1), Math.min(lines.length, lineIdx + 15)).join("\n");
-  const inlineObjMatch = contextSnippet.match(/(?:api|axios)\.(?:post|put|patch)\s*\([^,]+,\s*\{([^}]+)\}/s);
+  const inlineObjMatch = contextSnippet.match(/(?:api|axios|request|client|http)\.(?:post|put|patch)\s*\([^,]+,\s*\{([^}]+)\}/s);
   if (inlineObjMatch) {
     const rawProps = inlineObjMatch[1].split(",");
     for (const prop of rawProps) {

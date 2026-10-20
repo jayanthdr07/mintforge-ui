@@ -1,16 +1,23 @@
 "use client";
 
 import * as React from "react";
-import { AlertTriangle } from "lucide-react";
-import { SeamStatus, SeamContractEndpoint } from "./seam-status";
+import { AlertTriangle, AlertCircle } from "lucide-react";
+import { SeamStatus, SeamContractEndpoint, SeamBackendFramework } from "./seam-status";
+
+export interface FieldMetadata {
+  type?: string;
+  required?: boolean;
+}
 
 interface SeamFormContextValue {
   endpoint: string;
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   backendModel?: string;
+  framework?: SeamBackendFramework;
   expectedFields?: string[];
-  registeredFields: Record<string, boolean>;
-  registerField: (name: string) => void;
+  registeredFields: Record<string, FieldMetadata>;
+  registerField: (name: string, metadata?: FieldMetadata) => void;
+  errorMap?: Record<string, string>;
 }
 
 const SeamFormContext = React.createContext<SeamFormContextValue | null>(null);
@@ -24,7 +31,10 @@ export interface SeamFormProps
   endpoint: string;
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   backendModel?: string;
+  framework?: SeamBackendFramework;
   expectedFields?: string[];
+  errorMap?: Record<string, string>;
+  validateBeforeSubmit?: boolean;
   showSeamBadge?: boolean;
 }
 
@@ -34,7 +44,10 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
       endpoint,
       method = "POST",
       backendModel,
+      framework = "fastapi",
       expectedFields = [],
+      errorMap,
+      validateBeforeSubmit = false,
       showSeamBadge = true,
       className = "",
       children,
@@ -44,50 +57,80 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
     ref
   ) => {
     const [registeredFields, setRegisteredFields] = React.useState<
-      Record<string, boolean>
+      Record<string, FieldMetadata>
     >({});
 
-    const registerField = React.useCallback((name: string) => {
+    const registerField = React.useCallback((name: string, metadata?: FieldMetadata) => {
       setRegisteredFields((prev) => {
-        if (prev[name]) return prev;
-        return { ...prev, [name]: true };
+        const existing = prev[name];
+        if (
+          existing &&
+          existing.type === metadata?.type &&
+          existing.required === metadata?.required
+        ) {
+          return prev;
+        }
+        return {
+          ...prev,
+          [name]: {
+            type: metadata?.type || "string",
+            required: metadata?.required ?? false,
+          },
+        };
       });
     }, []);
 
     // Check for casing drift: if expected fields are snake_case, but form field is camelCase
     const detectedDrifts = React.useMemo(() => {
-      const drifts: { field: string; suggestion: string }[] = [];
+      const drifts: { field: string; suggestion: string; type: "casing" | "strict_drop" }[] = [];
       const fieldNames = Object.keys(registeredFields);
 
       for (const name of fieldNames) {
-        // camelCase detected in name
+        // Casing drift check
         if (/[a-z][A-Z]/.test(name)) {
           const snake = name.replace(/([A-Z])/g, "_$1").toLowerCase();
           if (expectedFields.includes(snake)) {
-            drifts.push({ field: name, suggestion: snake });
+            drifts.push({ field: name, suggestion: snake, type: "casing" });
+            continue;
+          }
+        }
+
+        // Mongoose strict mode stripping check
+        if (framework === "mongoose" && expectedFields.length > 0) {
+          const snake = name.replace(/([A-Z])/g, "_$1").toLowerCase();
+          if (!expectedFields.includes(name) && !expectedFields.includes(snake)) {
+            drifts.push({ field: name, suggestion: "Undeclared key will be dropped", type: "strict_drop" });
           }
         }
       }
       return drifts;
-    }, [registeredFields, expectedFields]);
+    }, [registeredFields, expectedFields, framework]);
 
     const endpointData: SeamContractEndpoint = React.useMemo(
       () => ({
         method,
         path: endpoint,
         backendModel,
+        framework,
         status: detectedDrifts.length > 0 ? "drift_detected" : "synced",
         fields: Object.keys(registeredFields).map((f) => {
           const drift = detectedDrifts.find((d) => d.field === f);
+          let fieldStatus: "synced" | "casing_drift" | "strict_dropped" = "synced";
+          if (drift) {
+            fieldStatus = drift.type === "strict_drop" ? "strict_dropped" : "casing_drift";
+          }
           return {
             frontendKey: f,
-            backendKey: drift ? drift.suggestion : f,
-            status: drift ? "casing_drift" : "synced",
-            required: expectedFields.includes(f) || (drift ? expectedFields.includes(drift.suggestion) : false),
+            backendKey: drift?.type === "casing" ? drift.suggestion : f,
+            status: fieldStatus,
+            type: registeredFields[f]?.type,
+            required:
+              expectedFields.includes(f) ||
+              (drift?.type === "casing" ? expectedFields.includes(drift.suggestion) : false),
           };
         }),
       }),
-      [method, endpoint, backendModel, registeredFields, detectedDrifts, expectedFields]
+      [method, endpoint, backendModel, framework, registeredFields, detectedDrifts, expectedFields]
     );
 
     const contextValue = React.useMemo(
@@ -95,18 +138,35 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
         endpoint,
         method,
         backendModel,
+        framework,
         expectedFields,
         registeredFields,
         registerField,
+        errorMap,
       }),
-      [endpoint, method, backendModel, expectedFields, registeredFields, registerField]
+      [endpoint, method, backendModel, framework, expectedFields, registeredFields, registerField, errorMap]
+    );
+
+    const handleSubmit = React.useCallback(
+      (e: React.FormEvent<HTMLFormElement>) => {
+        if (validateBeforeSubmit && detectedDrifts.length > 0) {
+          // Flag preflight validation errors
+          e.preventDefault();
+          console.warn("[Mintforge Seam Check] Form submission blocked by client pre-flight verification:", detectedDrifts);
+          return;
+        }
+        if (onSubmit) {
+          onSubmit(e);
+        }
+      },
+      [validateBeforeSubmit, detectedDrifts, onSubmit]
     );
 
     return (
       <SeamFormContext.Provider value={contextValue}>
         <form
           ref={ref}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           className={`space-y-5 ${className}`}
           {...props}
         >
@@ -116,6 +176,7 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
               <SeamStatus
                 variant="banner"
                 endpoint={endpointData}
+                framework={framework}
                 showInspectorOnClick={true}
               />
 
@@ -123,11 +184,13 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
                 <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 flex items-start gap-2 animate-in fade-in duration-200">
                   <AlertTriangle size={15} className="shrink-0 mt-0.5 text-amber-500" />
                   <div>
-                    <strong className="font-semibold">Contract Casing Warning:</strong>
+                    <strong className="font-semibold">Contract Drift Warnings:</strong>
                     <ul className="list-disc list-inside mt-1 space-y-0.5 font-mono text-[11px]">
                       {detectedDrifts.map((d, i) => (
                         <li key={i}>
-                          Form field &quot;{d.field}&quot; may cause HTTP 422. Expected backend parameter: &quot;{d.suggestion}&quot;.
+                          {d.type === "strict_drop"
+                            ? `Field "${d.field}" is not in Mongoose schema and will be silently stripped (strict: true).`
+                            : `Form field "${d.field}" may cause HTTP 422. Expected backend parameter: "${d.suggestion}".`}
                         </li>
                       ))}
                     </ul>
@@ -151,12 +214,14 @@ export interface SeamFormFieldProps
   extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   label?: string;
+  type?: string;
   required?: boolean;
 }
 
 export function SeamFormField({
   name,
   label,
+  type = "string",
   required,
   className = "",
   children,
@@ -167,13 +232,16 @@ export function SeamFormField({
 
   React.useEffect(() => {
     if (registerField && name) {
-      registerField(name);
+      registerField(name, { type, required });
     }
-  }, [registerField, name]);
+  }, [registerField, name, type, required]);
 
   const isCamel = /[a-z][A-Z]/.test(name);
   const snakeSuggestion = name.replace(/([A-Z])/g, "_$1").toLowerCase();
   const hasExpectedSnake = ctx?.expectedFields?.includes(snakeSuggestion);
+
+  // Auto-error mapping from backend 422 / ValidationError
+  const backendError = ctx?.errorMap?.[name] || ctx?.errorMap?.[snakeSuggestion];
 
   return (
     <div className={`space-y-1.5 ${className}`} {...props}>
@@ -194,6 +262,14 @@ export function SeamFormField({
       </div>
 
       {children}
+
+      {/* Auto-Mapped Error Message */}
+      {backendError && (
+        <div className="flex items-center gap-1.5 text-xs text-red-500 font-medium mt-1">
+          <AlertCircle size={13} className="shrink-0" />
+          <span>{backendError}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,24 +1,128 @@
 const fs = require("fs");
 const path = require("path");
 
+const { scanExpressBackend } = require("./express-scanner");
+const { scanMongooseSchemas } = require("./mongoose-scanner");
+const { scanPrismaSchema } = require("./prisma-scanner");
+const { scanNodeValidators } = require("./node-validator-scanner");
+
 /**
- * Scan FastAPI backend for routes and Pydantic models
+ * Scan backend for routes, models, and schemas across
+ * FastAPI (Python), Express (Node.js), Mongoose (MongoDB), and Prisma ORM.
  */
 function scanBackend(backendConfig) {
-  const { path: backendPath, openapi, prefix: globalPrefix = "" } = backendConfig;
+  const {
+    path: backendPath,
+    openapi,
+    prefix: globalPrefix = "",
+    framework = "auto",
+    prisma: prismaPath,
+  } = backendConfig;
 
-  // 1. If explicit openapi.json is provided or exists in backend directory
+  // 1. Explicit OpenAPI specification
   const openapiCandidate = openapi || findOpenApiFile(backendPath);
   if (openapiCandidate && fs.existsSync(openapiCandidate)) {
     return scanOpenApi(openapiCandidate);
   }
 
-  // 2. Otherwise perform static Python AST / Regex inspection
-  return scanPythonBackend(backendPath, globalPrefix);
+  if (!backendPath || !fs.existsSync(backendPath)) {
+    return {
+      source: "unknown",
+      frameworks: [],
+      routes: [],
+      models: {},
+      error: `Backend path not found: ${backendPath}`,
+    };
+  }
+
+  const detectedFrameworks = [];
+  const allRoutes = [];
+  const allModels = {};
+  let allEnums = {};
+
+  // Check file presence
+  const pyFiles = findFiles(backendPath, [".py"]);
+  const jsFiles = findFiles(backendPath, [".js", ".ts", ".mjs", ".cjs"]);
+  const prismaFileCandidate = prismaPath || path.join(backendPath, "schema.prisma") || path.join(backendPath, "prisma", "schema.prisma");
+
+  const shouldScanFastAPI = framework === "fastapi" || (framework === "auto" && pyFiles.length > 0);
+  const shouldScanExpress = framework === "express" || (framework === "auto" && jsFiles.length > 0);
+  const shouldScanMongoose = framework === "mongoose" || framework === "express" || framework === "auto";
+  const shouldScanPrisma = framework === "prisma" || (framework === "auto" && (fs.existsSync(prismaFileCandidate) || prismaPath));
+
+  // 1. Scan FastAPI (Python)
+  if (shouldScanFastAPI && pyFiles.length > 0) {
+    const pythonResult = scanPythonBackend(backendPath, globalPrefix);
+    if (pythonResult.routes.length > 0 || Object.keys(pythonResult.models).length > 0) {
+      detectedFrameworks.push("fastapi");
+      allRoutes.push(...pythonResult.routes);
+      Object.assign(allModels, pythonResult.models);
+    }
+  }
+
+  // 2. Scan Prisma ORM
+  if (shouldScanPrisma) {
+    const prismaResult = scanPrismaSchema(prismaPath || backendPath);
+    if (Object.keys(prismaResult.models || {}).length > 0) {
+      detectedFrameworks.push("prisma");
+      Object.assign(allModels, prismaResult.models);
+      allEnums = Object.assign(allEnums, prismaResult.enums || {});
+    }
+  }
+
+  // 3. Scan Mongoose (MongoDB)
+  if (shouldScanMongoose && jsFiles.length > 0) {
+    const mongooseResult = scanMongooseSchemas(backendPath);
+    if (Object.keys(mongooseResult.models || {}).length > 0) {
+      detectedFrameworks.push("mongoose");
+      Object.assign(allModels, mongooseResult.models);
+    }
+  }
+
+  // 4. Scan Node Validators (Joi, backend Zod)
+  if (jsFiles.length > 0) {
+    const validatorResult = scanNodeValidators(backendPath);
+    if (Object.keys(validatorResult.models || {}).length > 0) {
+      detectedFrameworks.push("validator");
+      Object.assign(allModels, validatorResult.models);
+    }
+  }
+
+  // 5. Scan Express (Node.js)
+  if (shouldScanExpress && jsFiles.length > 0) {
+    const expressResult = scanExpressBackend(backendPath, globalPrefix);
+    if (expressResult.routes.length > 0) {
+      detectedFrameworks.push("express");
+
+      // Cross-link Express routes to Mongoose/Prisma/Validator models
+      for (const route of expressResult.routes) {
+        if (route.modelRef && allModels[route.modelRef]) {
+          route.bodyModel = allModels[route.modelRef];
+        } else if (route.bodyModel) {
+          // If model has a name that matches a known model
+          if (allModels[route.bodyModel.name]) {
+            route.bodyModel = allModels[route.bodyModel.name];
+          }
+        }
+      }
+
+      allRoutes.push(...expressResult.routes);
+    }
+  }
+
+  const primarySource = detectedFrameworks.length > 0 ? detectedFrameworks.join("+") : "static";
+
+  return {
+    source: primarySource,
+    frameworks: detectedFrameworks,
+    routes: allRoutes,
+    models: allModels,
+    enums: allEnums,
+  };
 }
 
 function findOpenApiFile(backendPath) {
-  if (!fs.existsSync(backendPath)) return null;
+  if (!backendPath || !fs.existsSync(backendPath)) return null;
   const direct = path.join(backendPath, "openapi.json");
   if (fs.existsSync(direct)) return direct;
   return null;
@@ -33,13 +137,11 @@ function scanOpenApi(openApiPath) {
   const routes = [];
   const models = {};
 
-  // Extract schemas from components
   const schemas = spec.components?.schemas || {};
   for (const [name, schema] of Object.entries(schemas)) {
     models[name] = parseOpenApiSchema(name, schema, schemas);
   }
 
-  // Extract routes from paths
   const paths = spec.paths || {};
   for (const [routePath, methods] of Object.entries(paths)) {
     for (const [method, op] of Object.entries(methods)) {
@@ -55,6 +157,16 @@ function scanOpenApi(openApiPath) {
           }
         }
 
+        // Extract query parameters from OpenAPI
+        const queryParams = [];
+        if (op.parameters && Array.isArray(op.parameters)) {
+          for (const param of op.parameters) {
+            if (param.in === "query") {
+              queryParams.push(param.name);
+            }
+          }
+        }
+
         routes.push({
           path: normalizeRoutePath(routePath),
           originalPath: routePath,
@@ -62,6 +174,7 @@ function scanOpenApi(openApiPath) {
           operationId: op.operationId,
           summary: op.summary || "",
           bodyModel,
+          queryParams,
           file: openApiPath,
           line: 1,
         });
@@ -69,7 +182,7 @@ function scanOpenApi(openApiPath) {
     }
   }
 
-  return { source: "openapi", routes, models };
+  return { source: "openapi", frameworks: ["openapi"], routes, models };
 }
 
 function parseOpenApiSchema(name, schema, allSchemas) {
@@ -97,11 +210,11 @@ function parseOpenApiSchema(name, schema, allSchemas) {
     };
   }
 
-  return { name, fields };
+  return { name, fields, strict: true };
 }
 
 /**
- * Static Python codebase scanner
+ * Static Python codebase scanner for FastAPI
  */
 function scanPythonBackend(backendPath, globalPrefix = "") {
   if (!fs.existsSync(backendPath)) {
@@ -111,7 +224,7 @@ function scanPythonBackend(backendPath, globalPrefix = "") {
   const pyFiles = findFiles(backendPath, [".py"]);
   const models = {};
   const routes = [];
-  const routerPrefixes = {}; // e.g. router variable name -> prefix
+  const routerPrefixes = {};
 
   // Step 1: Scan all Pydantic models across Python files
   for (const file of pyFiles) {
@@ -156,7 +269,6 @@ function extractPydanticModels(content, file) {
     const line = lines[i];
     const lineNum = i + 1;
 
-    // Detect class Definition inheriting from BaseModel or Document
     const classMatch = line.match(/^(\s*)class\s+([A-Za-z0-9_]+)\s*\(\s*(?:BaseModel|Document|Settings)[^\)]*\):/);
     if (classMatch) {
       const indent = classMatch[1].length;
@@ -165,6 +277,7 @@ function extractPydanticModels(content, file) {
         name: modelName,
         file,
         line: lineNum,
+        strict: true,
         fields: {},
       };
       models[modelName] = currentModel;
@@ -173,7 +286,6 @@ function extractPydanticModels(content, file) {
     }
 
     if (currentModel) {
-      // Check if indentation closed the class
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("#")) continue;
 
@@ -183,14 +295,12 @@ function extractPydanticModels(content, file) {
         continue;
       }
 
-      // Check for field definition: name: Type = ...
       const fieldMatch = trimmed.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*([^=\n#]+)(?:=\s*(.*))?$/);
       if (fieldMatch) {
         const fieldName = fieldMatch[1];
         const rawType = fieldMatch[2].trim();
         const defaultValue = fieldMatch[3]?.trim();
 
-        // Skip internal class config / Settings
         if (fieldName === "Config" || fieldName === "Settings") continue;
 
         const isOptional =
@@ -212,7 +322,6 @@ function extractPydanticModels(content, file) {
 }
 
 function extractRouterPrefixes(content, routerPrefixes) {
-  // router = APIRouter(prefix="/interviews", tags=[...])
   const regex = /([a-zA-Z0-9_]+)\s*=\s*APIRouter\s*\([^)]*prefix\s*=\s*["']([^"']+)["']/g;
   let match;
   while ((match = regex.exec(content)) !== null) {
@@ -228,7 +337,6 @@ function extractRoutes(content, file, routerPrefixes, models, globalPrefix) {
     const line = lines[i];
     const lineNum = i + 1;
 
-    // Detect @(router|app).(get|post|put|patch|delete)("...")
     const routeMatch = line.match(/@([a-zA-Z0-9_]+)\.(get|post|put|patch|delete)\s*\(\s*["']([^"']+)["']/i);
     if (routeMatch) {
       const routerVar = routeMatch[1];
@@ -238,7 +346,6 @@ function extractRoutes(content, file, routerPrefixes, models, globalPrefix) {
       const routerPrefix = routerPrefixes[routerVar] || "";
       const combinedPath = joinPaths(globalPrefix, routerPrefix, rawPath);
 
-      // Look ahead for the async def function signature to identify the body model
       let bodyModel = null;
       let funcSig = "";
       for (let j = i + 1; j < Math.min(i + 15, lines.length); j++) {
@@ -246,7 +353,19 @@ function extractRoutes(content, file, routerPrefixes, models, globalPrefix) {
         if (lines[j].includes("):")) break;
       }
 
-      // Look for body argument: body: ModelName, request: ModelName, payload: ModelName
+      // Check for query parameters in FastAPI signature (e.g. search: str = Query(...), page: int = 1)
+      const queryParams = [];
+      const sigParams = funcSig.split(",");
+      for (const sp of sigParams) {
+        const qm = sp.match(/([a-zA-Z0-9_]+)\s*:\s*(?:str|int|float|bool|Optional\[[^\]]+\])\s*=\s*(?:Query\(|None|[0-9]+|["'])/);
+        if (qm) {
+          const pName = qm[1];
+          if (!["body", "payload", "request", "db", "session", "user"].includes(pName)) {
+            queryParams.push(pName);
+          }
+        }
+      }
+
       for (const modelName of Object.keys(models)) {
         const modelRegex = new RegExp(`(?:body|payload|data|request)\\s*:\\s*${modelName}\\b`);
         if (modelRegex.test(funcSig)) {
@@ -259,9 +378,11 @@ function extractRoutes(content, file, routerPrefixes, models, globalPrefix) {
         path: normalizeRoutePath(combinedPath),
         originalPath: combinedPath,
         method,
+        queryParams,
         bodyModel,
         file,
         line: lineNum,
+        framework: "fastapi",
       });
     }
   }
@@ -278,7 +399,6 @@ function joinPaths(...segments) {
 }
 
 function normalizeRoutePath(p) {
-  // Normalize parameters: /{session_id}/feedback -> /:session_id/feedback
   return p
     .replace(/^\/+|\/+$/g, "")
     .replace(/\{([a-zA-Z0-9_]+)\}/g, ":$1")
@@ -311,5 +431,7 @@ function findFiles(dir, extensions) {
 
 module.exports = {
   scanBackend,
+  scanPythonBackend,
+  scanOpenApi,
   normalizeRoutePath,
 };

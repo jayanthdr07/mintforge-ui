@@ -301,75 +301,55 @@ Input.displayName = "Input";`,
   card: {
     id: "card",
     title: "Card",
-    description: "Versatile surface container designed for grouping related information, media, and interactive controls.",
+    description: "Flexible, composable container for grouping related content, media, actions, and key metrics with clean spacing and subtle borders.",
     category: "Layout",
     status: "Ready",
     dependencies: [],
-    importSnippet: `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";`,
-    sourceCode: `import * as React from "react";
-
-export function Card({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={\`rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md \${className}\`}
-      {...props}
-    />
-  );
-}
-
-export function CardHeader({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={\`flex flex-col space-y-1.5 p-6 \${className}\`} {...props} />;
-}
-
-export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return (
-    <h3
-      className={\`text-lg font-semibold leading-none tracking-tight text-card-foreground \${className}\`}
-      {...props}
-    />
-  );
-}
-
-export function CardDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p
-      className={\`text-sm text-muted-foreground \${className}\`}
-      {...props}
-    />
-  );
-}
-
-export function CardContent({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={\`p-6 pt-0 \${className}\`} {...props} />;
-}
-
-export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={\`flex items-center p-6 pt-0 border-t border-border mt-4 \${className}\`}
-      {...props}
-    />
-  );
-}`,
+    importSnippet: `import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";`,
+    sourceCode: `export * from "@/components/ui/card";`,
     props: [
-      { name: "className", type: "string", defaultValue: '""', description: "Custom classes applied to the root card container." },
-      { name: "children", type: "React.ReactNode", defaultValue: "undefined", description: "Child components (CardHeader, CardContent, etc.)." },
+      { name: "size", type: '"default" | "sm"', defaultValue: '"default"', description: "Controls internal padding and typography scale ('sm' uses p-4)." },
+      { name: "className", type: "string", defaultValue: '""', description: "Additional CSS classes." },
+      { name: "children", type: "React.ReactNode", defaultValue: "undefined", description: "Card composition slots." },
     ],
     examples: [
       {
-        title: "Product Card",
-        code: `<Card className="w-90">
+        title: "Basic Card",
+        code: `<Card className="w-[380px]">
   <CardHeader>
-    <CardTitle>Enterprise Analytics</CardTitle>
-    <CardDescription>Real-time KPI metrics and telemetry alerts.</CardDescription>
+    <CardTitle>Team Workspace</CardTitle>
+    <CardDescription>Manage organization members and workspace access.</CardDescription>
   </CardHeader>
   <CardContent>
-    <p className="text-sm">Includes unlimited event streaming and custom dashboard widgets.</p>
+    <p className="text-sm text-[#64748B]">Invite collaborators to review published components.</p>
   </CardContent>
   <CardFooter className="justify-between">
-    <span className="text-xs text-muted-foreground">Active Plan</span>
+    <span className="text-xs text-[#64748B]">8 active members</span>
     <Button size="sm">Manage</Button>
   </CardFooter>
+</Card>`,
+      },
+      {
+        title: "Card With Header Action",
+        code: `<Card className="w-[380px]">
+  <CardHeader>
+    <CardTitle>API Key Provisioning</CardTitle>
+    <CardDescription>Production endpoints and telemetry secret tokens.</CardDescription>
+    <CardAction>
+      <Button size="sm" variant="outline">Revoke</Button>
+    </CardAction>
+  </CardHeader>
+  <CardContent>
+    <p className="text-xs font-mono">sk_live_94827018a...</p>
+  </CardContent>
 </Card>`,
       },
     ],

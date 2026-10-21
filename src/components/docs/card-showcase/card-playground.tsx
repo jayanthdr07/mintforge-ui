@@ -39,6 +39,7 @@ export interface CardPlaygroundState {
   showFooter: boolean;
   showMedia: boolean;
   showBadge: boolean;
+  interactive: boolean;
   footerActionType: "double" | "single" | "none";
 }
 
@@ -53,6 +54,7 @@ export const defaultCardPlaygroundState: CardPlaygroundState = {
   showFooter: true,
   showMedia: false,
   showBadge: true,
+  interactive: true,
   footerActionType: "double",
 };
 
@@ -116,7 +118,8 @@ export function CardPlayground({ state, onChange }: CardPlaygroundProps) {
   const generatedCode = React.useMemo(() => {
     const lines: string[] = [];
     const sizeAttr = state.size === "sm" ? ' size="sm"' : "";
-    lines.push(`<Card${sizeAttr} className="w-[380px]">`);
+    const interAttr = state.interactive ? " interactive" : "";
+    lines.push(`<Card${sizeAttr}${interAttr} className="w-[380px]">`);
 
     if (state.showMedia) {
       lines.push(`  <div className="h-32 w-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-xl" />`);
@@ -243,7 +246,11 @@ export function CardPlayground({ state, onChange }: CardPlaygroundProps) {
           <div className="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-xs min-h-[440px] flex items-center justify-center relative overflow-hidden bg-[radial-gradient(#E2E8F0_1px,transparent_1px)] [background-size:16px_16px]">
             {viewMode === "preview" ? (
               <div className="w-full flex justify-center py-4">
-                <Card size={state.size} className="w-full max-w-sm overflow-hidden transition-all duration-200">
+                <Card
+                  size={state.size}
+                  interactive={state.interactive}
+                  className="w-full max-w-sm overflow-hidden transition-all duration-300"
+                >
                   {/* Optional Media */}
                   {state.showMedia && (
                     <div className="h-32 w-full bg-gradient-to-r from-[#5145FF] to-[#8B5CF6] p-4 flex flex-col justify-between text-white relative">
@@ -453,6 +460,15 @@ export function CardPlayground({ state, onChange }: CardPlaygroundProps) {
                     className="rounded border-[#CBD5E1] text-[#5145FF] focus:ring-[#5145FF]"
                   />
                   <span>Status Badge</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={state.interactive}
+                    onChange={(e) => onChange((prev) => ({ ...prev, interactive: e.target.checked }))}
+                    className="rounded border-[#CBD5E1] text-[#5145FF] focus:ring-[#5145FF]"
+                  />
+                  <span className="text-[#5145FF] font-semibold">Hover Lift Effect</span>
                 </label>
               </div>
             </div>

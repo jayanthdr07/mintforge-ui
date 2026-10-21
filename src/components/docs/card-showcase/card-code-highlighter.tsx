@@ -40,7 +40,7 @@ function tokenizeLine(line: string): Token[] {
       continue;
     }
 
-    // 3. String literals (double quote, single quote, template literal)
+    // 3. String literals (double, single, template)
     m = remaining.match(/^("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`[^`]*`)/);
     if (m) {
       tokens.push({ type: "string", text: m[1] });
@@ -112,62 +112,6 @@ function tokenizeLine(line: string): Token[] {
   return tokens;
 }
 
-function renderToken(token: Token, key: number) {
-  switch (token.type) {
-    case "comment":
-      return (
-        <span key={key} className="text-[#64748B] italic">
-          {token.text}
-        </span>
-      );
-    case "keyword":
-      return (
-        <span key={key} className="text-[#818CF8] font-semibold">
-          {token.text}
-        </span>
-      );
-    case "string":
-      return (
-        <span key={key} className="text-[#34D399]">
-          {token.text}
-        </span>
-      );
-    case "tag":
-      return (
-        <span key={key} className="text-[#60A5FA] font-medium">
-          {token.text}
-        </span>
-      );
-    case "prop":
-      return (
-        <span key={key} className="text-[#FBBF24]">
-          {token.text}
-        </span>
-      );
-    case "number":
-      return (
-        <span key={key} className="text-[#F472B6]">
-          {token.text}
-        </span>
-      );
-    case "bracket":
-      return (
-        <span key={key} className="text-[#94A3B8]">
-          {token.text}
-        </span>
-      );
-    case "space":
-      return <span key={key}>{token.text}</span>;
-    case "text":
-    default:
-      return (
-        <span key={key} className="text-[#E2E8F0]">
-          {token.text}
-        </span>
-      );
-  }
-}
-
 export function CardCodeHighlighter({
   code,
   className = "",
@@ -181,23 +125,59 @@ export function CardCodeHighlighter({
     return code.trim().split("\n");
   }, [code]);
 
+  const renderToken = (token: Token, key: number) => {
+    switch (token.type) {
+      case "bracket":
+        return <span key={key} className="text-[#94A3B8]">{token.text}</span>;
+      case "tag":
+        return <span key={key} className="text-[#F472B6] font-semibold">{token.text}</span>;
+      case "prop":
+        return <span key={key} className="text-[#38BDF8]">{token.text}</span>;
+      case "keyword":
+        return <span key={key} className="text-[#C084FC] font-semibold">{token.text}</span>;
+      case "string":
+        return <span key={key} className="text-[#34D399]">{token.text}</span>;
+      case "number":
+        return <span key={key} className="text-[#F59E0B]">{token.text}</span>;
+      case "operator":
+        return <span key={key} className="text-[#38BDF8]">{token.text}</span>;
+      case "comment":
+        return <span key={key} className="text-[#64748B] italic">{token.text}</span>;
+      case "space":
+        return <span key={key}>{token.text}</span>;
+      case "text":
+      default:
+        return <span key={key} className="text-[#F8FAFC]">{token.text}</span>;
+    }
+  };
+
   return (
     <pre
-      tabIndex={0}
-      className={`font-mono text-xs leading-relaxed overflow-x-auto select-text focus:outline-none ${className}`}
+      style={{
+        fontFamily:
+          '"Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+        fontSize: "0.8125rem",
+        lineHeight: 1.7,
+        letterSpacing: "-0.01em",
+        tabSize: 2,
+      }}
+      className={`text-[#E2E8F0] overflow-x-auto select-text scrollbar-thin scrollbar-thumb-slate-700 m-0 ${className}`}
     >
       <code>
         {lines.map((line, lineIdx) => {
           const tokens = tokenizeLine(line);
           return (
-            <div key={lineIdx} className="table-row">
+            <div
+              key={lineIdx}
+              className="flex items-start hover:bg-white/[0.04] px-1 py-0.5 rounded transition-colors"
+            >
               {showLineNumbers && (
-                <span className="table-cell text-right pr-4 select-none text-[#475569] text-[11px] w-8">
+                <span className="w-8 shrink-0 text-right pr-4 text-[#475569] select-none text-[12px] pt-0.5 font-mono">
                   {lineIdx + 1}
                 </span>
               )}
-              <span className="table-cell whitespace-pre">
-                {tokens.map((t, tIdx) => renderToken(t, tIdx))}
+              <span className="whitespace-pre flex-1">
+                {tokens.map((token, tokenIdx) => renderToken(token, tokenIdx))}
               </span>
             </div>
           );

@@ -4,18 +4,30 @@ export type CardSize = "default" | "sm";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: CardSize;
+  interactive?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className = "", size = "default", ...props }, ref) => {
+  (
+    {
+      className = "",
+      size = "default",
+      interactive = false,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         ref={ref}
         data-slot="card"
         data-size={size}
-        className={`group/card rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-xs transition-shadow hover:shadow-sm ${
-          size === "sm" ? "text-sm" : ""
-        } ${className}`}
+        data-interactive={interactive ? "true" : undefined}
+        className={`group/card rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-xs transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#CBD5E1] hover:shadow-md ${
+          interactive
+            ? "hover:-translate-y-1.5 hover:border-[#5145FF]/45 hover:shadow-lg hover:shadow-[#5145FF]/10 active:scale-[0.985] cursor-pointer"
+            : ""
+        } ${size === "sm" ? "text-sm" : ""} ${className}`}
         {...props}
       />
     );
@@ -63,7 +75,7 @@ export const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescri
       <p
         ref={ref}
         data-slot="card-description"
-        className={`col-start-1 text-sm text-[#64748B] group-data-[size=sm]/card:text-xs ${className}`}
+        className={`col-start-1 text-sm text-[#64748B] group-data-[size=sm]/card:text-xs leading-relaxed ${className}`}
         {...props}
       />
     );

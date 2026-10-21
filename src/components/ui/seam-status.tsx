@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ShieldCheck, AlertTriangle, CheckCircle2, ChevronRight, X, Database, Server, Cpu } from "lucide-react";
+import { ShieldCheck, AlertTriangle, CheckCircle2, ChevronRight, X } from "lucide-react";
 
 export type SeamBackendFramework = "fastapi" | "express" | "mongoose" | "prisma";
 

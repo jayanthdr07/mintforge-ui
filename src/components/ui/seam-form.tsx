@@ -156,7 +156,7 @@ export const SeamForm = React.forwardRef<HTMLFormElement, SeamFormProps>(
           return;
         }
         if (onSubmit) {
-          onSubmit(e);
+          (onSubmit as (e: React.FormEvent<HTMLFormElement>) => void)(e);
         }
       },
       [validateBeforeSubmit, detectedDrifts, onSubmit]
